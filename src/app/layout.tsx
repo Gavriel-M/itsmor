@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import GridBackground from "@/components/layout/GridBackground";
+import Navigation from "@/components/layout/Navigation";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -27,8 +29,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${plexMono.variable}`}>
-      <body className="antialiased bg-background text-text selection:bg-terracotta selection:text-white">
-        {children}
+      <body className="antialiased bg-background text-text selection:bg-terracotta selection:text-white relative">
+        <GridBackground />
+        <Navigation />
+        <main className="relative z-10">{children}</main>
       </body>
     </html>
   );
