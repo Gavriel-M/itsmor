@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: '#F8F8F8',
+        background: '#F2F0E6',
         text: '#1A1A1A',
         terracotta: '#B85B40',
         lapis: '#004E98',
@@ -27,4 +27,3 @@ const config: Config = {
   plugins: [],
 };
 export default config;
-

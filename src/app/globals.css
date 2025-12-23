@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #f8f8f8;
+  --color-background: #f2f0e6;
   --color-text: #1a1a1a;
   --color-terracotta: #b85b40;
   --color-lapis: #004e98;
@@ -15,10 +15,12 @@
   --spacing-2: 8px;
 }
 
+:root {
+  --grid-cell: 4rem; /* 64px */
+}
+
 /* 
   Tailwind v4 CSS-first configuration.
-  We are also keeping tailwind.config.ts for compatibility if needed, 
-  but v4 prefers the @theme directive here.
 */
 
 body {
@@ -26,5 +28,3 @@ body {
   color: var(--color-text);
   font-family: var(--font-sans);
 }
-
-/* Global styles for the grid background or other utilities can go here */
