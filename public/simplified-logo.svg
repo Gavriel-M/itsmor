@@ -1,0 +1,7 @@
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Frame 28">
+<path id="top-diamond" d="M49.5 13L39.25 30.4L49.5 48L59.75 30.4L49.5 13Z" stroke="black"/>
+<path id="double-g" d="M37.5 33.5L6 87.5H38L47.5 71L37.5 54L24 77H32L37.5 67.5L39.5 71L34 80H19L37.5 48L49.5 68L61.5 48L80 80H65L59.5 71L61.5 67.5L67 77H75L61.5 54L51.5 71L61 87.5H93L61.5 33.5L49.5 54L37.5 33.5Z" stroke="black"/>
+<path id="bottom-pyramid" d="M57.5 87.5H41.5L49.5 73.5L57.5 87.5Z" stroke="black"/>
+</g>
+</svg>

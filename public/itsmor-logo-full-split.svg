@@ -1,0 +1,24 @@
+<svg width="98" height="83" viewBox="0 0 98 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 4">
+<g id="right-half">
+<mask id="path-1-inside-1_17_975" fill="white">
+<path d="M60.5 19.5L49 0V39.5L60.5 19.5Z"/>
+<path d="M62 83H98L63.5 24.58L49 48.5V62L62.5 39L84.5 77H66.5L59.5 66L62.5 61L69 72H76.5L62.5 48.5L52 66L62 83Z"/>
+</mask>
+<path d="M60.5 19.5L49 0V39.5L60.5 19.5Z" fill="#B74B3A"/>
+<path d="M62 83H98L63.5 24.58L49 48.5V62L62.5 39L84.5 77H66.5L59.5 66L62.5 61L69 72H76.5L62.5 48.5L52 66L62 83Z" fill="#B74B3A"/>
+<path d="M60.5 19.5L49 0V39.5L60.5 19.5Z" stroke="#B74B3A" stroke-width="4" mask="url(#path-1-inside-1_17_975)"/>
+<path d="M62 83H98L63.5 24.58L49 48.5V62L62.5 39L84.5 77H66.5L59.5 66L62.5 61L69 72H76.5L62.5 48.5L52 66L62 83Z" stroke="#B74B3A" stroke-width="4" mask="url(#path-1-inside-1_17_975)"/>
+</g>
+<g id="left-half">
+<mask id="path-2-inside-2_17_975" fill="white">
+<path d="M37.5 19.5L49 0V39.5L37.5 19.5Z"/>
+<path d="M36 83H0L34.5 24.58L49 48.5V62L35.5 39L13.5 77H31.5L38.5 66L35.5 61L29 72H21.5L35.5 48.5L46 66L36 83Z"/>
+</mask>
+<path d="M37.5 19.5L49 0V39.5L37.5 19.5Z" fill="#B74B3A"/>
+<path d="M36 83H0L34.5 24.58L49 48.5V62L35.5 39L13.5 77H31.5L38.5 66L35.5 61L29 72H21.5L35.5 48.5L46 66L36 83Z" fill="#B74B3A"/>
+<path d="M37.5 19.5L49 0V39.5L37.5 19.5Z" stroke="#B74B3A" stroke-width="4" mask="url(#path-2-inside-2_17_975)"/>
+<path d="M36 83H0L34.5 24.58L49 48.5V62L35.5 39L13.5 77H31.5L38.5 66L35.5 61L29 72H21.5L35.5 48.5L46 66L36 83Z" stroke="#B74B3A" stroke-width="4" mask="url(#path-2-inside-2_17_975)"/>
+</g>
+</g>
+</svg>
