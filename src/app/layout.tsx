@@ -20,6 +20,11 @@ const plexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "itsmor | Digital Bauhaus Portfolio",
   description: "A high-performance portfolio website.",
+  icons: {
+    icon: "/itsmor-logo-full-split.svg",
+    shortcut: "/itsmor-logo-full-split.svg",
+    apple: "/itsmor-logo-full-split.svg",
+  },
 };
 
 export default function RootLayout({
