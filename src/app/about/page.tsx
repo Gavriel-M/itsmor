@@ -1,12 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Timeline from "@/components/about/Timeline";
+import WireframeLogo3D from "@/components/work/WireframeLogo3D";
 
 export default function AboutPage() {
   return (
     <section className="min-h-screen w-full pt-32 md:pt-48 px-4 md:px-8 pb-20">
       <div className="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
         {/* Header */}
+        <div className="absolute top-1/4 -right-1/6 -translate-x-1/2 -translate-y-1/2 w-[60vw] max-w-[600px] aspect-square z-0 opacity-50 pointer-events-auto">
+          <div className="w-full h-120">
+            <WireframeLogo3D zoom={40} />
+          </div>
+        </div>
         <div className="md:col-span-12 mb-12">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -36,6 +43,14 @@ export default function AboutPage() {
               gap between design and engineering, ensuring that every
               interaction is meaningful.
             </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
+            <Timeline />
           </motion.div>
         </div>
 
