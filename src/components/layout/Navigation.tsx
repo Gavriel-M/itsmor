@@ -15,14 +15,15 @@ export default function Navigation() {
   const pathname = usePathname();
   console.log("🚀 ~ navItems:", navItems)
   console.log("🚀 ~ Navigation ~ pathname:", pathname)
+  console.log("🚀 ~ Navigation ~ is:", pathname === '/')
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 p-4 md:p-8 flex justify-between items-start pointer-events-none">
       {/* Logo Area */}
       <div className="pointer-events-auto">
         <Link href="/" className="flex items-center gap-2 group">
-          <Logo className="w-8 h-8 md:w-10 md:h-10 text-text group-hover:text-terracotta transition-colors duration-300" />
-          <span className="font-sans font-bold text-lg md:text-xl tracking-tight text-text group-hover:text-terracotta transition-colors duration-300">
+          <Logo className={`w-8 h-8 md:w-10 md:h-10 group-hover:text-terracotta transition-colors duration-300 ${pathname === "/" ? "text-terracotta" : "text-text"}`} />
+          <span className={`font-sans font-bold text-lg md:text-xl tracking-tight group-hover:text-terracotta transition-colors duration-300 ${pathname === "/" ? "text-terracotta" : "text-text"}`}>
             itsmor
           </span>
         </Link>
