@@ -1,0 +1,41 @@
+interface LogoProps {
+  className?: string;
+}
+
+export default function Logo({ className = "" }: LogoProps) {
+  return (
+    <svg
+      viewBox="0 0 87 76"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <g id="Group 1">
+        <path
+          id="right-g"
+          d="M55.3687 34.5026L43.8687 53.5026V41.5026L55.3687 22.0026L85.8687 74.5026H55.3687L45.8687 58.5026L55.3687 42.5026L67.8687 64.0026H61.8687L55.8687 54.0026L52.8687 58.5026L58.8687 68.0026H74.8687L55.3687 34.5026Z"
+          fill="currentColor"
+          stroke="currentColor"
+        />
+        <path
+          id="left-g"
+          d="M31.3687 34.5026L42.8687 53.5026V41.5026L31.3687 22.0026L0.868744 74.5026H31.3687L40.8687 58.5026L31.3687 42.5026L18.8687 64.0026H24.8687L30.8687 54.0026L33.8687 58.5026L27.8687 68.0026H11.8687L31.3687 34.5026Z"
+          fill="currentColor"
+          stroke="currentColor"
+        />
+        <path
+          id="brown-diamond"
+          d="M53.0307 17.796L43.3687 1.00262L33.7068 17.796L43.3687 33.9971L53.0307 17.796Z"
+          fill="currentColor"
+          stroke="currentColor"
+        />
+        <path
+          id="bottom-triangle"
+          d="M50.8687 75.0026L43.3687 62.0026L35.8687 75.0026H50.8687Z"
+          fill="currentColor"
+          stroke="currentColor"
+        />
+      </g>
+    </svg>
+  );
+}
