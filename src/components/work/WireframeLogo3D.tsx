@@ -120,19 +120,25 @@ function LogoMesh() {
     const elapsed = (Date.now() - startTimeRef.current) / 1000; // Convert to seconds
     
     // Phase transitions
-    if (phase === 'drawing' && elapsed > 2.0) {
+    if (phase === 'drawing' && elapsed >= 2.0) {
       setPhase('settling');
-    } else if (phase === 'settling' && elapsed > 2.5) {
+    } else if (phase === 'settling' && elapsed >= 2.5) {
       setPhase('rotating');
     }
     
-    // Update animation progress
+    // Update animation progress based on phase
     if (phase === 'drawing') {
+      // Drawing phase: 0 to 2 seconds
       setAnimationProgress(Math.min(elapsed / 2.0, 1));
     } else if (phase === 'settling') {
-      const progress = elapsed - 2.0;
-      setSettlingProgress(progress);
+      // Settling phase: 2 to 2.5 seconds
+      // Normalize to 0-1 range for this 0.5s phase
+      setSettlingProgress(Math.min((elapsed - 2.0) / 0.5, 1));
       setAnimationProgress(1);
+    } else {
+      // Rotating phase: fully drawn
+      setAnimationProgress(1);
+      setSettlingProgress(1);
     }
     
     // Apply rotation only in rotating phase
@@ -154,12 +160,19 @@ function LogoMesh() {
           const staggerDelay = index * 0.15; // 150ms delay between parts
           const partProgress = Math.max(0, Math.min(1, (animationProgress - staggerDelay) / (1 - staggerDelay * logoParts.length)));
           
-          // Calculate opacity based on phase
-          let lineOpacity = 1;
+          // Calculate opacity based on phase with smooth transitions
+          let lineOpacity = 0;
+          
           if (phase === 'drawing') {
-            lineOpacity = partProgress;
+            // Drawing phase: fade from 0 to 0.85
+            lineOpacity = partProgress * 0.85;
           } else if (phase === 'settling') {
-            lineOpacity = 0.7 + (settlingProgress / 0.5) * 0.3; // Fade from 0.7 to 1.0
+            // Settling phase: fade from 0.85 to 1.0 smoothly
+            // settlingProgress goes from 0 to 1 over the 0.5s settling period
+            lineOpacity = 0.85 + (settlingProgress * 0.15);
+          } else {
+            // Rotating phase: stay at full opacity
+            lineOpacity = 1.0;
           }
           
           return (
