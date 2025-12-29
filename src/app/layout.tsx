@@ -41,6 +41,7 @@ export default function RootLayout({
         <NavigationProvider>
           <GridBackground />
           <Navigation />
+          <ScrollNavigationLoader />
           <PageTransition>
             <main className="relative z-10">{children}</main>
           </PageTransition>
