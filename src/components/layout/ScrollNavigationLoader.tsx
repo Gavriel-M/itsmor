@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigation } from "@/contexts/NavigationContext";
 
-// Page navigation order
 const PAGE_ORDER = ["/", "/work", "/about", "/contact", "/"];
 
 // Configuration
@@ -27,19 +26,19 @@ type LoaderState =
 /**
  * Get the next page in the navigation order
  */
-function getNextPage(currentPath: string): string | null {
+const getNextPage = (currentPath: string): string | null => {
   const currentIndex = PAGE_ORDER.indexOf(currentPath);
   if (currentIndex === -1 || currentIndex === PAGE_ORDER.length - 1) {
     return null; // No next page
   }
   return PAGE_ORDER[currentIndex + 1];
-}
+};
 
 /**
  * Check if user is at the bottom of the page
  * Works for both scrollable pages and 100vh pages
  */
-function isAtBottom(threshold = SCROLL_THRESHOLD): boolean {
+const isAtBottom = (threshold = SCROLL_THRESHOLD): boolean => {
   const scrollTop = window.scrollY || document.documentElement.scrollTop;
   const scrollHeight = document.documentElement.scrollHeight;
   const clientHeight = window.innerHeight;
@@ -52,7 +51,7 @@ function isAtBottom(threshold = SCROLL_THRESHOLD): boolean {
   // For scrollable pages
   const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
   return distanceFromBottom <= threshold;
-}
+};
 
 /**
  * ScrollNavigationLoader Component
@@ -63,7 +62,7 @@ function isAtBottom(threshold = SCROLL_THRESHOLD): boolean {
  * - Better 100vh page handling
  * - Visual hints and feedback
  */
-export default function ScrollNavigationLoader() {
+export const ScrollNavigationLoader = () => {
   const pathname = usePathname();
   const { navigate, transitionStage } = useNavigation();
   const [loaderState, setLoaderState] = useState<LoaderState>("idle");
@@ -400,4 +399,4 @@ export default function ScrollNavigationLoader() {
       )}
     </AnimatePresence>
   );
-}
+};
