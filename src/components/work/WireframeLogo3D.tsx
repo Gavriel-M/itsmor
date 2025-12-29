@@ -8,7 +8,7 @@ import * as THREE from "three";
 
 /**
  * LogoPart Interface
- * 
+ *
  * Represents a single extruded part of the logo with its wireframe edges.
  * Each part can be animated independently.
  */
@@ -20,15 +20,15 @@ interface LogoPart {
 
 /**
  * LogoMesh Component
- * 
+ *
  * Loads and renders the logo SVG as three separate 3D extruded wireframes.
  * Each part (top-diamond, double-g, bottom-pyramid) is processed independently
  * to enable individual animations.
- * 
+ *
  * Creates a dual-layer effect per part:
  * 1. Semi-transparent base mesh for volume
  * 2. Glowing edge lines for the wireframe aesthetic
- * 
+ *
  * Animation Phases:
  * - drawing: Lines draw in sequentially (0-2s)
  * - settling: Fade to full opacity (2-2.5s)
@@ -37,10 +37,12 @@ interface LogoPart {
 function LogoMesh() {
   const groupRef = useRef<THREE.Group>(null);
   const [animationProgress, setAnimationProgress] = useState(0);
-  const [phase, setPhase] = useState<'drawing' | 'settling' | 'rotating'>('drawing');
+  const [phase, setPhase] = useState<"drawing" | "settling" | "rotating">(
+    "drawing"
+  );
   const [settlingProgress, setSettlingProgress] = useState(0);
   const startTimeRef = useRef<number | null>(null);
-  
+
   // Load the SVG file
   const svgData = useLoader(SVGLoader, "/logo-mark.svg");
 
@@ -52,15 +54,15 @@ function LogoMesh() {
     }
 
     const parts: LogoPart[] = [];
-    
+
     // Process each path in the SVG independently
     svgData.paths.forEach((path) => {
       // Extract the path ID from SVG metadata
       const pathId = path.userData?.node?.id || `path-${parts.length}`;
-      
+
       // Convert the path to THREE.js shapes
       const shapes = SVGLoader.createShapes(path);
-      
+
       if (shapes.length === 0) {
         console.warn(`No shapes found for path: ${pathId}`);
         return;
@@ -79,11 +81,14 @@ function LogoMesh() {
       // If there are multiple shapes in this path, we need to handle them
       // Create a geometry for each shape and merge them for this path
       if (shapes.length === 1) {
-        const extrudedGeometry = new THREE.ExtrudeGeometry(shapes[0], extrudeSettings);
+        const extrudedGeometry = new THREE.ExtrudeGeometry(
+          shapes[0],
+          extrudeSettings
+        );
         // DO NOT center individual geometries - preserves relative positions from SVG
-        
+
         const edgesGeometry = new THREE.EdgesGeometry(extrudedGeometry, 15);
-        
+
         parts.push({
           id: pathId,
           extrudedGeometry,
@@ -92,11 +97,14 @@ function LogoMesh() {
       } else {
         // For multiple shapes in one path, create separate geometries
         shapes.forEach((shape, index) => {
-          const extrudedGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+          const extrudedGeometry = new THREE.ExtrudeGeometry(
+            shape,
+            extrudeSettings
+          );
           // DO NOT center individual geometries - preserves relative positions from SVG
-          
+
           const edgesGeometry = new THREE.EdgesGeometry(extrudedGeometry, 15);
-          
+
           parts.push({
             id: `${pathId}-${index}`,
             extrudedGeometry,
@@ -106,7 +114,10 @@ function LogoMesh() {
       }
     });
 
-    console.log(`Processed ${parts.length} logo parts:`, parts.map(p => p.id));
+    console.log(
+      `Processed ${parts.length} logo parts:`,
+      parts.map((p) => p.id)
+    );
     return parts;
   }, [svgData]);
 
@@ -116,21 +127,21 @@ function LogoMesh() {
     if (startTimeRef.current === null) {
       startTimeRef.current = Date.now();
     }
-    
+
     const elapsed = (Date.now() - startTimeRef.current) / 1000; // Convert to seconds
-    
+
     // Phase transitions
-    if (phase === 'drawing' && elapsed >= 2.0) {
-      setPhase('settling');
-    } else if (phase === 'settling' && elapsed >= 2.5) {
-      setPhase('rotating');
+    if (phase === "drawing" && elapsed >= 2.0) {
+      setPhase("settling");
+    } else if (phase === "settling" && elapsed >= 2.5) {
+      setPhase("rotating");
     }
-    
+
     // Update animation progress based on phase
-    if (phase === 'drawing') {
+    if (phase === "drawing") {
       // Drawing phase: 0 to 2 seconds
       setAnimationProgress(Math.min(elapsed / 2.0, 1));
-    } else if (phase === 'settling') {
+    } else if (phase === "settling") {
       // Settling phase: 2 to 2.5 seconds
       // Normalize to 0-1 range for this 0.5s phase
       setSettlingProgress(Math.min((elapsed - 2.0) / 0.5, 1));
@@ -140,9 +151,9 @@ function LogoMesh() {
       setAnimationProgress(1);
       setSettlingProgress(1);
     }
-    
+
     // Apply rotation only in rotating phase
-    if (groupRef.current && phase === 'rotating') {
+    if (groupRef.current && phase === "rotating") {
       groupRef.current.rotation.y += delta * 0.25;
     }
   });
@@ -154,27 +165,34 @@ function LogoMesh() {
 
   return (
     <group ref={groupRef} scale={[0.1, -0.1, 0.1]}>
-        <Center>
-          {logoParts.map((part, index) => {
+      <Center>
+        {logoParts.map((part, index) => {
           // Stagger each part's animation
           const staggerDelay = index * 0.15; // 150ms delay between parts
-          const partProgress = Math.max(0, Math.min(1, (animationProgress - staggerDelay) / (1 - staggerDelay * logoParts.length)));
-          
+          const partProgress = Math.max(
+            0,
+            Math.min(
+              1,
+              (animationProgress - staggerDelay) /
+                (1 - staggerDelay * logoParts.length)
+            )
+          );
+
           // Calculate opacity based on phase with smooth transitions
           let lineOpacity = 0;
-          
-          if (phase === 'drawing') {
+
+          if (phase === "drawing") {
             // Drawing phase: fade from 0 to 0.85
             lineOpacity = partProgress * 0.85;
-          } else if (phase === 'settling') {
+          } else if (phase === "settling") {
             // Settling phase: fade from 0.85 to 1.0 smoothly
             // settlingProgress goes from 0 to 1 over the 0.5s settling period
-            lineOpacity = 0.85 + (settlingProgress * 0.15);
+            lineOpacity = 0.85 + settlingProgress * 0.15;
           } else {
             // Rotating phase: stay at full opacity
             lineOpacity = 1.0;
           }
-          
+
           return (
             <group key={part.id}>
               {/* Child 1: Semi-transparent base mesh for volume */}
@@ -201,21 +219,21 @@ function LogoMesh() {
             </group>
           );
         })}
-        </Center>
+      </Center>
     </group>
   );
 }
 
 /**
  * WireframeLogo3D Component
- * 
+ *
  * A 3D rotating wireframe representation of the brand logo mark.
  * Engineered aesthetic with glowing blueprint-style edges.
- * 
+ *
  * Brand Colors:
  * - Terracotta: #B85B40
  * - Off-white Background: #F2F0E6
- * 
+ *
  * @example
  * ```tsx
  * <div className="w-full h-96">
@@ -223,7 +241,7 @@ function LogoMesh() {
  * </div>
  * ```
  */
-export default function WireframeLogo3D({zoom}: {zoom: number}) {
+export default function WireframeLogo3D({ zoom }: { zoom: number }) {
   return (
     <Canvas
       orthographic
@@ -244,19 +262,16 @@ export default function WireframeLogo3D({zoom}: {zoom: number}) {
     >
       {/* Ambient lighting for base illumination */}
       <ambientLight intensity={2} />
-      
+
       {/* Directional light for depth and definition */}
-      <directionalLight 
-        position={[5, 5, 5]} 
+      <directionalLight
+        position={[5, 5, 5]}
         intensity={0.8}
         castShadow={false}
       />
-      
+
       {/* Additional fill light from opposite side */}
-      <directionalLight 
-        position={[-5, -5, -5]} 
-        intensity={0.3}
-      />
+      <directionalLight position={[-5, -5, -5]} intensity={0.3} />
 
       <LogoMesh />
     </Canvas>

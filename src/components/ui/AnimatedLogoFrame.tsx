@@ -62,7 +62,7 @@ export default function AnimatedLogoFrame({
             return (prev + 1) % GLITCH_FRAMES.length;
           }
         });
-        
+
         // After first transition, no longer initial mount
         if (isInitialMount) {
           setIsInitialMount(false);

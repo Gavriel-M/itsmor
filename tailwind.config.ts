@@ -9,18 +9,18 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: '#F2F0E6',
-        text: '#1A1A1A',
-        terracotta: '#B85B40',
-        lapis: '#004E98',
+        background: "#F2F0E6",
+        text: "#1A1A1A",
+        terracotta: "#B85B40",
+        lapis: "#004E98",
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'sans-serif'],
-        mono: ['var(--font-plex-mono)', 'monospace'],
+        sans: ["var(--font-inter)", "sans-serif"],
+        mono: ["var(--font-plex-mono)", "monospace"],
       },
       spacing: {
-        '1': '4px',
-        '2': '8px',
+        "1": "4px",
+        "2": "8px",
       },
     },
   },

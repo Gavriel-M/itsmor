@@ -1,7 +1,6 @@
 export default function GridBackground() {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none select-none">
-      {/* Vertical Lines */}
       <div
         className="absolute inset-0 w-full h-full"
         style={{
@@ -10,7 +9,6 @@ export default function GridBackground() {
           backgroundPosition: "center top",
         }}
       />
-      {/* Horizontal Lines */}
       <div
         className="absolute inset-0 w-full h-full"
         style={{
