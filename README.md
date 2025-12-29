@@ -13,6 +13,7 @@ This isn't a template dressed up with content. It's an exercise in **constraint-
 The visual language draws from Bauhaus principles — function informing form, grid-based precision, and high contrast clarity.
 
 **Core Tenets:**
+
 - **Grid as Foundation**: Everything aligns to a strict 4rem grid (`--grid-cell`). Not decorative; structural.
 - **Restrained Palette**: Terracotta (#B85B40) as the accent, off-white (#F2F0E6) as the canvas, near-black (#1A1A1A) for type. High contrast, zero ambiguity.
 - **Typography as Hierarchy**: Inter for bold statements, IBM Plex Mono for technical precision.
@@ -23,13 +24,15 @@ The visual language draws from Bauhaus principles — function informing form, g
 This project is statically exported to AWS S3 + CloudFront. No server-side rendering, no runtime overhead — just pre-built HTML/CSS/JS served from the edge. This constraint forces discipline: every feature must work within a static context, which ironically enables creative solutions.
 
 **Stack:**
+
 - **Next.js 14+** (App Router, Static Export) — Leveraging React's ecosystem while maintaining a static footprint
-- **TypeScript** — Type safety as a design tool, not just error prevention  
+- **TypeScript** — Type safety as a design tool, not just error prevention
 - **Tailwind CSS** — Configured with custom design tokens for grid precision and color consistency
 - **Framer Motion** — High-performance declarative animations
 - **React Three Fiber** — For 3D wireframe logo visualization (WebGL-based, GPU-accelerated)
 
 **Why Static?**
+
 - **Performance**: Sub-100ms response times from CloudFront edge locations
 - **Cost**: Nearly zero infrastructure cost compared to server-rendered alternatives
 - **Simplicity**: No server to manage, no runtime to monitor, no scaling concerns
@@ -39,18 +42,23 @@ This isn't a limitation — it's a forcing function for better architecture.
 ## Key Features
 
 ### 3D Wireframe Logo
+
 A custom React Three Fiber component that renders the brand mark as an engineered, glowing wireframe in 3D space. The SVG is decomposed into separate extruded geometries, centered collectively, and animated with phased opacity transitions (drawing → settling → rotating). Built with `EdgesGeometry` and additive blending for that "blueprint aesthetic."
 
 ### Network Visualization
+
 The Contact page features a particle network that responds to user interaction — nodes repel from cursor position using force-directed physics. Built with Canvas API and requestAnimationFrame for 60fps performance.
 
 ### Timeline Component
+
 A vertical timeline on the About page that progressively reveals as you scroll. Intersection Observer API triggers staggered Framer Motion animations for a fluid, responsive feel.
 
 ### Animated Logo Frame
+
 A "glitch/scramble" effect on hover that distorts the logo through SVG filter manipulations. The animation system handles play/pause states, prevents stuck loops, and respects reduced-motion preferences.
 
 ### Hero Geometric Overlays
+
 The homepage features animated geometric primitives (circles, rectangles) that enter the viewport with staggered delays and spring physics. Each element is grid-aligned using CSS `calc(var(--grid-cell) * N)` for pixel-perfect placement.
 
 ## Development Philosophy
