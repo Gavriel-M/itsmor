@@ -3,6 +3,9 @@ import { Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import GridBackground from "@/components/layout/GridBackground";
 import Navigation from "@/components/layout/Navigation";
+import PageTransition from "@/components/layout/PageTransition";
+import ScrollNavigationLoader from "@/components/layout/ScrollNavigationLoader";
+import { NavigationProvider } from "@/contexts/NavigationContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -35,9 +38,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${plexMono.variable}`}>
       <body className="antialiased bg-background text-text selection:bg-terracotta selection:text-white relative">
-        <GridBackground />
-        <Navigation />
-        <main className="relative z-10">{children}</main>
+        <NavigationProvider>
+          <GridBackground />
+          <Navigation />
+          <PageTransition>
+            <main className="relative z-10">{children}</main>
+          </PageTransition>
+        </NavigationProvider>
       </body>
     </html>
   );
