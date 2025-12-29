@@ -4,7 +4,7 @@ import "./globals.css";
 import GridBackground from "@/components/layout/GridBackground";
 import Navigation from "@/components/layout/Navigation";
 import PageTransition from "@/components/layout/PageTransition";
-import ScrollNavigationLoader from "@/components/layout/ScrollNavigationLoader";
+import { ScrollNavigationLoader } from "@/components/layout/ScrollNavigationLoader";
 import { NavigationProvider } from "@/contexts/NavigationContext";
 
 const inter = Inter({
