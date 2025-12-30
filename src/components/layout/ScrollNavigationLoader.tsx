@@ -11,7 +11,7 @@ const PAGE_ORDER = ["/", "/work", "/about", "/contact", "/"];
 const SCROLL_THRESHOLD = 10; // px from bottom to consider "at bottom"
 const GRACE_PERIOD = 800; // ms grace period before accepting wheel events
 const MIN_WHEEL_FOR_100VH = 150; // cumulative deltaY required for 100vh pages
-const PROGRESS_SPEED = 10; // wheel deltaY pixels per 1% progress
+const PROGRESS_SPEED = 5; // wheel deltaY pixels per 1% progress
 const DECAY_DELAY = 300; // ms idle before decay starts
 const LOADER_WIDTH = 250; // px
 
