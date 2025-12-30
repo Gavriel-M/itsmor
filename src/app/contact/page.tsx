@@ -11,7 +11,7 @@ export default function ContactPage() {
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="font-sans font-bold text-6xl md:text-8xl tracking-tighter text-text mb-12"
+            className="cursor-default font-sans font-bold text-6xl md:text-8xl tracking-tighter text-text mb-12"
           >
             CONTACT
           </motion.h1>
@@ -22,7 +22,7 @@ export default function ContactPage() {
             transition={{ delay: 0.2 }}
             className="mb-12"
           >
-            <p className="font-mono text-sm md:text-base mb-4 opacity-70 uppercase tracking-widest">
+            <p className="cursor-default font-mono text-sm md:text-base mb-4 opacity-70 uppercase tracking-widest">
               Let&apos;s build something together.
             </p>
             <a
@@ -44,7 +44,7 @@ export default function ContactPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
-        className="w-full border-t border-black/10 mt-auto pt-8 flex justify-between font-mono text-xs uppercase opacity-50"
+        className="cursor-default w-full border-t border-black/10 mt-auto pt-8 flex justify-between font-mono text-xs uppercase opacity-50"
       >
         <span>© 2025 itsmor</span>
         <span>All Rights Reserved</span>

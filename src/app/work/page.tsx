@@ -52,7 +52,7 @@ export default function WorkPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="font-sans font-bold text-6xl md:text-8xl mb-6 tracking-tighter text-text"
+              className="cursor-default font-sans font-bold text-6xl md:text-8xl mb-6 tracking-tighter text-text"
             >
               SELECTED <br className="hidden md:block" />
               <span className="text-terracotta">WORK</span>
@@ -75,7 +75,7 @@ export default function WorkPage() {
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
             className="pb-4 relative z-10"
           >
-            <p className="font-mono text-sm md:text-base max-w-md leading-relaxed opacity-80">
+            <p className="cursor-default font-mono text-sm md:text-base max-w-md leading-relaxed opacity-80">
               A collection of digital artifacts, web experiences, and brand
               systems designed with precision and purpose.
             </p>

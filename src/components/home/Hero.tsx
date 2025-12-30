@@ -53,7 +53,7 @@ export default function Hero() {
               marginLeft: "calc(var(--grid-cell) * 1 + 10px)",
               marginTop: "calc(var(--grid-cell) * 2 + 10px)",
             }}
-            className="relative z-20 mt-4 font-mono text-sm text-background tracking-widest uppercase"
+            className="cursor-default relative z-20 mt-4 font-mono text-sm text-background tracking-widest uppercase"
           >
             Portfolio 2025
           </motion.p>
@@ -63,7 +63,7 @@ export default function Hero() {
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="relative z-20 font-sans font-bold text-[15vw] leading-none tracking-tighter text-text mix-blend-hard-light"
+          className="cursor-default relative z-20 font-sans font-bold text-[15vw] leading-none tracking-tighter text-text mix-blend-hard-light"
         >
           itsmor
         </motion.h1>
