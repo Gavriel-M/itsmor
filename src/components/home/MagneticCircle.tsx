@@ -15,8 +15,16 @@ export const MagneticCircle = () => {
     return (value - centerY) * 0.03;
   });
 
-  const circleX = useSpring(circleXRaw, { stiffness: 150, damping: 20 });
-  const circleY = useSpring(circleYRaw, { stiffness: 150, damping: 20 });
+  const circleX = useSpring(circleXRaw, {
+    stiffness: 100,
+    damping: 8,
+    bounce: 20,
+  });
+  const circleY = useSpring(circleYRaw, {
+    stiffness: 100,
+    damping: 8,
+    bounce: 20,
+  });
 
   const handleMouseMove = useCallback(
     (e: MouseEvent): void => {
@@ -44,11 +52,10 @@ export const MagneticCircle = () => {
         height: "calc(var(--grid-cell) * 8)",
         left: "50%",
         top: "50%",
-        x: circleX, // Magnetic offset + centering
+        x: circleX,
         y: circleY,
-        translateX: "-50%", // Center the element itself
+        translateX: "-50%",
         translateY: "-50%",
-        // Additional offset to shift it relative to the 'center' grid line
         marginLeft: "calc(var(--grid-cell) * -2)",
         marginTop: "calc(var(--grid-cell) * -1)",
       }}
