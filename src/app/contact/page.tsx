@@ -6,7 +6,7 @@ import ContactNetwork from "@/components/contact/ContactNetwork";
 export default function ContactPage() {
   return (
     <section className="min-h-screen w-full pt-32 md:pt-48 px-4 md:px-8 pb-20 flex flex-col">
-      <div className="max-w-screen-xl mx-auto w-full flex-grow flex flex-col md:grid md:grid-cols-2 gap-12">
+      <div className="max-w-screen-xl mx-auto w-full flex-grow flex flex-col md:grid md:grid-cols-2 gap-4 md:gap-12">
         <div className="flex flex-col justify-between">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
