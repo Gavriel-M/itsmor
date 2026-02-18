@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback, useState } from "react";
+import { useRef, useCallback, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { SeparatedLogo } from "./SeparatedLogo";
@@ -50,6 +50,22 @@ const ContactNetwork = () => {
   const logoRef = useRef<HTMLDivElement>(null);
   const hoveredNodeElRef = useRef<HTMLElement | null>(null);
 
+  // Track container size for computing SVG line coordinates
+  // (SVG attributes don't support calc(), so we need pixel values)
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      setContainerSize({ width, height });
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const isCursorTracking = hoveredNode === "default";
 
   // Cursor tracking (disabled when hovering nodes)
@@ -98,22 +114,27 @@ const ContactNetwork = () => {
         <div className="absolute inset-0 flex items-center justify-center">
           {/* Connecting Lines */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none">
-            {LINKS.map((link) => (
-              <motion.line
-                key={link.id}
-                x1="50%"
-                y1="50%"
-                x2={`calc(50% + ${link.x}px)`}
-                y2={`calc(50% + ${link.y}px)`}
-                stroke="#b85b40"
-                strokeWidth="1"
-                className="transition-all duration-300"
-                style={{ opacity: hoveredNode === link.id ? 0.6 : 0.3 }}
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 1, delay: 0.5, ease: "easeInOut" }}
-              />
-            ))}
+            {containerSize.width > 0 &&
+              LINKS.map((link) => {
+                const cx = containerSize.width / 2;
+                const cy = containerSize.height / 2;
+                return (
+                  <motion.line
+                    key={link.id}
+                    x1={cx}
+                    y1={cy}
+                    x2={cx + link.x}
+                    y2={cy + link.y}
+                    stroke="#b85b40"
+                    strokeWidth="1"
+                    className="transition-all duration-300"
+                    style={{ opacity: hoveredNode === link.id ? 0.6 : 0.3 }}
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ duration: 1, delay: 0.5, ease: "easeInOut" }}
+                  />
+                );
+              })}
           </svg>
 
           {/* Canvas for Lightning Effect */}
