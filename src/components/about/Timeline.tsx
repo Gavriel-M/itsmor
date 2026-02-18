@@ -1,65 +1,122 @@
 "use client";
 
+import { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-const events = [
-  { label: "30 YEARS (IL)", year: "1994" },
-  { label: "RELOCATING (MUNICH)", year: "2018" },
-  { label: "EDUCATION", year: "2020" },
-  { label: "CLIMBING", year: "2021" },
-  { label: "DESIGN", year: "2024" },
+interface TimelineEvent {
+  label: string;
+  year: string;
+  yPosition: number; // 0-1 normalized (0=top, 1=bottom)
+  emphasis: "primary" | "secondary";
+}
+
+const EVENTS: TimelineEvent[] = [
+  { label: "30 YEARS (IL)", year: "1994", yPosition: 0.4, emphasis: "primary" },
+  { label: "RELOCATING", year: "2018", yPosition: 0.6, emphasis: "secondary" },
+  { label: "EDUCATION", year: "2020", yPosition: 0.5, emphasis: "secondary" },
+  { label: "CLIMBING", year: "2021", yPosition: 0.2, emphasis: "secondary" },
+  { label: "DESIGN", year: "2024", yPosition: 0.15, emphasis: "primary" },
 ];
 
+const PADDING_X = 40;
+const PADDING_Y = 30;
+
 export default function Timeline() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const measure = () => {
+      const rect = container.getBoundingClientRect();
+      setDimensions({ width: rect.width, height: rect.height });
+    };
+
+    measure();
+
+    const observer = new ResizeObserver(measure);
+    observer.observe(container);
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Calculate positions for each event
+  const positions = EVENTS.map((event, i) => {
+    const usableWidth = dimensions.width - PADDING_X * 2;
+    const x =
+      EVENTS.length > 1
+        ? PADDING_X + (i / (EVENTS.length - 1)) * usableWidth
+        : dimensions.width / 2;
+    const usableHeight = dimensions.height - PADDING_Y * 2;
+    const y = PADDING_Y + event.yPosition * usableHeight;
+    return { x, y };
+  });
+
+  // Generate SVG path from positions (straight line segments)
+  const pathD =
+    positions.length > 0 && dimensions.width > 0
+      ? positions
+          .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x},${p.y}`)
+          .join(" ")
+      : "";
+
   return (
     <div className="w-full mt-12">
       <h3 className="font-mono text-xs text-terracotta uppercase tracking-widest mb-8">
         Personal Timeline
       </h3>
 
-      <div className="relative h-40 w-full overflow-hidden">
-        {/* SVG Line */}
-        <svg className="absolute inset-0 w-full h-full overflow-visible">
-          <motion.path
-            d="M0,50 L100,50 L150,80 L250,80 L300,20 L400,50 L500,10"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="text-terracotta"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
-          />
-        </svg>
+      <div ref={containerRef} className="relative h-40 w-full overflow-visible">
+        {dimensions.width > 0 && (
+          <>
+            {/* SVG Line */}
+            <svg className="absolute inset-0 w-full h-full overflow-visible">
+              <motion.path
+                d={pathD}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className="text-terracotta"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 1.5, ease: "easeInOut" }}
+              />
+            </svg>
 
-        {/* Points (Simplified positioning for this aesthetic abstract timeline) */}
-        <div className="absolute top-[50px] left-0 -translate-y-1/2">
-          <div className="w-3 h-3 bg-terracotta rounded-full" />
-          <span className="absolute top-4 left-0 font-mono text-xs whitespace-nowrap">
-            30 YEARS (IL)
-          </span>
-        </div>
+            {/* Event dots + labels */}
+            {EVENTS.map((event, i) => {
+              const pos = positions[i];
+              const isPrimary = event.emphasis === "primary";
+              const labelBelow = event.yPosition <= 0.5;
 
-        <div className="absolute top-[80px] left-[150px] -translate-y-1/2">
-          <div className="w-2 h-2 bg-lapis rounded-full" />
-          <span className="absolute top-4 left-0 font-mono text-xs whitespace-nowrap">
-            RELOCATING
-          </span>
-        </div>
+              return (
+                <div
+                  key={event.year + event.label}
+                  className="absolute -translate-x-1/2 -translate-y-1/2"
+                  style={{ left: pos.x, top: pos.y }}
+                >
+                  {/* Dot */}
+                  <div
+                    className={`rounded-full ${
+                      isPrimary ? "w-3 h-3 bg-terracotta" : "w-2 h-2 bg-lapis"
+                    }`}
+                  />
 
-        <div className="absolute top-[20px] left-[300px] -translate-y-1/2">
-          <div className="w-2 h-2 bg-lapis rounded-full" />
-          <span className="absolute bottom-3 left-0 font-mono text-xs whitespace-nowrap">
-            CLIMBING
-          </span>
-        </div>
-
-        <div className="absolute top-[10px] left-[500px] -translate-y-1/2">
-          <div className="w-3 h-3 bg-terracotta rounded-full" />
-          <span className="absolute top-4 right-0 font-mono text-xs whitespace-nowrap">
-            DESIGN
-          </span>
-        </div>
+                  {/* Label */}
+                  <span
+                    className={`absolute left-0 font-mono text-xs whitespace-nowrap ${
+                      labelBelow ? "top-4" : "bottom-3"
+                    }`}
+                  >
+                    {event.label}
+                  </span>
+                </div>
+              );
+            })}
+          </>
+        )}
       </div>
     </div>
   );

@@ -1,18 +1,29 @@
 interface SeparatedLogoProps {
   className?: string;
   isOpen: boolean;
+  rotation?: number;
+  smoothTransition?: boolean; // true for node snaps, false for cursor tracking
 }
 
 export const SeparatedLogo = ({
   className = "",
   isOpen,
+  rotation = 0,
+  smoothTransition = true,
 }: SeparatedLogoProps) => {
   const transforms = {
-    leftG: isOpen ? "translate(-12px, 0)" : "translate(0, 0)",
-    rightG: isOpen ? "translate(12px, 0)" : "translate(0, 0)",
+    leftG: isOpen ? "translate(-8px, 0)" : "translate(0, 0)",
+    rightG: isOpen ? "translate(8px, 0)" : "translate(0, 0)",
     topDiamond: isOpen ? "translate(0, -12px)" : "translate(0, 0)",
-    bottomTriangle: isOpen ? "translate(0, 8px)" : "translate(0, 0)",
+    bottomTriangle: isOpen ? "translate(0, 10px)" : "translate(0, 0)",
   };
+
+  // When cursor-tracking drives rotation every frame, CSS transition
+  // fights the lerp and causes visible stepping. Only use CSS transition
+  // for discrete snaps (node hover).
+  const transitionStyle = smoothTransition
+    ? "transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)"
+    : "none";
 
   return (
     <svg
@@ -21,6 +32,10 @@ export const SeparatedLogo = ({
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       overflow="visible"
+      style={{
+        transform: `rotate(${rotation}deg)`,
+        transition: transitionStyle,
+      }}
     >
       <g id="logo-group">
         <path
@@ -30,7 +45,7 @@ export const SeparatedLogo = ({
           stroke="currentColor"
           style={{
             transform: transforms.rightG,
-            transition: "transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)",
+            transition: "transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s",
           }}
         />
         <path
@@ -40,7 +55,7 @@ export const SeparatedLogo = ({
           stroke="currentColor"
           style={{
             transform: transforms.leftG,
-            transition: "transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)",
+            transition: "transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s",
           }}
         />
         <path
@@ -50,7 +65,8 @@ export const SeparatedLogo = ({
           stroke="currentColor"
           style={{
             transform: transforms.topDiamond,
-            transition: "transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)",
+            transition:
+              "transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) 0.65s",
           }}
         />
         <path
@@ -60,7 +76,8 @@ export const SeparatedLogo = ({
           stroke="currentColor"
           style={{
             transform: transforms.bottomTriangle,
-            transition: "transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)",
+            transition:
+              "transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s",
           }}
         />
       </g>
