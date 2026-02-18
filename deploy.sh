@@ -31,7 +31,8 @@ aws s3 sync out/ s3://$S3_BUCKET/ \
   --delete \
   --cache-control "public, max-age=31536000" \
   --exclude "*.html" \
-  --exclude "404.html"
+  --exclude "404.html" \
+  --exclude "favicon.ico"
 
 echo "📤 Uploading HTML files (no cache)..."
 aws s3 sync out/ s3://$S3_BUCKET/ \
