@@ -24,8 +24,11 @@ export const metadata: Metadata = {
   title: "itsmor | Digital Bauhaus Portfolio",
   description: "A high-performance portfolio website.",
   icons: {
-    icon: "/itsmor-logo-full-split.svg",
-    shortcut: "/itsmor-logo-full-split.svg",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/itsmor-logo-full-split.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/favicon.ico",
     apple: "/itsmor-logo-full-split.svg",
   },
 };
