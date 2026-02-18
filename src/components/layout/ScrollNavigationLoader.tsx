@@ -70,6 +70,7 @@ export const ScrollNavigationLoader = () => {
   const lastWheelTimeRef = useRef<number>(0);
   const cumulativeDeltaRef = useRef<number>(0);
   const decayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const touchStartYRef = useRef<number | null>(null);
 
   // Initialize lastWheelTimeRef after mount
   useEffect(() => {
@@ -188,6 +189,85 @@ export const ScrollNavigationLoader = () => {
   );
 
   /**
+   * Handle touch events for mobile progress tracking
+   */
+  const handleTouchStart = useCallback((e: TouchEvent) => {
+    touchStartYRef.current = e.touches[0].clientY;
+  }, []);
+
+  const handleTouchMove = useCallback(
+    (e: TouchEvent) => {
+      if (touchStartYRef.current === null) return;
+      if (!isEnabled || loaderState === "triggering") return;
+
+      const currentY = e.touches[0].clientY;
+      const deltaY = touchStartYRef.current - currentY;
+      // Update start position for continuous tracking
+      touchStartYRef.current = currentY;
+
+      // Only track upward swipes (scrolling down)
+      if (deltaY <= 0) return;
+
+      const atBottom = isAtBottom();
+
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = window.innerHeight;
+      const hasScroll = scrollHeight > clientHeight + 50;
+
+      if (!hasScroll && loaderState === "idle") {
+        setLoaderState("appearing");
+        setProgress(0);
+        cumulativeDeltaRef.current = 0;
+        return;
+      }
+
+      if (hasScroll && loaderState === "idle" && atBottom) {
+        setLoaderState("appearing");
+        setProgress(0);
+        cumulativeDeltaRef.current = 0;
+        return;
+      }
+
+      if (hasScroll && !atBottom) return;
+      if (loaderState === "appearing") return;
+
+      lastWheelTimeRef.current = Date.now();
+
+      if (decayTimeoutRef.current) {
+        clearTimeout(decayTimeoutRef.current);
+        decayTimeoutRef.current = null;
+      }
+
+      if (!hasScroll) {
+        cumulativeDeltaRef.current += deltaY;
+        if (cumulativeDeltaRef.current < MIN_WHEEL_FOR_100VH) {
+          return;
+        }
+      }
+
+      const deltaProgress = deltaY / PROGRESS_SPEED;
+
+      setProgress((prev) => {
+        const newProgress = Math.max(0, Math.min(100, prev + deltaProgress));
+
+        if (
+          newProgress > 0 &&
+          (loaderState === "ready" || loaderState === "decaying")
+        ) {
+          setLoaderState("loading");
+        }
+
+        return newProgress;
+      });
+    },
+    [isEnabled, loaderState]
+  );
+
+  const handleTouchEnd = useCallback(() => {
+    touchStartYRef.current = null;
+  }, []);
+
+  /**
    * Grace period: Transition from "appearing" to "ready" after delay
    */
   useEffect(() => {
@@ -268,6 +348,23 @@ export const ScrollNavigationLoader = () => {
       window.removeEventListener("wheel", handleWheel);
     };
   }, [isEnabled, handleWheel]);
+
+  /**
+   * Set up touch listeners for mobile
+   */
+  useEffect(() => {
+    if (!isEnabled) return;
+
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd, { passive: true });
+
+    return () => {
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [isEnabled, handleTouchStart, handleTouchMove, handleTouchEnd]);
 
   /**
    * Reset state when pathname changes (after navigation)
