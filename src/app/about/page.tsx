@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import RotatingText from "@/components/about/RotatingText";
 import Timeline from "@/components/about/Timeline";
 import WireframeLogo3D from "@/components/work/WireframeLogo3D";
 
@@ -30,19 +31,30 @@ export default function AboutPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="font-sans text-xl md:text-3xl leading-tight font-medium space-y-8"
+            className="font-sans text-2xl md:text-5xl leading-tight font-bold tracking-tight space-y-8"
           >
-            <p>
-              I am a creative developer and interface designer focused on
-              building digital products with a strong emphasis on aesthetics and
-              performance.
-            </p>
-            <p>
-              My philosophy is rooted in the principles of the Bauhaus: form
-              follows function, but form should never be boring. I bridge the
-              gap between design and engineering, ensuring that every
-              interaction is meaningful.
-            </p>
+            <RotatingText
+              prefix="I am a"
+              words={[
+                "creative developer",
+                "design engineer",
+                "detail devotee",
+                "pixel perfectionist",
+                "craft-driven builder",
+              ]}
+              className="font-sans text-2xl md:text-5xl leading-tight font-bold tracking-tight"
+            />
+            <RotatingText
+              prefix="My philosophy is"
+              words={[
+                "precision and purpose",
+                "less but better",
+                "motion with meaning",
+                "craft over convention",
+                "constraint as catalyst",
+              ]}
+              className="font-sans text-2xl md:text-5xl leading-tight font-bold tracking-tight"
+            />
           </motion.div>
 
           <motion.div
