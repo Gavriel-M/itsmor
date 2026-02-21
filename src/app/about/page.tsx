@@ -7,7 +7,7 @@ import WireframeLogo3D from "@/components/work/WireframeLogo3D";
 
 export default function AboutPage() {
   return (
-    <section className="cursor-default min-h-screen w-full pt-32 md:pt-48 px-4 md:px-8 pb-20">
+    <section className="cursor-default min-h-screen w-full pt-32 md:pt-48 px-4 md:px-8 pb-20 overflow-x-hidden">
       <div className="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
         {/* Header */}
         <div className="absolute top-1/4 -right-1/6 -translate-x-1/2 -translate-y-1/2 w-[60vw] max-w-[600px] aspect-square z-0 opacity-50 pointer-events-auto">
