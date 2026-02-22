@@ -40,6 +40,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${plexMono.variable}`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var k="itsmor-transition",r=sessionStorage.getItem(k);if(!r)return;var d=JSON.parse(r);if(Date.now()-d.timestamp>5000){sessionStorage.removeItem(k);return;}var t=d.targetPath==="/"?d.targetPath:d.targetPath.replace(/\\/+$/,"");var p=location.pathname==="/"?location.pathname:location.pathname.replace(/\\/+$/,"");if(t===p)document.documentElement.classList.add("transition-recovery");}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="antialiased bg-background text-text selection:bg-terracotta selection:text-white relative">
         <NavigationProvider>
           <GridBackground />

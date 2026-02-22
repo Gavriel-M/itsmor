@@ -38,8 +38,17 @@ echo "📤 Uploading HTML files (no cache)..."
 aws s3 sync out/ s3://$S3_BUCKET/ \
   --region $AWS_REGION \
   --cache-control "public, max-age=0, must-revalidate" \
+  --exclude "*" \
   --include "*.html" \
   --include "404.html"
+
+echo "📤 Uploading RSC payload files (no cache)..."
+aws s3 cp out/ s3://$S3_BUCKET/ \
+  --recursive \
+  --region $AWS_REGION \
+  --cache-control "public, max-age=0, must-revalidate" \
+  --exclude "*" \
+  --include "*.txt"
 
 echo "🔄 Invalidating CloudFront cache..."
 aws cloudfront create-invalidation \

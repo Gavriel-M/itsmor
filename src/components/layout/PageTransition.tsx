@@ -9,9 +9,10 @@ export default function PageTransition({
 }: {
   children: React.ReactNode;
 }) {
-  const { transitionStage, onExitComplete, targetPath } = useNavigation();
+  const { transitionStage, onExitComplete, targetPath, isRecovering } =
+    useNavigation();
 
-  const isActive = transitionStage !== "idle";
+  const isActive = transitionStage !== "idle" || isRecovering;
 
   // Top bar: left → center → right
   const topBarX =
@@ -41,9 +42,11 @@ export default function PageTransition({
 
   const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-  // Center content visible during exiting and navigating, fades during entering
+  // Center content visible during exiting and navigating, fades during entering.
+  // Suppress during recovery — bars should slide out without logo flashing.
   const contentVisible =
-    transitionStage === "exiting" || transitionStage === "navigating";
+    (transitionStage === "exiting" || transitionStage === "navigating") &&
+    !isRecovering;
 
   return (
     <>
@@ -57,7 +60,7 @@ export default function PageTransition({
         {/* Top bar — upper half */}
         <motion.div
           className="absolute top-0 left-0 w-full h-1/2 bg-terracotta"
-          initial={false}
+          initial={isRecovering ? { x: "0%" } : false}
           animate={{ x: topBarX }}
           transition={{ duration: barDuration, ease }}
         />
@@ -65,7 +68,7 @@ export default function PageTransition({
         {/* Bottom bar — lower half */}
         <motion.div
           className="absolute bottom-0 left-0 w-full h-1/2 bg-terracotta"
-          initial={false}
+          initial={isRecovering ? { x: "0%" } : false}
           animate={{ x: bottomBarX }}
           transition={{ duration: barDuration, ease, delay: bottomDelay }}
           onAnimationComplete={() => {
