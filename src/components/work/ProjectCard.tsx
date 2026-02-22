@@ -31,7 +31,7 @@ export default function ProjectCard({
     >
       <Link
         href={href}
-        className="block py-7 md:py-10 border-l-2 border-transparent group-hover:border-terracotta pl-0 group-hover:pl-4 transition-all duration-300"
+        className="block py-7 md:py-10 border-l-2 border-transparent group-hover:border-terracotta focus-visible:border-terracotta pl-0 group-hover:pl-4 focus-visible:pl-4 transition-all duration-300"
       >
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-baseline">
           {/* Index + Year */}

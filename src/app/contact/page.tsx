@@ -27,7 +27,7 @@ export default function ContactPage() {
             </p>
             <a
               href="mailto:gavriel.mor@itsmor.com"
-              className="block font-sans text-3xl md:text-5xl lg:text-6xl font-bold hover:text-terracotta transition-colors break-all md:break-normal underline decoration-2 underline-offset-8 decoration-terracotta/30 hover:decoration-terracotta"
+              className="w-fit font-sans text-3xl md:text-5xl lg:text-6xl font-bold hover:text-terracotta focus-visible:text-terracotta transition-colors break-all md:break-normal underline decoration-2 underline-offset-8 decoration-terracotta/30 hover:decoration-terracotta focus-visible:decoration-terracotta"
               style={{ fontSize: "clamp(1.5rem, 4vw, 3.75rem)" }}
             >
               gavriel.mor@itsmor.com

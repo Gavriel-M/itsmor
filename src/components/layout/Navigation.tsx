@@ -33,7 +33,7 @@ export default function Navigation() {
           <li key={item.label}>
             <TransitionLink
               href={item.href}
-              className={`font-sans font-bold text-sm md:text-base tracking-tight hover:text-terracotta transition-colors uppercase`}
+              className={`font-sans font-bold text-sm md:text-base tracking-tight hover:text-terracotta focus-visible:text-terracotta transition-colors uppercase`}
             >
               {item.label}
             </TransitionLink>

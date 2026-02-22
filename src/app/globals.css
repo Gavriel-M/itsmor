@@ -31,6 +31,18 @@ body {
   font-family: var(--font-sans);
 }
 
+/* Suppress default browser outline on mouse/touch focus */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Keyboard focus indicator */
+:focus-visible {
+  outline: 2px solid var(--color-terracotta);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
 /* Performance-optimized CSS animations for ScrollNavigationLoader */
 @keyframes bounce-gentle {
   0%,

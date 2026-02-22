@@ -181,7 +181,7 @@ const ContactNetwork = () => {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block -translate-x-1/2 -translate-y-1/2 bg-background px-4 py-2 border border-terracotta/20 hover:border-terracotta hover:bg-terracotta hover:text-white transition-all duration-300 font-mono text-sm uppercase tracking-widest"
+                className="block -translate-x-1/2 -translate-y-1/2 bg-background px-4 py-2 border border-terracotta/20 hover:border-terracotta hover:bg-terracotta hover:text-white focus-visible:border-terracotta focus-visible:bg-terracotta focus-visible:text-white focus-visible:outline-none transition-all duration-300 font-mono text-sm uppercase tracking-widest"
                 onMouseEnter={(e) => handleMouseEnter(link.id, e.currentTarget)}
                 onMouseLeave={handleMouseLeave}
               >
@@ -200,7 +200,7 @@ const ContactNetwork = () => {
             key={link.id}
             href={link.href}
             target="_blank"
-            className="w-32 text-center py-3 border border-black/10 active:bg-terracotta active:text-white transition-colors font-mono text-sm uppercase tracking-widest"
+            className="w-32 text-center py-3 border border-black/10 active:bg-terracotta active:text-white focus-visible:border-terracotta focus-visible:bg-terracotta focus-visible:text-white focus-visible:outline-none transition-colors font-mono text-sm uppercase tracking-widest"
           >
             {link.label}
           </Link>
