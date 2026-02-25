@@ -7,6 +7,11 @@ export type DemoId =
   | "displacement"
   | "color-script";
 
+export interface DemoLegendItem {
+  label: string;
+  color: string;
+}
+
 export interface Callout {
   type: "studio" | "implementation";
   title: string;
@@ -29,4 +34,6 @@ export interface ResearchSection {
   callouts?: Callout[];
   checklist?: Checklist;
   demoId?: DemoId;
+  demoHint?: string;
+  demoLegend?: DemoLegendItem[];
 }

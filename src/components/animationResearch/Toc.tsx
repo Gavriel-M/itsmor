@@ -19,6 +19,7 @@ export default function Toc({ sections, activeSectionId }: TocProps) {
     const el = activeRef.current;
     const container = navRef.current?.parentElement;
     if (!el || !container) return;
+    if (container.scrollHeight <= container.clientHeight + 1) return;
 
     const elRect = el.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
@@ -43,7 +44,7 @@ export default function Toc({ sections, activeSectionId }: TocProps) {
       {/* Mobile: collapsible accordion */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden flex items-center justify-between w-full font-mono text-xs uppercase tracking-widest py-3 border-b border-black/10"
+        className="lg:hidden flex items-center justify-between w-full font-mono text-xs uppercase tracking-widest py-3 border-b border-black/10"
         aria-expanded={isOpen}
       >
         <span>Contents</span>
@@ -56,7 +57,7 @@ export default function Toc({ sections, activeSectionId }: TocProps) {
       </button>
 
       {/* Desktop: always visible. Mobile: toggleable */}
-      <ul className={`space-y-1 ${isOpen ? "block" : "hidden"} md:block`}>
+      <ul className={`space-y-1 ${isOpen ? "block" : "hidden"} lg:block`}>
         {sections.map((section) => {
           const isActive = section.id === activeSectionId;
           return (
@@ -64,6 +65,7 @@ export default function Toc({ sections, activeSectionId }: TocProps) {
               <button
                 ref={isActive ? activeRef : undefined}
                 onClick={() => handleClick(section.id)}
+                aria-current={isActive ? "true" : undefined}
                 className={`w-full text-left py-1.5 px-3 font-sans text-sm transition-colors duration-150 border-l-2 ${
                   isActive
                     ? "border-terracotta text-terracotta"
@@ -71,7 +73,9 @@ export default function Toc({ sections, activeSectionId }: TocProps) {
                 }`}
               >
                 <span className="font-mono text-xs mr-2">{section.number}</span>
-                {section.title}
+                <span className="leading-snug wrap-break-word">
+                  {section.title}
+                </span>
               </button>
             </li>
           );

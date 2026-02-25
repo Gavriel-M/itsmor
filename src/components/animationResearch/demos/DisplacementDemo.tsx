@@ -35,19 +35,20 @@ export default function DisplacementDemo() {
               ? undefined
               : {
                   y: -6,
-                  boxShadow: "0 8px 20px rgba(0,0,0,0.1)",
+                  borderColor: "#b85b40",
                 }
           }
           whileTap={
             prefersReduced
               ? undefined
               : {
-                  y: -6,
-                  boxShadow: "0 8px 20px rgba(0,0,0,0.1)",
+                  y: -4,
+                  scale: 0.98,
+                  borderColor: "#b85b40",
                 }
           }
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          className="w-16 h-16 border border-black/10 flex items-center justify-center cursor-pointer shadow-sm"
+          className="w-16 h-16 border border-black/10 flex items-center justify-center cursor-pointer"
         >
           <span className="font-mono text-[10px] opacity-40">Hover</span>
         </motion.div>
@@ -60,11 +61,11 @@ export default function DisplacementDemo() {
               ? undefined
               : {
                   scale: 0.96,
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+                  borderColor: "#b85b40",
                 }
           }
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          className="w-16 h-16 border border-black/10 flex items-center justify-center cursor-pointer shadow-sm"
+          className="w-16 h-16 border border-black/10 flex items-center justify-center cursor-pointer"
         >
           <span className="font-mono text-[10px] opacity-40">Press</span>
         </motion.div>
@@ -75,7 +76,7 @@ export default function DisplacementDemo() {
           animate={shakeControls}
           initial={{ borderColor: "rgba(0,0,0,0.1)" }}
           onClick={handleShake}
-          className="w-16 h-16 border flex items-center justify-center cursor-pointer shadow-sm"
+          className="w-16 h-16 border flex items-center justify-center cursor-pointer"
         >
           <span className="font-mono text-[10px] opacity-40">Click</span>
         </motion.div>

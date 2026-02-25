@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { type ResearchSection } from "./types";
 import Section from "./Section";
 import Toc from "./Toc";
+import DemoPopover from "./DemoPopover";
 import DemoCard from "./DemoCard";
 
 interface ResearchLayoutProps {
@@ -21,19 +22,37 @@ export default function ResearchLayout({ sections }: ResearchLayoutProps) {
     const targets = content.querySelectorAll<HTMLElement>("[data-section-id]");
     if (targets.length === 0) return;
 
+    const entriesById = new Map<string, IntersectionObserverEntry>();
+
     const observer = new IntersectionObserver(
       (entries) => {
-        // Find the topmost intersecting section
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-
-        if (visible.length > 0) {
-          const id = visible[0].target.getAttribute("data-section-id");
-          if (id) setActiveSectionId(id);
+        for (const entry of entries) {
+          const id = entry.target.getAttribute("data-section-id");
+          if (id) entriesById.set(id, entry);
         }
+
+        const visible = Array.from(entriesById.values()).filter(
+          (e) => e.isIntersecting
+        );
+        if (visible.length === 0) return;
+
+        const targetLine =
+          (typeof window !== "undefined" ? window.innerHeight : 0) * 0.25;
+
+        const best = visible
+          .map((e) => ({
+            e,
+            d: Math.abs(e.boundingClientRect.top - targetLine),
+          }))
+          .sort((a, b) => a.d - b.d)[0]?.e;
+
+        const bestId = best?.target.getAttribute("data-section-id");
+        if (bestId) setActiveSectionId(bestId);
       },
-      { rootMargin: "-128px 0px -60% 0px" }
+      {
+        rootMargin: "-128px 0px -60% 0px",
+        threshold: [0, 0.15, 0.3, 0.5, 0.75, 1],
+      }
     );
 
     targets.forEach((t) => observer.observe(t));
@@ -44,23 +63,38 @@ export default function ResearchLayout({ sections }: ResearchLayoutProps) {
   const activeDemoId = activeSection?.demoId;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-      {/* Content column */}
-      <div ref={contentRef} className="md:col-span-7">
-        {sections.map((section) => (
-          <Section key={section.id} section={section} />
-        ))}
+    <div className="relative">
+      {/* Mobile/tablet: TOC above content */}
+      <div className="lg:hidden mb-10">
+        <Toc sections={sections} activeSectionId={activeSectionId} />
       </div>
 
-      {/* Sidebar column */}
-      <aside className="md:col-span-5 md:pl-8">
-        <div className="sticky top-32 flex flex-col gap-6 max-h-[calc(100vh-10rem)]">
-          <div className="min-h-0 flex-1 overflow-y-auto">
-            <Toc sections={sections} activeSectionId={activeSectionId} />
-          </div>
-          <DemoCard demoId={activeDemoId} />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Content column */}
+        <div ref={contentRef} className="lg:col-span-7">
+          {sections.map((section) => (
+            <Section key={section.id} section={section} />
+          ))}
         </div>
-      </aside>
+
+        {/* Desktop: TOC sidebar only */}
+        <aside className="hidden lg:block lg:col-span-5 lg:pl-8">
+          <div className="sticky top-32 flex flex-col gap-6 max-h-[calc(100vh-10rem)]">
+            <div className="min-h-0 flex-1 overflow-y-auto">
+              <Toc sections={sections} activeSectionId={activeSectionId} />
+            </div>
+            <DemoCard demoId={activeDemoId} />
+          </div>
+        </aside>
+      </div>
+
+      <DemoPopover
+        className="lg:hidden"
+        demoId={activeDemoId}
+        title={activeSection?.title}
+        hint={activeSection?.demoHint}
+        legend={activeSection?.demoLegend}
+      />
     </div>
   );
 }

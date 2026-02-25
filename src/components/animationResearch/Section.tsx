@@ -87,7 +87,7 @@ export default function Section({ section }: SectionProps) {
       )}
 
       {section.checklist && (
-        <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div>
             <h4 className="font-mono text-xs text-terracotta uppercase tracking-widest mb-3">
               Use When

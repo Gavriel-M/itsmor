@@ -14,7 +14,7 @@ export default function DemoCard({ demoId }: DemoCardProps) {
   const DemoComponent = demoId ? DEMO_MAP[demoId] : undefined;
 
   return (
-    <div className="border border-black/10 bg-background aspect-[4/3] flex items-center justify-center overflow-hidden">
+    <div className="border border-black/10 bg-background aspect-4/3 flex items-center justify-center overflow-hidden">
       <AnimatePresence mode="wait">
         {DemoComponent ? (
           <motion.div

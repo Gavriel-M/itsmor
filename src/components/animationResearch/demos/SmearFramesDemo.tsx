@@ -30,11 +30,13 @@ export default function SmearFramesDemo() {
             animate={
               playing && !prefersReduced
                 ? {
-                    x: [0, 80, 0, -80, 0],
+                    x: [0, 40, 80, 40, 0, -40, -80, -40, 0],
                     ...(withSmear
                       ? {
-                          scaleX: [1, 1.4, 1, 1.4, 1],
-                          scaleY: [1, 0.85, 1, 0.85, 1],
+                          // Smear should appear near peak velocity (mid-travel),
+                          // not at the endpoints.
+                          scaleX: [1, 1.45, 1, 1.45, 1, 1.45, 1, 1.45, 1],
+                          scaleY: [1, 0.82, 1, 0.82, 1, 0.82, 1, 0.82, 1],
                         }
                       : {}),
                   }
@@ -46,7 +48,7 @@ export default function SmearFramesDemo() {
                 : {
                     duration: 0.8,
                     ease: "easeInOut",
-                    times: [0, 0.25, 0.5, 0.75, 1],
+                    times: [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1],
                     repeat: 0,
                   }
             }

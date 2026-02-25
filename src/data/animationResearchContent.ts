@@ -26,17 +26,17 @@ export const sections: ResearchSection[] = [
     number: "02",
     title: "Human Perception of Motion",
     summary:
-      "The neuroscience behind why 200ms feels instant and 16ms is your frame budget.",
+      "Why some changes feel instant, and others demand motion to stay legible.",
     paragraphs: [
-      "Human visual perception operates on timescales that directly constrain UI animation. The visual cortex processes motion through two systems: the magnocellular pathway (fast, low-resolution, motion-sensitive) and the parvocellular pathway (slow, high-resolution, color and detail). Changes shorter than approximately 100 milliseconds register as instantaneous — the user perceives a state change, not a transition. Beyond 100ms, the visual system begins tracking intermediate positions, and motion is perceived as continuous.",
-      "The Weber-Fechner law tells us that perception of change is logarithmic, not linear. A 50ms difference between 100ms and 150ms is perceptible, but the same 50ms gap between 500ms and 550ms is imperceptible. This has direct implications for easing: the perceptual impact of deceleration is front-loaded.",
-      "For web interfaces, the critical thresholds are: 16ms (one frame at 60fps — your per-frame budget), 100ms (perceived as instantaneous response), 200-300ms (typical transition sweet spot), and 1000ms (maximum before the user's attention disengages). Most UI transitions should land in the 200-400ms range, with micro-interactions (hover states, toggles) at 100-200ms.",
+      "UI motion lives inside human response-time limits. If the system reacts within about 0.1 seconds, it feels immediate. Around 1 second, users notice the delay but keep their flow. Beyond ~10 seconds, attention drops and you need explicit progress feedback. These aren’t “web rules” — they’re interaction limits that haven’t changed for decades.",
+      "Animation sits in the middle: it can add clarity, but it also adds delay. Use it when it helps the eye track relationships (where did that panel come from? what did that button affect?), and skip it when it only decorates.",
+      "For web animation, the practical constraints are frame budgets: at 60Hz you have 16.7ms per frame, and at 120Hz only 8.3ms. That’s why high-quality UI motion defaults to compositor-friendly properties (`transform`, `opacity`) and keeps continuous effects opt-in.",
     ],
     callouts: [
       {
         type: "implementation",
         title: "Frame Budget",
-        body: "At 60fps, each frame has 16.67ms of total budget. The browser needs ~6ms for compositing and painting, leaving roughly 10ms for JavaScript execution per frame. requestAnimationFrame callbacks that exceed this budget cause visible jank — dropped frames that break the illusion of fluid motion.",
+        body: "At 60fps, you get 16.7ms per frame. At 120Hz, you get 8.3ms. If your animation depends on JS every frame (or triggers layout/paint), you’ll feel it immediately as stutter. Prefer `transform` + `opacity`, and avoid animating layout properties.",
       },
     ],
     checklist: {
@@ -52,7 +52,8 @@ export const sections: ResearchSection[] = [
       ],
       a11yPerf: [
         "Always provide prefers-reduced-motion fallbacks",
-        "Keep total animation time under 5s to avoid seizure triggers",
+        "Motion triggered by interaction should be reducible (WCAG 2.3.3)",
+        "Avoid flashing patterns; keep motion subtle and optional",
         "Use will-change sparingly — it allocates GPU memory",
       ],
     },
@@ -76,6 +77,12 @@ export const sections: ResearchSection[] = [
       },
     ],
     demoId: "timing-scrubber",
+    demoHint: "Press Play. Watch how the same distance feels different.",
+    demoLegend: [
+      { label: "Linear", color: "rgba(0,0,0,0.4)" },
+      { label: "Ease-out", color: "#004e98" },
+      { label: "Expo", color: "#b85b40" },
+    ],
     checklist: {
       useWhen: [
         "ease-out for elements entering the viewport",
@@ -142,6 +149,7 @@ export const sections: ResearchSection[] = [
       "The key constraint is subtlety. In film animation, anticipation can be exaggerated for comedic effect. In UI, excessive anticipation feels sluggish — the user clicked a button and expects immediate response, not a theatrical windup. Keep anticipation well under 100ms and proportionally small relative to the total motion — typically just enough for the user to feel, not consciously notice. Click both buttons in the demo to feel the difference a small preparatory dip makes.",
     ],
     demoId: "anticipation-button",
+    demoHint: "Click both. Feel the difference a wind-up makes.",
     callouts: [
       {
         type: "studio",
@@ -215,6 +223,7 @@ export const sections: ResearchSection[] = [
       "In web UI, overlapping action manifests as staggered property transitions on a single element. A card might translate to its final position over 350ms while its opacity reaches 1.0 in 200ms and its scale settles from 0.92 to 1.0 over 500ms. Each property has independent timing, creating the impression of a single fluid motion with internal complexity. This is easily achieved with Framer Motion's per-property transition definitions. Toggle between lockstep and overlapping modes in the demo to see how independent property timing creates organic feel.",
     ],
     demoId: "overlap-chain",
+    demoHint: "Toggle modes. Then press Play.",
     callouts: [
       {
         type: "studio",
@@ -252,6 +261,11 @@ export const sections: ResearchSection[] = [
       "The practical application is selective. Navigation transitions, floating action buttons, and thrown/dismissed elements benefit from arcs. Standard slide-in panels and fade transitions do not — they already feel natural because they move along a single axis. Over-applying arcs makes a UI feel whimsical rather than professional. The demo traces both paths simultaneously so you can compare the mechanical straight line against the natural-feeling arc.",
     ],
     demoId: "arc-vs-line",
+    demoHint: "Press Play. Compare the path your eye prefers.",
+    demoLegend: [
+      { label: "Straight", color: "rgba(0,0,0,0.4)" },
+      { label: "Arc", color: "#b85b40" },
+    ],
     callouts: [
       {
         type: "implementation",
@@ -272,7 +286,7 @@ export const sections: ResearchSection[] = [
       ],
       a11yPerf: [
         "Arcs via transform decomposition have no extra perf cost",
-        "SVG path-based motion (offset-path) has limited browser support",
+        "CSS motion paths (offset-path) are widely supported in modern browsers — still test across devices",
         "Under reduced motion, simplify arcs to direct position change",
       ],
     },
@@ -289,6 +303,7 @@ export const sections: ResearchSection[] = [
       "CSS and browser APIs offer limited motion blur capabilities. The filter: blur() property can be dynamically applied during transitions but is computationally expensive. A more practical approach is to use opacity and scale creatively: an element moving fast can increase its scaleX in the direction of motion — in production, a 3–8% stretch is sufficient, though the demo below exaggerates the effect to make the principle visible at small scale. This is the web equivalent of a smear frame — a subtle shape distortion during the fastest part of the motion. Toggle smear on and off in the demo to see how a subtle stretch during peak velocity adds continuity to fast motion.",
     ],
     demoId: "smear-frames",
+    demoHint: "Toggle smear. Press Play.",
     callouts: [
       {
         type: "studio",
@@ -317,15 +332,16 @@ export const sections: ResearchSection[] = [
   {
     id: "abstract-displacement",
     number: "10",
-    title: "Abstract Displacement",
+    title: "Semantic Displacement",
     summary:
-      "When UI elements move to convey meaning beyond their physical position.",
+      "Motion as metaphor: lift, press, recoil — cues that communicate state.",
     paragraphs: [
       "Traditional animation uses 'squash and stretch' to give weight and flexibility to objects. A bouncing ball squashes on impact and stretches in free-fall. This displacement from the rest shape communicates material properties — rubber vs. metal — and emotional tone — playful vs. rigid.",
       "Web UI has its own form of abstract displacement: elements that move, scale, or transform not because they're physically traveling through space, but to communicate state, hierarchy, or relationship. A card that lifts (translateY + shadow increase) on hover communicates interactivity. A toggle that overshoots its endpoint communicates that a state change has registered. A notification that shakes communicates urgency or error.",
       "The key insight is that these displacements are semantic, not spatial. The card isn't actually rising off the screen — the upward motion is a metaphor for 'ready to interact.' This means the displacement should be just large enough to register (4-8px for hover lifts, 2-4px for micro-feedback) and should use easing that communicates the intended physical metaphor (spring for organic, ease-out for deliberate). Hover, press, and click the cards in the demo to feel how displacement communicates different interactive states.",
     ],
     demoId: "displacement",
+    demoHint: "Hover, press, and click to compare signals.",
     callouts: [
       {
         type: "studio",
@@ -363,6 +379,7 @@ export const sections: ResearchSection[] = [
       "The critical implementation detail is that color transitions should generally be faster than spatial transitions. A background color change at 150ms feels snappy; at 400ms it feels sluggish. Opacity transitions are the exception — because they affect perceived brightness, abrupt opacity changes are more jarring than abrupt color changes. Opacity transitions benefit from 200-300ms durations even when co-occurring with faster color changes. The demo shows a different aspect — how staggered color transitions across multiple elements create a wave-like cascade, a technique used in color scripts to direct visual flow.",
     ],
     demoId: "color-script",
+    demoHint: "Switch palettes. Notice the cascade and mood shift.",
     callouts: [
       {
         type: "implementation",
@@ -418,9 +435,9 @@ export const sections: ResearchSection[] = [
         "CSS @keyframes for dynamic values (prefer JS-driven)",
       ],
       a11yPerf: [
-        "CSS transitions: ~0KB bundle, compositor-optimized",
-        "Framer Motion: ~34KB gzipped (full), reducible to ~5KB with LazyMotion",
-        "GSAP: ~23KB core gzipped, main-thread, tree-shakeable",
+        "CSS transitions: browser-native and compositor-friendly for transform/opacity",
+        "Motion: use LazyMotion (m + feature packs) when you care about initial JS cost",
+        "Any JS-driven animation: measure main-thread work during motion (jank is a UX bug)",
       ],
     },
   },
