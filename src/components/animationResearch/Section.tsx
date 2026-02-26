@@ -94,7 +94,7 @@ export default function Section({ section }: SectionProps) {
         <button
           type="button"
           aria-label={`Copy link to ${section.title}`}
-          className="group/copy flex items-center self-end mb-1.5 text-terracotta cursor-pointer"
+          className="group/copy flex items-center self-end mb-1 text-terracotta cursor-pointer"
           onClick={handleCopy}
         >
           <span className="relative w-[14px] h-[14px]">
