@@ -1,0 +1,25 @@
+name: PR Title Check
+
+# This dictates when the action runs
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  check-title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR Title Format
+        env:
+          # Pulls the title safely into an environment variable
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          # The regex ^ITSMOR-[0-9]{4} checks if it starts with ITSMOR- followed by exactly 4 digits
+          if [[ ! "$PR_TITLE" =~ ^ITSMOR-[0-9]{4} ]]; then
+            echo "❌ Error: PR title does not meet the requirements."
+            echo "Expected format: Starts with 'ITSMOR-' followed by 4 numbers (e.g., ITSMOR-1234)."
+            echo "Current title: $PR_TITLE"
+            exit 1
+          fi
+          
+          echo "✅ PR title format is valid: $PR_TITLE"
