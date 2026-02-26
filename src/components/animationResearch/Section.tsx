@@ -1,16 +1,72 @@
 "use client";
 
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { type ResearchSection } from "./types";
-import { EASE_OUT_EXPO } from "@/lib/motion/easing";
+import { EASE_OUT_EXPO, EASE_OUT_EXPO_CSS } from "@/lib/motion/easing";
 import { usePrefersReducedMotion } from "@/lib/motion/usePrefersReducedMotion";
+
+const GLOW_FRAMES = [
+  { text: "Copy", glow: 0 },
+  { text: "Copy", glow: 1 },
+  { text: "Copy", glow: 2 },
+  { text: "Copi", glow: 3 },
+  { text: "Copie", glow: 4 },
+  { text: "Copied", glow: 5 },
+] as const;
 
 interface SectionProps {
   section: ResearchSection;
 }
 
 export default function Section({ section }: SectionProps) {
+  const [copyPhase, setCopyPhase] = useState<"idle" | "glowing" | "copied">(
+    "idle"
+  );
+  const [glowFrame, setGlowFrame] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const prefersReduced = usePrefersReducedMotion();
+
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  const handleCopy = useCallback(() => {
+    if (copyPhase !== "idle") return;
+    const url = `${window.location.origin}${window.location.pathname}#${section.id}`;
+    navigator.clipboard.writeText(url);
+
+    if (prefersReduced) {
+      setCopyPhase("copied");
+      timeoutRef.current = setTimeout(() => setCopyPhase("idle"), 1500);
+      return;
+    }
+
+    setCopyPhase("glowing");
+    setGlowFrame(0);
+    let frame = 0;
+    intervalRef.current = setInterval(() => {
+      frame++;
+      if (frame >= GLOW_FRAMES.length) {
+        clearInterval(intervalRef.current!);
+        intervalRef.current = null;
+        setCopyPhase("copied");
+        timeoutRef.current = setTimeout(() => setCopyPhase("idle"), 1500);
+      } else {
+        setGlowFrame(frame);
+      }
+    }, 90);
+  }, [copyPhase, prefersReduced, section.id]);
+
+  const frame = copyPhase === "glowing" ? GLOW_FRAMES[glowFrame] : null;
+  const displayText =
+    frame?.text ?? (copyPhase === "copied" ? "Copied" : "Copy");
+  const glowIndex = frame?.glow ?? -1;
+  const forceVisible = copyPhase !== "idle";
 
   const reveal = prefersReduced
     ? {}
@@ -23,17 +79,90 @@ export default function Section({ section }: SectionProps) {
 
   return (
     <motion.section
+      id={section.id}
       data-section-id={section.id}
       className="mb-20 md:mb-28 scroll-mt-36"
       {...reveal}
     >
-      <div className="flex items-baseline gap-3 mb-4">
+      <div className="group flex items-baseline gap-3 mb-4">
         <span className="font-mono text-sm text-terracotta">
           {section.number}
         </span>
         <h2 className="font-sans font-bold text-2xl md:text-3xl tracking-tight text-text">
           {section.title}
         </h2>
+        <button
+          type="button"
+          aria-label={`Copy link to ${section.title}`}
+          className="group/copy flex items-center self-end mb-1.5 text-terracotta cursor-pointer"
+          onClick={handleCopy}
+        >
+          <span className="relative w-[14px] h-[14px]">
+            <span
+              className={`absolute inset-0 flex items-center justify-center transition-all duration-200 ${
+                copyPhase !== "idle"
+                  ? "opacity-0 scale-75"
+                  : "opacity-100 scale-100"
+              }`}
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+              </svg>
+            </span>
+            <span
+              className={`absolute inset-0 flex items-center justify-center transition-all duration-200 ${
+                copyPhase !== "idle"
+                  ? "opacity-100 scale-100"
+                  : "opacity-0 scale-75"
+              }`}
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </span>
+          </span>
+
+          <span
+            className={`overflow-hidden inline-flex whitespace-nowrap transition-all duration-500 ${
+              forceVisible
+                ? "max-w-[4rem] opacity-100"
+                : "max-w-0 opacity-0 group-hover/copy:max-w-[4rem] group-hover/copy:opacity-100"
+            }`}
+            style={{ transitionTimingFunction: EASE_OUT_EXPO_CSS }}
+          >
+            <span className="pl-1.5 font-mono text-sm inline-flex">
+              {displayText.split("").map((char, i) => (
+                <span
+                  key={`${displayText.length}-${i}`}
+                  className={`transition-colors duration-150 ${
+                    i === glowIndex ? "text-gold font-semibold" : ""
+                  }`}
+                >
+                  {char}
+                </span>
+              ))}
+            </span>
+          </span>
+        </button>
       </div>
 
       {section.summary && (

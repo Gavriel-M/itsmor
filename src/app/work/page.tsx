@@ -6,6 +6,13 @@ import AnimatedLogoFrame from "@/components/ui/AnimatedLogoFrame";
 
 const projects = [
   {
+    title: "2D Animation on the Web",
+    category: "Research",
+    year: "2025",
+    href: "/work/2d-web-animation",
+    description: "Principles of 2D animation applied to web interfaces.",
+  },
+  {
     title: "FinTech Dashboard",
     category: "Web Development",
     year: "2024",

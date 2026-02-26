@@ -5,6 +5,7 @@
   --color-text: #1a1a1a;
   --color-terracotta: #b85b40;
   --color-lapis: #004e98;
+  --color-gold: #ffd700;
 
   --font-sans:
     var(--font-inter), ui-sans-serif, system-ui, sans-serif,

@@ -35,6 +35,7 @@ export default function Toc({ sections, activeSectionId }: TocProps) {
     const el = document.querySelector(`[data-section-id="${id}"]`);
     if (el) {
       el.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth" });
+      history.replaceState(null, "", `#${id}`);
     }
     setIsOpen(false);
   };

@@ -14,6 +14,7 @@ interface ResearchLayoutProps {
 export default function ResearchLayout({ sections }: ResearchLayoutProps) {
   const [activeSectionId, setActiveSectionId] = useState(sections[0].id);
   const contentRef = useRef<HTMLDivElement>(null);
+  const initialRender = useRef(true);
 
   useEffect(() => {
     const content = contentRef.current;
@@ -57,6 +58,26 @@ export default function ResearchLayout({ sections }: ResearchLayoutProps) {
 
     targets.forEach((t) => observer.observe(t));
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+    history.replaceState(null, "", `#${activeSectionId}`);
+  }, [activeSectionId]);
+
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return;
+    requestAnimationFrame(() => {
+      const el = document.getElementById(hash);
+      if (el) {
+        el.scrollIntoView({ behavior: "auto" });
+        setActiveSectionId(hash);
+      }
+    });
   }, []);
 
   const activeSection = sections.find((s) => s.id === activeSectionId);
