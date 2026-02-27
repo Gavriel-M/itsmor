@@ -1,0 +1,58 @@
+/* Text cascade — CSS-driven stagger animation system.
+   JS sets data-phase on the container and data-active on each char span.
+   CSS custom properties --char-delay / --exit-delay drive per-character timing. */
+.text-cascade {
+  opacity: 0;
+  transition:
+    opacity var(--char-transition, 150ms),
+    color var(--char-transition, 150ms),
+    font-weight var(--char-transition, 150ms);
+}
+
+/* Character reveal — always */
+[data-phase="entering"] .text-cascade[data-active] {
+  opacity: 1;
+  transition-delay: var(--char-delay, 0ms);
+}
+
+/* Glow pulse — only when glowColor provided */
+[data-glow][data-phase="entering"] .text-cascade[data-active] {
+  animation: text-cascade-glow var(--char-step, 60ms) ease-out
+    var(--char-delay, 0ms);
+}
+
+[data-phase="visible"] .text-cascade[data-active],
+[data-phase="glowing"] .text-cascade[data-active],
+[data-phase="confirmed"] .text-cascade[data-active] {
+  opacity: 1;
+}
+
+/* Character exit — always */
+[data-phase="exiting"] .text-cascade[data-active] {
+  transition-delay: var(--exit-delay, 0ms);
+}
+
+/* Glow pulse on exit — only when glowColor provided */
+[data-glow][data-phase="exiting"] .text-cascade[data-active] {
+  animation: text-cascade-glow var(--char-step, 60ms) ease-in
+    var(--exit-delay, 0ms);
+}
+
+@keyframes text-cascade-glow {
+  0%,
+  100% {
+    color: inherit;
+    font-weight: inherit;
+  }
+  50% {
+    color: var(--cascade-glow-color);
+    font-weight: var(--cascade-weight);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-cascade {
+    transition: none !important;
+    animation: none !important;
+  }
+}

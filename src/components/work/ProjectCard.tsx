@@ -36,9 +36,7 @@ export default function ProjectCard({
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-baseline">
           {/* Index + Year */}
           <div className="md:col-span-2 flex items-baseline gap-3">
-            <span className="font-mono text-xs text-black/30">
-              {paddedIndex}
-            </span>
+            <span className="font-mono text-xs text-lapis">{paddedIndex}</span>
             <span className="font-mono text-xs md:text-sm text-terracotta opacity-80">
               {year}
             </span>

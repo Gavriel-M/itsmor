@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "text-cascade/styles";
 
 @theme {
   --color-background: #f2f0e6;
@@ -6,6 +7,7 @@
   --color-terracotta: #b85b40;
   --color-lapis: #004e98;
   --color-gold: #ffd700;
+  --color-amber: #ffbf00;
 
   --font-sans:
     var(--font-inter), ui-sans-serif, system-ui, sans-serif,
@@ -20,6 +22,7 @@
 
 :root {
   --grid-cell: 4rem; /* 64px */
+  --cascade-glow-color: var(--color-gold);
 }
 
 /* 
@@ -30,6 +33,25 @@ body {
   background-color: var(--color-background);
   color: var(--color-text);
   font-family: var(--font-sans);
+}
+
+/* Lapis scrollbars */
+* {
+  scrollbar-color: var(--color-lapis) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-lapis);
+  border-radius: 4px;
 }
 
 /* Suppress default browser outline on mouse/touch focus */
@@ -75,3 +97,4 @@ html.transition-recovery body::after {
   background-color: var(--color-terracotta);
   pointer-events: none;
 }
+

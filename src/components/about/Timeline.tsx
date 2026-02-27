@@ -19,7 +19,7 @@ const EVENTS: TimelineEvent[] = [
 ];
 
 const PADDING_X = 40;
-const PADDING_Y = 30;
+const PADDING_Y = 0;
 
 export default function Timeline() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -78,10 +78,10 @@ export default function Timeline() {
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
-                className="text-terracotta"
+                className="text-lapis"
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
-                transition={{ duration: 1.5, ease: "easeInOut" }}
+                transition={{ delay: 0.5, duration: 1.5, ease: "linear" }}
               />
             </svg>
 
@@ -100,7 +100,9 @@ export default function Timeline() {
                   {/* Dot */}
                   <div
                     className={`rounded-full ${
-                      isPrimary ? "w-3 h-3 bg-terracotta" : "w-2 h-2 bg-lapis"
+                      isPrimary
+                        ? "w-3 h-3 bg-amber border-4 border-terracotta"
+                        : "w-2 h-2 bg-terracotta"
                     }`}
                   />
 
