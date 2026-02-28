@@ -57,10 +57,12 @@ export interface TextCascadeRendererProps {
   className?: string;
   charClassName?: string;
   glowClassName?: string;
-  expandedWidth?: string;
+  stableWidth: string;
   timing?: CascadeTiming;
   glowColor?: string;
   cascadeWeight?: number;
+  fontWeight?: number;
+  dynamicWidth?: boolean;
 }
 
 /** Props for the public TextCascade component */
@@ -70,13 +72,14 @@ export interface TextCascadeProps {
   onClick?: () => void;
   trigger?: (props: { clicked: boolean }) => ReactNode;
   timing?: CascadeTiming;
-  expandedWidth?: string;
   className?: string;
   textClassName?: string;
   charClassName?: string;
   glowClassName?: string;
   glowColor?: string;
   cascadeWeight?: number;
+  fontWeight?: number;
+  dynamicWidth?: boolean;
   as?: "span" | "button" | "div";
   "aria-label"?: string;
   onEnter?: () => void;

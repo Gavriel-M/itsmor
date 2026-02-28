@@ -18,13 +18,14 @@ export const TextCascade = forwardRef<TextCascadeHandle, TextCascadeProps>(
       onClick,
       trigger,
       timing,
-      expandedWidth,
+      dynamicWidth,
       className,
       textClassName,
       charClassName,
       glowClassName,
       glowColor,
       cascadeWeight,
+      fontWeight,
       as: Tag = "span",
       "aria-label": ariaLabel,
       onEnter,
@@ -87,6 +88,8 @@ export const TextCascade = forwardRef<TextCascadeHandle, TextCascadeProps>(
       }
     }, [state.phase, onEnter, onExit, onConfirm]);
 
+    const stableWidth = `${Math.max(hoverText.length, clickText?.length ?? 0) + 2}ch`;
+
     const handleClick = onClick
       ? () => {
           onClick();
@@ -107,12 +110,14 @@ export const TextCascade = forwardRef<TextCascadeHandle, TextCascadeProps>(
         {trigger?.({ clicked: state.isConfirmed })}
         <TextCascadeRenderer
           state={state}
-          expandedWidth={expandedWidth}
+          stableWidth={stableWidth}
+          dynamicWidth={dynamicWidth}
           className={textClassName}
           charClassName={charClassName}
           glowClassName={glowClassName}
           glowColor={glowColor}
           cascadeWeight={cascadeWeight}
+          fontWeight={fontWeight}
           timing={timing}
         />
       </Tag>

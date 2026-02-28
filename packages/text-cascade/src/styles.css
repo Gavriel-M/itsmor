@@ -1,58 +1,99 @@
 /* Text cascade — CSS-driven stagger animation system.
    JS sets data-phase on the container and data-active on each char span.
    CSS custom properties --char-delay / --exit-delay drive per-character timing. */
+
+/* Base: no animation, no transition — reduced-motion safe by default */
 .text-cascade {
   opacity: 0;
-  transition:
-    opacity var(--char-transition, 150ms),
-    color var(--char-transition, 150ms),
-    font-weight var(--char-transition, 150ms);
+  font-weight: var(--cascade-font-weight, inherit);
 }
 
-/* Character reveal — always */
-[data-phase="entering"] .text-cascade[data-active] {
-  opacity: 1;
-  transition-delay: var(--char-delay, 0ms);
-}
-
-/* Glow pulse — only when glowColor provided */
-[data-glow][data-phase="entering"] .text-cascade[data-active] {
-  animation: text-cascade-glow var(--char-step, 60ms) ease-out
-    var(--char-delay, 0ms);
-}
-
-[data-phase="visible"] .text-cascade[data-active],
-[data-phase="glowing"] .text-cascade[data-active],
-[data-phase="confirmed"] .text-cascade[data-active] {
-  opacity: 1;
-}
-
-/* Character exit — always */
-[data-phase="exiting"] .text-cascade[data-active] {
-  transition-delay: var(--exit-delay, 0ms);
-}
-
-/* Glow pulse on exit — only when glowColor provided */
-[data-glow][data-phase="exiting"] .text-cascade[data-active] {
-  animation: text-cascade-glow var(--char-step, 60ms) ease-in
-    var(--exit-delay, 0ms);
-}
-
-@keyframes text-cascade-glow {
-  0%,
-  100% {
-    color: inherit;
-    font-weight: inherit;
-  }
-  50% {
-    color: var(--cascade-glow-color);
-    font-weight: var(--cascade-weight);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: no-preference) {
   .text-cascade {
-    transition: none !important;
-    animation: none !important;
+    transition:
+      opacity var(--char-transition, 150ms),
+      color var(--char-transition, 150ms);
+    /* font-weight excluded — handled by animation snap, not transition */
+  }
+
+  /* === Entering === */
+  [data-phase="entering"] .text-cascade[data-active] {
+    opacity: 1;
+    transition-delay: var(--char-delay, 0ms);
+  }
+
+  /* Color-only glow on enter */
+  [data-glow]:not([data-cascade-weight])[data-phase="entering"]
+    .text-cascade[data-active] {
+    animation: text-cascade-glow var(--char-step, 60ms) ease-out
+      var(--char-delay, 0ms);
+  }
+
+  /* Weight-only pulse on enter */
+  [data-cascade-weight]:not([data-glow])[data-phase="entering"]
+    .text-cascade[data-active] {
+    animation: text-cascade-weight-pulse var(--char-step, 60ms) ease-out
+      var(--char-delay, 0ms);
+  }
+
+  /* Combined glow + weight on enter */
+  [data-glow][data-cascade-weight][data-phase="entering"]
+    .text-cascade[data-active] {
+    animation:
+      text-cascade-glow var(--char-step, 60ms) ease-out var(--char-delay, 0ms),
+      text-cascade-weight-pulse var(--char-step, 60ms) ease-out
+        var(--char-delay, 0ms);
+  }
+
+  /* === Visible / Glowing / Confirmed === */
+  [data-phase="visible"] .text-cascade[data-active],
+  [data-phase="glowing"] .text-cascade[data-active],
+  [data-phase="confirmed"] .text-cascade[data-active] {
+    opacity: 1;
+  }
+
+  /* === Exiting === */
+  [data-phase="exiting"] .text-cascade[data-active] {
+    transition-delay: var(--exit-delay, 0ms);
+  }
+
+  /* Color-only glow on exit */
+  [data-glow]:not([data-cascade-weight])[data-phase="exiting"]
+    .text-cascade[data-active] {
+    animation: text-cascade-glow var(--char-step, 60ms) ease-in
+      var(--exit-delay, 0ms);
+  }
+
+  /* Weight-only pulse on exit */
+  [data-cascade-weight]:not([data-glow])[data-phase="exiting"]
+    .text-cascade[data-active] {
+    animation: text-cascade-weight-pulse var(--char-step, 60ms) ease-in
+      var(--exit-delay, 0ms);
+  }
+
+  /* Combined glow + weight on exit */
+  [data-glow][data-cascade-weight][data-phase="exiting"]
+    .text-cascade[data-active] {
+    animation:
+      text-cascade-glow var(--char-step, 60ms) ease-in var(--exit-delay, 0ms),
+      text-cascade-weight-pulse var(--char-step, 60ms) ease-in
+        var(--exit-delay, 0ms);
+  }
+}
+
+/* === Keyframes === */
+@keyframes text-cascade-glow {
+  100% {
+    color: var(--cascade-glow-color);
+  }
+  0% {
+    color: inherit;
+  }
+}
+
+@keyframes text-cascade-weight-pulse {
+  from,
+  to {
+    font-weight: var(--cascade-weight, 600);
   }
 }

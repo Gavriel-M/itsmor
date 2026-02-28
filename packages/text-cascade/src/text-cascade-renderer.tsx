@@ -6,10 +6,12 @@ export function TextCascadeRenderer({
   className = "",
   charClassName = "",
   glowClassName = "",
-  expandedWidth,
+  stableWidth,
   timing,
   glowColor,
   cascadeWeight,
+  fontWeight,
+  dynamicWidth,
 }: TextCascadeRendererProps) {
   const containerEasing =
     timing?.containerEasing ?? DEFAULT_TIMING.containerEasing;
@@ -23,15 +25,18 @@ export function TextCascadeRenderer({
       className={className}
       data-phase={state.phase}
       {...(glowColor ? { "data-glow": "" } : undefined)}
+      {...(cascadeWeight ? { "data-cascade-weight": "" } : undefined)}
       style={
         {
           overflow: "hidden",
           display: "inline-flex",
           whiteSpace: "nowrap",
           transitionProperty: "all",
-          maxWidth: state.isExpanded
-            ? (expandedWidth ?? `${state.displayText.length + 2}ch`)
-            : "0",
+          width: dynamicWidth
+            ? state.isExpanded
+              ? `${state.displayText.length + 2}ch`
+              : "0"
+            : stableWidth,
           transitionTimingFunction: containerEasing,
           transitionDuration: `${containerTransitionMs}ms`,
           "--char-step": `${state.charStepMs}ms`,
@@ -39,7 +44,16 @@ export function TextCascadeRenderer({
           ...(glowColor
             ? {
                 "--cascade-glow-color": glowColor,
-                "--cascade-weight": cascadeWeight ?? 600,
+              }
+            : undefined),
+          ...(cascadeWeight
+            ? {
+                "--cascade-weight": cascadeWeight,
+              }
+            : undefined),
+          ...(fontWeight
+            ? {
+                "--cascade-font-weight": fontWeight,
               }
             : undefined),
         } as React.CSSProperties
@@ -74,10 +88,10 @@ export function TextCascadeRenderer({
                   "--char-delay": `${i * state.charStepMs}ms`,
                   "--exit-delay": `${Math.max(0, exitDelay)}ms`,
                   ...(isGlowing && glowColor
-                    ? {
-                        color: glowColor,
-                        fontWeight: cascadeWeight ?? 600,
-                      }
+                    ? { color: glowColor }
+                    : undefined),
+                  ...(isGlowing && cascadeWeight
+                    ? { fontWeight: cascadeWeight }
                     : undefined),
                 } as React.CSSProperties
               }

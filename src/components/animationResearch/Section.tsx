@@ -44,12 +44,11 @@ export default function Section({ section }: SectionProps) {
             const url = `${window.location.origin}${window.location.pathname}#${section.id}`;
             navigator.clipboard.writeText(url);
           }}
-          expandedWidth="4rem"
           textClassName="pl-1.5 font-mono"
           className="group/copy flex items-center self-end mb-1 text-terracotta cursor-pointer"
           aria-label={`Copy link to ${section.title}`}
           glowClassName="text-gold"
-          cascadeWeight={700}
+          cascadeWeight={600}
           trigger={({ clicked }) => (
             <span className="relative w-[14px] h-[14px]">
               <span
