@@ -209,7 +209,7 @@ function LogoMesh() {
               {/* Child 2: Glowing edge lines for wireframe effect */}
               <lineSegments geometry={part.edgesGeometry}>
                 <lineBasicMaterial
-                  color="#B85B40"
+                  color="#004e98"
                   linewidth={1}
                   blending={THREE.AdditiveBlending}
                   transparent={true}

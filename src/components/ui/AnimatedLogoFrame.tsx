@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 const GLITCH_FRAMES = [
-  "/itsmor-logo.svg",
   "/itsmor-logo-hardboiled.svg",
   "/itsmor-logo-epic.svg",
   "/itsmor-logo-new-wave.svg",
