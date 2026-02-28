@@ -6,7 +6,7 @@ import { usePrefersReducedMotion } from "@/lib/motion/usePrefersReducedMotion";
 
 interface TocProps {
   sections: ResearchSection[];
-  activeSectionId: string;
+  activeSectionId: string | null;
 }
 
 export default function Toc({ sections, activeSectionId }: TocProps) {
@@ -67,7 +67,7 @@ export default function Toc({ sections, activeSectionId }: TocProps) {
                 ref={isActive ? activeRef : undefined}
                 onClick={() => handleClick(section.id)}
                 aria-current={isActive ? "true" : undefined}
-                className={`w-full text-left py-1.5 px-3 font-sans text-sm transition-colors duration-150 border-l-2 ${
+                className={`w-full text-left py-1.5 px-3 font-sans text-sm transition-colors cursor-pointer duration-150 border-l-2 ${
                   isActive
                     ? "border-terracotta text-terracotta"
                     : "border-transparent opacity-60 hover:opacity-100"

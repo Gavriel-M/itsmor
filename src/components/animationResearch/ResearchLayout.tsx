@@ -12,7 +12,7 @@ interface ResearchLayoutProps {
 }
 
 export default function ResearchLayout({ sections }: ResearchLayoutProps) {
-  const [activeSectionId, setActiveSectionId] = useState(sections[0].id);
+  const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const initialRender = useRef(true);
 
@@ -35,7 +35,15 @@ export default function ResearchLayout({ sections }: ResearchLayoutProps) {
         const visible = Array.from(entriesById.values()).filter(
           (e) => e.isIntersecting
         );
-        if (visible.length === 0) return;
+        if (visible.length === 0) {
+          const targetLine =
+            (typeof window !== "undefined" ? window.innerHeight : 0) * 0.25;
+          const allBelow = Array.from(entriesById.values()).every(
+            (e) => e.boundingClientRect.top > targetLine
+          );
+          if (allBelow) setActiveSectionId(null);
+          return;
+        }
 
         const targetLine =
           (typeof window !== "undefined" ? window.innerHeight : 0) * 0.25;
@@ -62,10 +70,14 @@ export default function ResearchLayout({ sections }: ResearchLayoutProps) {
 
   useEffect(() => {
     if (initialRender.current) {
-      initialRender.current = false;
+      if (activeSectionId !== null) initialRender.current = false;
       return;
     }
-    history.replaceState(null, "", `#${activeSectionId}`);
+    if (activeSectionId === null) {
+      history.replaceState(null, "", window.location.pathname);
+    } else {
+      history.replaceState(null, "", `#${activeSectionId}`);
+    }
   }, [activeSectionId]);
 
   useEffect(() => {
