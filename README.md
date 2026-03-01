@@ -1,6 +1,6 @@
 # itsmor
 
-A portfolio site that practices what it preaches — where engineering rigor meets intentional design.
+A portfolio site that practices what it preaches - where engineering rigor meets intentional design.
 
 ## Philosophy
 
