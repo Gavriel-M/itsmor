@@ -12,6 +12,8 @@ const SCROLL_THRESHOLD = 10; // px from bottom to consider "at bottom"
 const GRACE_PERIOD = 800; // ms grace period before accepting wheel events
 const MIN_WHEEL_FOR_100VH = 150; // cumulative deltaY required for 100vh pages
 const PROGRESS_SPEED = 10; // wheel deltaY pixels per 1% progress
+const TOUCH_PROGRESS_SPEED = 5; // touch deltaY pixels per 1% progress (mobile)
+const MIN_TOUCH_FOR_100VH = 75; // cumulative touch deltaY for 100vh pages (mobile)
 const DECAY_DELAY = 300; // ms idle before decay starts
 const LOADER_WIDTH = 250; // px
 
@@ -240,12 +242,12 @@ export const ScrollNavigationLoader = () => {
 
       if (!hasScroll) {
         cumulativeDeltaRef.current += deltaY;
-        if (cumulativeDeltaRef.current < MIN_WHEEL_FOR_100VH) {
+        if (cumulativeDeltaRef.current < MIN_TOUCH_FOR_100VH) {
           return;
         }
       }
 
-      const deltaProgress = deltaY / PROGRESS_SPEED;
+      const deltaProgress = deltaY / TOUCH_PROGRESS_SPEED;
 
       setProgress((prev) => {
         const newProgress = Math.max(0, Math.min(100, prev + deltaProgress));
