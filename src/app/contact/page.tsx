@@ -32,6 +32,9 @@ export default function ContactPage() {
             >
               gavriel.mor@itsmor.com
             </a>
+            <p className="font-mono text-xs uppercase tracking-widest opacity-50 mt-4">
+              Based in Munich, CET timezone
+            </p>
           </motion.div>
         </div>
 
@@ -46,7 +49,7 @@ export default function ContactPage() {
         transition={{ delay: 0.6 }}
         className="cursor-default w-full border-t border-black/10 mt-auto pt-8 flex justify-between font-mono text-xs uppercase opacity-50"
       >
-        <span>© 2025 itsmor</span>
+        <span>© 2026 itsmor</span>
         <span>All Rights Reserved</span>
       </motion.div>
     </section>

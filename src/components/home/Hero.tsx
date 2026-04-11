@@ -55,7 +55,7 @@ export default function Hero() {
             }}
             className="cursor-default relative z-20 mt-4 font-mono text-sm text-background tracking-widest uppercase"
           >
-            Portfolio 2025
+            Portfolio 2026
           </motion.p>
         </div>
 

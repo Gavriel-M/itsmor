@@ -264,8 +264,7 @@ export default function DemoPopover({
     ? { duration: 0 }
     : { duration: 0.25, ease: EASE_OUT_EXPO };
 
-  const subtitle =
-    DemoComponent && title ? title : DemoComponent ? "Demo" : "Unavailable";
+  const subtitle = DemoComponent ? title || "Demo" : "Demo Player";
 
   return (
     <div className={`fixed inset-0 z-60 pointer-events-none ${className}`}>
@@ -433,19 +432,21 @@ export default function DemoPopover({
                       </motion.div>
                     ) : (
                       <motion.div
-                        key={demoId || "empty"}
+                        key="empty"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.2, ease: EASE_OUT_EXPO }}
-                        className="text-center px-4"
+                        className="w-full h-full flex items-center justify-center text-center px-4"
                       >
-                        <p className="font-mono text-xs uppercase tracking-widest opacity-40">
-                          {demoId ? `Demo: ${demoId}` : "Demo"}
-                        </p>
-                        <p className="font-mono text-xs opacity-30 mt-1">
-                          This section has no demo yet.
-                        </p>
+                        <div>
+                          <p className="font-mono text-xs uppercase tracking-widest opacity-30">
+                            Demo Player
+                          </p>
+                          <p className="font-mono text-[10px] opacity-20 mt-1">
+                            No demo for this section
+                          </p>
+                        </div>
                       </motion.div>
                     )}
                   </AnimatePresence>

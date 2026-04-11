@@ -26,8 +26,8 @@ export const LINKS: NetworkLink[] = [
   },
   {
     id: "readcv",
-    label: "READ.CV",
-    href: "https://read.cv/itsmor",
+    label: "Resume",
+    href: "/cv",
     x: 0,
     y: 120,
   },

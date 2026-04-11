@@ -11,11 +11,48 @@ interface TimelineEvent {
 }
 
 const EVENTS: TimelineEvent[] = [
-  { label: "30 YEARS (IL)", year: "1994", yPosition: 0.4, emphasis: "primary" },
-  { label: "RELOCATING", year: "2018", yPosition: 0.6, emphasis: "secondary" },
-  { label: "EDUCATION", year: "2020", yPosition: 0.5, emphasis: "secondary" },
-  { label: "CLIMBING", year: "2021", yPosition: 0.2, emphasis: "secondary" },
-  { label: "DESIGN", year: "2024", yPosition: 0.15, emphasis: "primary" },
+  {
+    label: "CS COURSEWORK",
+    year: "2020",
+    yPosition: 0.7,
+    emphasis: "secondary",
+  },
+  {
+    label: "HACKERU BOOTCAMP",
+    year: "2021",
+    yPosition: 0.55,
+    emphasis: "secondary",
+  },
+  {
+    label: "GRADUATED · SELF-STUDY",
+    year: "2022",
+    yPosition: 0.6,
+    emphasis: "secondary",
+  },
+  {
+    label: "JOINED LOGZ.IO",
+    year: "2023",
+    yPosition: 0.4,
+    emphasis: "primary",
+  },
+  {
+    label: "EXPLORE · ALERTS · DASHBOARDS",
+    year: "2024",
+    yPosition: 0.3,
+    emphasis: "secondary",
+  },
+  {
+    label: "DESIGN SYSTEM LEAD",
+    year: "2025",
+    yPosition: 0.15,
+    emphasis: "primary",
+  },
+  {
+    label: "TEAM LEAD",
+    year: "2026",
+    yPosition: 0.1,
+    emphasis: "primary",
+  },
 ];
 
 const PADDING_X = 40;
@@ -68,7 +105,7 @@ export default function Timeline() {
         Personal Timeline
       </h3>
 
-      <div ref={containerRef} className="relative h-40 w-full overflow-visible">
+      <div ref={containerRef} className="relative h-80 w-full overflow-visible">
         {dimensions.width > 0 && (
           <>
             {/* SVG Line */}

@@ -38,8 +38,6 @@ export default function AboutPage() {
               words={[
                 "creative developer",
                 "design engineer",
-                "detail devotee",
-                "pixel perfectionist",
                 "craft-driven builder",
               ]}
               className="font-sans text-2xl md:text-5xl leading-tight font-bold tracking-tight"
@@ -56,6 +54,17 @@ export default function AboutPage() {
               className="font-sans text-2xl md:text-5xl leading-tight font-bold tracking-tight"
             />
           </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="font-sans text-base md:text-lg leading-relaxed opacity-80 mt-12"
+          >
+            Frontend engineer based in Munich. 2.5 years building observability
+            tools at Logz.io. <br />I care about performance, design systems,
+            and making complex data feel simple.
+          </motion.p>
 
           <motion.div
             initial={{ opacity: 0 }}
@@ -77,26 +86,28 @@ export default function AboutPage() {
             {/* Stack */}
             <div>
               <h3 className="font-mono text-xs text-terracotta uppercase tracking-widest mb-4">
-                Tech Stack
+                Professional Stack
               </h3>
               <ul className="font-sans text-sm md:text-base space-y-2">
-                <li>TypeScript / React / Next.js</li>
-                <li>Tailwind CSS / Framer Motion</li>
+                <li>React / TypeScript / Next.js</li>
+                <li>Zustand / React Query</li>
+                <li>Tailwind CSS / Emotion</li>
+                <li>Highcharts / Framer Motion</li>
+                <li>Vite / Storybook / Git</li>
                 <li>Node.js / PostgreSQL</li>
-                <li>WebGL / Three.js</li>
               </ul>
             </div>
 
             {/* Services */}
             <div>
               <h3 className="font-mono text-xs text-terracotta uppercase tracking-widest mb-4">
-                Services
+                Areas of Expertise
               </h3>
               <ul className="font-sans text-sm md:text-base space-y-2">
+                <li>Design Systems</li>
+                <li>Data Visualization</li>
+                <li>Performance Engineering</li>
                 <li>Frontend Architecture</li>
-                <li>Creative Development</li>
-                <li>UI/UX Design</li>
-                <li>Performance Optimization</li>
               </ul>
             </div>
           </motion.div>

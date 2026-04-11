@@ -49,7 +49,6 @@ function LogoMesh() {
   // Process each SVG path into separate extruded 3D geometries
   const logoParts = useMemo<LogoPart[]>(() => {
     if (!svgData) {
-      console.log("No SVG data found");
       return [];
     }
 
@@ -64,7 +63,6 @@ function LogoMesh() {
       const shapes = SVGLoader.createShapes(path);
 
       if (shapes.length === 0) {
-        console.warn(`No shapes found for path: ${pathId}`);
         return;
       }
 
@@ -114,10 +112,6 @@ function LogoMesh() {
       }
     });
 
-    console.log(
-      `Processed ${parts.length} logo parts:`,
-      parts.map((p) => p.id)
-    );
     return parts;
   }, [svgData]);
 
@@ -159,7 +153,6 @@ function LogoMesh() {
   });
 
   if (logoParts.length === 0) {
-    console.log("No logo parts generated");
     return null;
   }
 

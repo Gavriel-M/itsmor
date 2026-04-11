@@ -8,44 +8,18 @@ const projects = [
   {
     title: "2D Animation on the Web",
     category: "Research",
-    year: "2025",
+    year: "2026",
     href: "/work/2d-web-animation",
-    description: "Principles of 2D animation applied to web interfaces.",
+    description:
+      "A 14-section deep dive translating Disney's animation principles into web UI constraints, with interactive demos.",
   },
   {
-    title: "FinTech Dashboard",
-    category: "Web Development",
-    year: "2024",
-    href: "/work/fintech-dashboard",
-    description: "Real-time financial data visualization.",
-  },
-  {
-    title: "E-Commerce Design System",
-    category: "Design System",
-    year: "2023",
-    href: "/work/ecommerce-ds",
-    description: "Composable UI library for retail.",
-  },
-  {
-    title: "Generative Art Collection",
-    category: "Creative Coding",
-    year: "2023",
-    href: "/work/generative-art",
-    description: "Interactive 3D experiments.",
-  },
-  {
-    title: "Neon Genesis",
-    category: "Web Development",
+    title: "Eli Mor — Chinese Medicine",
+    category: "Client Work",
     year: "2025",
-    href: "/work/neon-genesis",
-    description: "Next-gen web framework prototype.",
-  },
-  {
-    title: "Type Foundry",
-    category: "Brand Identity",
-    year: "2023",
-    href: "/work/type-foundry",
-    description: "Typography showcase and sales platform.",
+    href: "https://d2yp9197xa6wil.cloudfront.net/",
+    description:
+      "Bilingual RTL Hebrew website for a Chinese medicine practitioner. Video hero, treatment pages, blog, and testimonials — designed and built end-to-end.",
   },
 ];
 
@@ -83,8 +57,7 @@ export default function WorkPage() {
             className="pb-4 relative z-10"
           >
             <p className="cursor-default font-mono text-sm md:text-base max-w-md leading-relaxed opacity-80">
-              A collection of digital artifacts, web experiences, and brand
-              systems designed with precision and purpose.
+              A curated selection of projects, research, and client work.
             </p>
           </motion.div>
         </header>

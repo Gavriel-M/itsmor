@@ -38,19 +38,14 @@ export default function DemoCard({ demoId }: DemoCardProps) {
             </Suspense>
           </motion.div>
         ) : (
-          <motion.div
-            key={demoId || "empty"}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
-            className="text-center px-4"
-          >
-            <p className="font-mono text-xs uppercase tracking-widest opacity-40">
-              {demoId ? `Demo: ${demoId}` : "No demo for this section"}
+          <div className="text-center px-4">
+            <p className="font-mono text-xs uppercase tracking-widest opacity-30">
+              Demo Player
             </p>
-            <p className="font-mono text-xs opacity-30 mt-1">Coming soon</p>
-          </motion.div>
+            <p className="font-mono text-[10px] opacity-20 mt-1">
+              No demo for this section
+            </p>
+          </div>
         )}
       </AnimatePresence>
     </div>

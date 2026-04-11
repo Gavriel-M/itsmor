@@ -21,6 +21,11 @@ export default function ProjectCard({
   index,
 }: ProjectProps) {
   const paddedIndex = String(index + 1).padStart(2, "0");
+  const isExternal = href.startsWith("http");
+  const Wrapper = isExternal ? "a" : Link;
+  const externalProps = isExternal
+    ? { target: "_blank" as const, rel: "noopener noreferrer" }
+    : {};
 
   return (
     <motion.div
@@ -29,9 +34,10 @@ export default function ProjectCard({
       transition={{ delay: index * 0.1, duration: 0.5 }}
       className="group relative border-t border-black/10 dark:border-white/10"
     >
-      <Link
+      <Wrapper
         href={href}
         className="block py-7 md:py-10 border-l-2 border-transparent group-hover:border-terracotta focus-visible:border-terracotta pl-0 group-hover:pl-4 focus-visible:pl-4 transition-all duration-300"
+        {...externalProps}
       >
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-baseline">
           {/* Index + Year */}
@@ -68,7 +74,7 @@ export default function ProjectCard({
             </p>
           </div>
         )}
-      </Link>
+      </Wrapper>
     </motion.div>
   );
 }
