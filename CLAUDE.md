@@ -16,7 +16,7 @@ pnpm format        # Prettier format all files
 pnpm format:check  # Prettier validation
 ```
 
-Package manager is **pnpm**. No test runner is configured.
+Package manager is **pnpm**. The `packages/text-cascade` local package has vitest for tests (`pnpm --filter text-cascade test`). No test runner for the main app.
 
 ## Architecture
 
@@ -31,11 +31,25 @@ Package manager is **pnpm**. No test runner is configured.
 Components live in `src/components/` organized by page domain:
 
 - `home/` — Hero section, MagneticCircle (mouse-tracking)
-- `work/` — Project cards, WireframeLogo3D (React Three Fiber)
-- `about/` — Timeline with SVG path animation
+- `work/` — ProjectCard (handles internal + external links), WireframeLogo3D (React Three Fiber)
+- `about/` — Timeline (SVG path animation), RotatingText (cycling text with Framer Motion)
+- `animationResearch/` — Research page system: ResearchLayout, DemoCard, DemoPopover (draggable mobile panel), Section, Toc, HeroHeader, and 7 lazy-loaded demo components in `demos/`
 - `contact/` — Network visualization with canvas-based lightning hover effect, cursor-tracking logo rotation
 - `layout/` — Navigation, GridBackground, PageTransition, ScrollNavigationLoader
 - `ui/` — Shared primitives (Logo, AnimatedLogoFrame, TransitionLink)
+
+### Content Data
+
+Content-heavy pages store structured data in `src/data/` (e.g., `animationResearchContent.ts` defines all 14 research sections with paragraphs, callouts, checklists, and demo references).
+
+### Pages
+
+- `/` — Hero with magnetic circle and geometric shapes
+- `/work` — Project list (inline `projects` array in page component)
+- `/work/2d-web-animation` — 14-section research article with interactive demos
+- `/about` — Rotating titles, bio, timeline, tech stack, expertise
+- `/contact` — Email, social network visualization, copyright footer
+- `/cv` — Embedded PDF viewer with download fallback for mobile
 
 ### Page Transitions
 
@@ -66,6 +80,20 @@ Three distinct animation approaches coexist:
 - Fonts: `Inter` (sans-serif) and `IBM Plex Mono` (monospace), loaded via `next/font/google`
 - Custom keyframe animations: `bounce-gentle`, `pulse-slow`
 
+### Animation Research Demo System
+
+The 2D Animation research page (`/work/2d-web-animation`) has a sophisticated demo player:
+
+- `ResearchLayout` uses IntersectionObserver to track the active section and passes its `demoId` to the demo components
+- `DemoCard` (desktop sidebar) and `DemoPopover` (mobile draggable panel) render the active demo or an empty "Demo Player" state
+- `DemoPopover` supports drag-to-reposition with snap-to-corner, persists position in sessionStorage, and respects safe-area insets
+- Demos are lazy-loaded via `React.lazy` through `DEMO_MAP` in `demos/index.ts`
+- 7 of 14 sections have demos; the rest show a placeholder label
+
+### Local Packages
+
+`packages/text-cascade/` — Standalone React component for cascading text reveal animations with glow effects. Has its own build (tsup) and test suite (vitest).
+
 ### Contact Network System
 
 The contact page has the most complex component architecture:
@@ -80,3 +108,5 @@ The contact page has the most complex component architecture:
 - Prettier: 2-space indent, trailing commas (es5), double quotes (single quotes disabled)
 - All interactive components use `"use client"` directive
 - Most components are client components due to heavy interactivity
+- `ProjectCard` detects external URLs (`http` prefix) and renders `<a target="_blank">` instead of Next.js `<Link>`
+- Project data lives inline in page components (no separate config/JSON files)
