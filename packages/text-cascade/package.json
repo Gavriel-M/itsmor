@@ -1,6 +1,28 @@
 {
   "name": "text-cascade",
   "version": "0.1.0",
+  "description": "React component for per-character staggered text reveal, with an optional glow-morph between two labels.",
+  "keywords": [
+    "react",
+    "react-component",
+    "animation",
+    "text-animation",
+    "text-reveal",
+    "stagger",
+    "cascade",
+    "typography"
+  ],
+  "homepage": "https://github.com/Gavriel-M/itsmor/tree/main/packages/text-cascade",
+  "bugs": {
+    "url": "https://github.com/Gavriel-M/itsmor/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gavriel-M/itsmor.git",
+    "directory": "packages/text-cascade"
+  },
+  "license": "MIT",
+  "author": "Gavriel Mor (https://itsmor.com)",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -19,8 +41,14 @@
     "./styles": "./dist/styles.css",
     "./styles.css": "./dist/styles.css"
   },
-  "sideEffects": ["*.css"],
-  "files": ["dist", "README.md", "LICENSE"],
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
