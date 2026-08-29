@@ -8,7 +8,11 @@ import {
 import { useTextCascade } from "./use-text-cascade";
 import { TextCascadeRenderer } from "./text-cascade-renderer";
 import { generateGlowTransition } from "./generate-glow-transition";
-import type { TextCascadeProps, TextCascadeHandle, CascadePhase } from "./types";
+import type {
+  TextCascadeProps,
+  TextCascadeHandle,
+  CascadePhase,
+} from "./types";
 
 export const TextCascade = forwardRef<TextCascadeHandle, TextCascadeProps>(
   function TextCascade(
@@ -23,7 +27,9 @@ export const TextCascade = forwardRef<TextCascadeHandle, TextCascadeProps>(
       textClassName,
       charClassName,
       glowClassName,
+      glow,
       glowColor,
+      weightPulse,
       cascadeWeight,
       fontWeight,
       as: Tag = "span",
@@ -115,7 +121,9 @@ export const TextCascade = forwardRef<TextCascadeHandle, TextCascadeProps>(
           className={textClassName}
           charClassName={charClassName}
           glowClassName={glowClassName}
+          glow={glow}
           glowColor={glowColor}
+          weightPulse={weightPulse}
           cascadeWeight={cascadeWeight}
           fontWeight={fontWeight}
           timing={timing}

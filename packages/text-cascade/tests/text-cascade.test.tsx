@@ -39,11 +39,7 @@ describe("TextCascade", () => {
   it("click triggers onClick + confirm when clickText is provided", () => {
     const onClick = vi.fn();
     const { container } = render(
-      <TextCascade
-        hoverText="Copy"
-        clickText="Copied"
-        onClick={onClick}
-      />
+      <TextCascade hoverText="Copy" clickText="Copied" onClick={onClick} />
     );
 
     const wrapper = container.firstElementChild!;
@@ -102,9 +98,7 @@ describe("TextCascade", () => {
       vi.advanceTimersByTime(400);
     });
 
-    const updatedTrigger = container.querySelector(
-      "[data-testid='trigger']"
-    );
+    const updatedTrigger = container.querySelector("[data-testid='trigger']");
     expect(updatedTrigger?.getAttribute("data-clicked")).toBe("true");
   });
 
@@ -187,16 +181,12 @@ describe("TextCascade", () => {
   });
 
   it("as prop changes the root element", () => {
-    const { container } = render(
-      <TextCascade hoverText="Hello" as="button" />
-    );
+    const { container } = render(<TextCascade hoverText="Hello" as="button" />);
     expect(container.firstElementChild!.tagName).toBe("BUTTON");
   });
 
   it("as='div' renders a div", () => {
-    const { container } = render(
-      <TextCascade hoverText="Hello" as="div" />
-    );
+    const { container } = render(<TextCascade hoverText="Hello" as="div" />);
     expect(container.firstElementChild!.tagName).toBe("DIV");
   });
 

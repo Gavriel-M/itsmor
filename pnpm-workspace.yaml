@@ -1,2 +1,13 @@
 packages:
   - "packages/*"
+
+# pnpm blocks dependency build scripts by default. Only the two the toolchain
+# actually needs are allowed to run:
+#   esbuild        - vitest and tsup
+#   unrs-resolver  - eslint-import-resolver-typescript, via eslint-config-next
+# sharp is Next's image optimiser, unused here: next.config.ts sets
+# output "export" with images.unoptimized.
+allowBuilds:
+  esbuild: true
+  unrs-resolver: true
+  sharp: false

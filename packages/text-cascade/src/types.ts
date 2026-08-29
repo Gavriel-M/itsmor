@@ -59,7 +59,9 @@ export interface TextCascadeRendererProps {
   glowClassName?: string;
   stableWidth: string;
   timing?: CascadeTiming;
+  glow?: boolean;
   glowColor?: string;
+  weightPulse?: boolean;
   cascadeWeight?: number;
   fontWeight?: number;
   dynamicWidth?: boolean;
@@ -76,7 +78,13 @@ export interface TextCascadeProps {
   textClassName?: string;
   charClassName?: string;
   glowClassName?: string;
+  /** Turns the colour-glow animation on. Defaults to true when `glowColor` is set. */
+  glow?: boolean;
+  /** Colour the glow animates to. Sets `--cascade-glow-color`; omit to take it from CSS. */
   glowColor?: string;
+  /** Turns the weight-pulse animation on. Defaults to true when `cascadeWeight` is set. */
+  weightPulse?: boolean;
+  /** Weight the pulse animates to. Sets `--cascade-weight`; omit to take it from CSS. */
   cascadeWeight?: number;
   fontWeight?: number;
   dynamicWidth?: boolean;

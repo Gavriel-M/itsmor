@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // The build config sets rootDir "src" and emits declarations; neither is
+    // meaningful here. This config only typechecks — it never emits.
+    "rootDir": ".",
+    "declaration": false,
+    "declarationMap": false,
+    "noEmit": true,
+    "types": ["vitest/globals"]
+  },
+  "include": ["src", "tests"],
+  "exclude": ["node_modules", "dist"]
+}
