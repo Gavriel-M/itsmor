@@ -3,12 +3,14 @@ import type { TextCascadeRendererProps } from "./types";
 
 export function TextCascadeRenderer({
   state,
-  className = "",
-  charClassName = "",
-  glowClassName = "",
+  className,
+  charClassName,
+  glowClassName,
   stableWidth,
   timing,
+  glow,
   glowColor,
+  weightPulse,
   cascadeWeight,
   fontWeight,
   dynamicWidth,
@@ -20,12 +22,15 @@ export function TextCascadeRenderer({
   const charTransitionMs =
     timing?.charTransitionMs ?? DEFAULT_TIMING.charTransitionMs;
 
+  const glowOn = glow ?? Boolean(glowColor);
+  const weightOn = weightPulse ?? Boolean(cascadeWeight);
+
   return (
     <span
       className={className}
       data-phase={state.phase}
-      {...(glowColor ? { "data-glow": "" } : undefined)}
-      {...(cascadeWeight ? { "data-cascade-weight": "" } : undefined)}
+      {...(glowOn ? { "data-glow": "" } : undefined)}
+      {...(weightOn ? { "data-cascade-weight": "" } : undefined)}
       style={
         {
           overflow: "hidden",
@@ -81,16 +86,20 @@ export function TextCascadeRenderer({
           return (
             <span
               key={i}
-              className={`text-cascade ${isGlowing ? glowClassName : ""}`}
+              className={
+                isGlowing && glowClassName
+                  ? `text-cascade ${glowClassName}`
+                  : "text-cascade"
+              }
               data-active={isActive || undefined}
               style={
                 {
                   "--char-delay": `${i * state.charStepMs}ms`,
                   "--exit-delay": `${Math.max(0, exitDelay)}ms`,
-                  ...(isGlowing && glowColor
+                  ...(isGlowing && glowOn && glowColor
                     ? { color: glowColor }
                     : undefined),
-                  ...(isGlowing && cascadeWeight
+                  ...(isGlowing && weightOn && cascadeWeight
                     ? { fontWeight: cascadeWeight }
                     : undefined),
                 } as React.CSSProperties
