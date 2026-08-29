@@ -34,9 +34,7 @@ describe("useTextCascade", () => {
   });
 
   it("has correct initial state", () => {
-    const { result } = renderHook(() =>
-      useTextCascade({ text: "Hello" })
-    );
+    const { result } = renderHook(() => useTextCascade({ text: "Hello" }));
     expect(result.current.phase).toBe("idle");
     expect(result.current.isExpanded).toBe(false);
     expect(result.current.revealCount).toBe(0);
@@ -44,9 +42,7 @@ describe("useTextCascade", () => {
   });
 
   it("enter transitions to entering then visible", () => {
-    const { result } = renderHook(() =>
-      useTextCascade({ text: "Hi" })
-    );
+    const { result } = renderHook(() => useTextCascade({ text: "Hi" }));
 
     act(() => result.current.enter());
     expect(result.current.phase).toBe("entering");
@@ -59,9 +55,7 @@ describe("useTextCascade", () => {
   });
 
   it("exit from visible transitions to exiting then idle", () => {
-    const { result } = renderHook(() =>
-      useTextCascade({ text: "Hi" })
-    );
+    const { result } = renderHook(() => useTextCascade({ text: "Hi" }));
 
     // Enter then wait for visible
     act(() => result.current.enter());
@@ -79,9 +73,7 @@ describe("useTextCascade", () => {
   });
 
   it("mid-enter exit gracefully interrupts", () => {
-    const { result } = renderHook(() =>
-      useTextCascade({ text: "Hello" })
-    );
+    const { result } = renderHook(() => useTextCascade({ text: "Hello" }));
 
     act(() => result.current.enter());
     expect(result.current.phase).toBe("entering");
@@ -129,9 +121,7 @@ describe("useTextCascade", () => {
   it("reduced motion: enter skips to visible instantly", () => {
     mockPrefersReduced.mockReturnValue(true);
 
-    const { result } = renderHook(() =>
-      useTextCascade({ text: "Hi" })
-    );
+    const { result } = renderHook(() => useTextCascade({ text: "Hi" }));
 
     act(() => result.current.enter());
     expect(result.current.phase).toBe("visible");
@@ -141,9 +131,7 @@ describe("useTextCascade", () => {
   it("reduced motion: exit skips to idle instantly", () => {
     mockPrefersReduced.mockReturnValue(true);
 
-    const { result } = renderHook(() =>
-      useTextCascade({ text: "Hi" })
-    );
+    const { result } = renderHook(() => useTextCascade({ text: "Hi" }));
 
     act(() => result.current.enter());
     expect(result.current.phase).toBe("visible");
