@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>GitHub profile banner — 1536 × 384</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /*
+        Ported verbatim from the React jig that used to live at src/app/banner/.
+        It was moved out because `output: "export"` publishes every route under
+        src/app/, so committing it would have made itsmor.com/banner a public
+        page. Same pattern as career/assets/linkedin-banner.html: a standalone
+        screenshot jig, deliberately not part of the site.
+
+        Canvas is 1536 x 384 — exactly 24 x 6 cells of the site's real
+        --grid-cell (4rem / 64px, from src/app/globals.css). The geometry is
+        Hero.tsx + MagneticCircle.tsx re-laid on that grid rather than
+        approximated by eye:
+
+          ring    MagneticCircle's 8-cell circle with its 40px border, centred
+                  on the vertical midline so it bleeds exactly one cell past
+                  top and bottom
+          column  Hero's vertical lapis bar, 1 cell wide, tangent to the ring's
+                  right edge, bleeding past both edges
+          rail    Hero's horizontal lapis bar, 1 cell tall, crossing the column
+                  and passing behind the ring so the circle stays unbroken
+
+        No name on the canvas: the README's H1 sits directly beneath it.
+      */
+      :root {
+        --cell: 64px;
+        --color-background: #f2f0e6;
+        --color-text: #1a1a1a;
+        --color-terracotta: #b85b40;
+        --color-lapis: #004e98;
+        --banner-grid: #e5e5e5;
+      }
+
+      /*
+        Dark is derived from the light tokens, not inverted. The ground keeps
+        the cream's warmth — both sit near 45deg hue — at very low lightness,
+        and lapis is lifted along its own 209deg hue until it clears 4.5:1
+        there; #004e98 manages only 2.2:1 on this ground and all but disappears.
+        The grid line is tuned to the same 1.10:1 against its ground that
+        #e5e5e5 has against the cream.
+      */
+      html[data-variant="dark"] {
+        --color-background: #161410;
+        --color-text: #e8e4d6;
+        --color-terracotta: #c2634a;
+        --color-lapis: #4d9be8;
+        --banner-grid: #211e17;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        overflow: hidden;
+        background: var(--color-background);
+      }
+
+      body {
+        width: 1536px;
+        height: 384px;
+        font-family: "Inter", "Helvetica Neue", sans-serif;
+        color: var(--color-text);
+      }
+
+      #canvas {
+        position: relative;
+        width: 1536px;
+        height: 384px;
+        overflow: hidden;
+        background: var(--color-background);
+      }
+
+      /* GridBackground.tsx, at the same 64px pitch and the same phase. */
+      .grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(to right, var(--banner-grid) 1px, transparent 1px),
+          linear-gradient(to bottom, var(--banner-grid) 1px, transparent 1px);
+        background-size:
+          var(--cell) 100%,
+          100% var(--cell);
+        background-position:
+          center top,
+          left center;
+      }
+
+      svg {
+        position: absolute;
+        inset: 0;
+      }
+
+      .copy {
+        position: absolute;
+        left: 128px; /* 2 cells */
+        top: 104px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+      }
+
+      .copy h1 {
+        font-size: 72px;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: var(--color-text);
+      }
+
+      .copy p {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 22px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.09em;
+        color: var(--color-lapis);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="canvas">
+      <div class="grid"></div>
+
+      <!-- Rail first — the ring draws over it, keeping the circle unbroken. -->
+      <svg width="1536" height="384" viewBox="0 0 1536 384" aria-hidden="true">
+        <rect
+          x="832"
+          y="256"
+          width="640"
+          height="64"
+          fill="var(--color-lapis)"
+        />
+        <circle
+          cx="1152"
+          cy="192"
+          r="236"
+          fill="none"
+          stroke="var(--color-terracotta)"
+          stroke-width="40"
+        />
+        <rect
+          x="1408"
+          y="-64"
+          width="64"
+          height="512"
+          fill="var(--color-lapis)"
+        />
+      </svg>
+
+      <div class="copy">
+        <h1>Full-Stack Engineer</h1>
+        <p>AI PRODUCTS · DESIGN SYSTEMS · PERFORMANCE</p>
+      </div>
+    </div>
+
+    <script>
+      // ?variant=dark for the dark capture. capture.sh drives both.
+      const v = new URLSearchParams(location.search).get("variant");
+      if (v === "dark") document.documentElement.dataset.variant = "dark";
+    </script>
+  </body>
+</html>

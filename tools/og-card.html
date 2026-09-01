@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Open Graph card — 1200 × 630</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /*
+        The link-preview card. Captured to src/app/opengraph-image.png, which
+        Next's file convention picks up and emits as absolute og:image and
+        twitter:image tags.
+
+        Same technique as career/assets/linkedin-banner.html and
+        tools/github-banner.html: the site's own tokens and the Hero's own
+        geometry, recomposed for this aspect ratio, screenshotted with headless
+        Chrome. Nothing here is approximated by eye.
+
+        Grid pitch is 63px, not the site's 64px, for the same reason the
+        LinkedIn banner uses 66px: 630 = 10 x 63 exactly, so the card divides
+        cleanly on the short axis and bleeds on the long one, which is what the
+        live page does at any viewport. Every measurement below is an integer
+        multiple of 63 and the grid is phased to 0 0 so geometry and grid agree
+        — unlike the live page, where the phase is incidental.
+
+          ring    MagneticCircle's 8-cell circle (504px) with its border at the
+                  site's own 0.62-cell ratio (39px), bleeding 2 cells off the
+                  right edge, 1 cell clear top and bottom
+          column  Hero's vertical lapis bar, 1 cell wide, tangent to the ring's
+                  left extremity, bleeding past top and bottom
+          rail    Hero's horizontal lapis bar, 1 cell tall, crossing the column
+                  and stopping at x = ring centre - inner radius, the leftmost
+                  point of the ring's hole, so it can never poke through it.
+                  Drawn before the ring, so the circle stays unbroken.
+      */
+      :root {
+        --cell: 63px;
+        --color-background: #f2f0e6;
+        --color-text: #1a1a1a;
+        --color-terracotta: #b85b40;
+        --color-lapis: #004e98;
+        --grid-line: #e5e5e5;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        overflow: hidden;
+        background: var(--color-background);
+      }
+
+      body {
+        width: 1200px;
+        height: 630px;
+        font-family: "Inter", "Helvetica Neue", sans-serif;
+        color: var(--color-text);
+      }
+
+      #canvas {
+        position: relative;
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: var(--color-background);
+      }
+
+      .grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+          linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+        background-size:
+          var(--cell) 100%,
+          100% var(--cell);
+        background-position: 0 0;
+      }
+
+      svg {
+        position: absolute;
+        inset: 0;
+      }
+
+      .copy {
+        position: absolute;
+        left: 126px; /* 2 cells */
+        top: 170px;
+      }
+
+      .copy h1 {
+        font-size: 80px;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: var(--color-text);
+      }
+
+      .copy .role {
+        margin-top: 26px;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 26px;
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: 0.12em;
+        color: var(--color-text);
+      }
+
+      .copy .domain {
+        margin-top: 18px;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.09em;
+        color: var(--color-lapis);
+      }
+
+      /* Knocked out in cream on the rail, the way "Portfolio 2026" is on the
+         live homepage and "ITSMOR.COM" is on the LinkedIn banner. */
+      .url {
+        position: absolute;
+        left: 268px;
+        top: 378px;
+        height: 63px;
+        display: flex;
+        align-items: center;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        color: var(--color-background);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="canvas">
+      <div class="grid"></div>
+
+      <svg width="1200" height="630" viewBox="0 0 1200 630" aria-hidden="true">
+        <!-- rail: x 252 -> 858 (ring centre 1071 - inner radius 213) -->
+        <rect
+          x="252"
+          y="378"
+          width="606"
+          height="63"
+          fill="var(--color-lapis)"
+        />
+        <!-- ring: outer r 252, stroke 39, so the drawn r is 252 - 39/2 -->
+        <circle
+          cx="1071"
+          cy="315"
+          r="232.5"
+          fill="none"
+          stroke="var(--color-terracotta)"
+          stroke-width="39"
+        />
+        <!-- column: tangent to the ring's left extremity (1071 - 252 = 819) -->
+        <rect
+          x="756"
+          y="-63"
+          width="63"
+          height="756"
+          fill="var(--color-lapis)"
+        />
+      </svg>
+
+      <div class="copy">
+        <h1>Gavriel Mor</h1>
+        <p class="role">FULL-STACK ENGINEER</p>
+        <p class="domain">AI PRODUCTS · DESIGN SYSTEMS · PERFORMANCE</p>
+      </div>
+
+      <div class="url">ITSMOR.COM</div>
+    </div>
+  </body>
+</html>

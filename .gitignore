@@ -42,3 +42,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .docs/
+
+# Generated screenshot output from tools/capture.sh
+/tools/out/
