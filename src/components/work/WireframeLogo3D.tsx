@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef, useMemo, useState } from "react";
+import { useRef, useMemo, useState, useEffect } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import Logo from "@/components/ui/Logo";
 import { Center } from "@react-three/drei";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
 import * as THREE from "three";
@@ -234,9 +235,64 @@ function LogoMesh() {
  * </div>
  * ```
  */
+/**
+ * Probed once per page load and cached. `getContext` returning null is silent —
+ * the noisy part is three.js reacting to it, which is exactly what this avoids.
+ */
+let webglSupported: boolean | null = null;
+
+function hasWebGL(): boolean {
+  if (webglSupported !== null) return webglSupported;
+  try {
+    const probe = document.createElement("canvas");
+    webglSupported = !!(
+      probe.getContext("webgl2") || probe.getContext("webgl")
+    );
+  } catch {
+    webglSupported = false;
+  }
+  return webglSupported;
+}
+
+/**
+ * The degraded form: the same mark, flat, in the same lapis the wireframe uses.
+ * Decorative and aria-hidden, like the canvas it stands in for.
+ */
+function FlatLogo() {
+  return (
+    <div
+      className="w-full h-full flex items-center justify-center"
+      aria-hidden="true"
+    >
+      <Logo className="w-2/3 h-2/3 text-lapis" />
+    </div>
+  );
+}
+
 export default function WireframeLogo3D({ zoom }: { zoom: number }) {
+  /*
+    Mounting <Canvas> where WebGL is unavailable — a GPU blocklist, a managed
+    browser with WebGL off, an old device — makes three.js log two errors and
+    throw "Error creating WebGL context". R3F's own `fallback` prop is not
+    enough on its own: it catches the throw and draws the fallback, but only
+    after three.js has already attempted the context and written to the console,
+    so Lighthouse still records errors-in-console. The support check has to come
+    first, so the context is never attempted.
+
+    `null` until the effect runs, because the export is prerendered and the
+    probe needs a DOM. This element is decorative — z-0, opacity-50, behind the
+    text — so one frame without it costs nothing.
+  */
+  const [supported, setSupported] = useState<boolean | null>(null);
+  useEffect(() => setSupported(hasWebGL()), []);
+
+  if (supported === null) return null;
+  if (!supported) return <FlatLogo />;
+
   return (
     <Canvas
+      /* Second line of defence: a context lost after mount still degrades. */
+      fallback={<FlatLogo />}
       orthographic
       camera={{
         zoom,

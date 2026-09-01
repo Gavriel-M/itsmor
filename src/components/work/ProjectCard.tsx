@@ -32,7 +32,7 @@ export default function ProjectCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1, duration: 0.5 }}
-      className="group relative border-t border-black/10 dark:border-white/10"
+      className="group relative border-t border-black/10"
     >
       <Wrapper
         href={href}
@@ -43,7 +43,7 @@ export default function ProjectCard({
           {/* Index + Year */}
           <div className="md:col-span-2 flex items-baseline gap-3">
             <span className="font-mono text-xs text-lapis">{paddedIndex}</span>
-            <span className="font-mono text-xs md:text-sm text-terracotta opacity-80">
+            <span className="font-mono text-xs md:text-sm text-terracotta">
               {year}
             </span>
           </div>

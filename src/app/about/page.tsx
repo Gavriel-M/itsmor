@@ -76,7 +76,7 @@ export default function AboutPage() {
         </div>
 
         {/* Sidebar / Details */}
-        <div className="md:col-span-4 md:pl-8 border-l border-black/10 dark:border-white/10">
+        <div className="md:col-span-4 md:pl-8 border-l border-black/10">
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
