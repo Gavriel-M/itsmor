@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { MagneticCircle } from "./MagneticCircle";
+import HeroInfoSlot from "./HeroInfoSlot";
 
 export default function Hero() {
   return (
@@ -68,6 +69,9 @@ export default function Hero() {
           itsmor
         </motion.h1>
       </div>
+
+      {/* Sibling of the wordmark wrapper, not a child — see HeroInfoSlot. */}
+      <HeroInfoSlot />
     </section>
   );
 }
