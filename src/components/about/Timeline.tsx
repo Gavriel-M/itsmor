@@ -36,21 +36,32 @@ const EVENTS: TimelineEvent[] = [
     emphasis: "primary",
   },
   {
-    label: "EXPLORE · ALERTS · DASHBOARDS",
+    label: "EXPLORE · ALERTS · FIRST AI FEATURES",
     year: "2024",
-    yPosition: 0.3,
+    yPosition: 0.32,
     emphasis: "secondary",
   },
   {
     label: "DESIGN SYSTEM LEAD",
     year: "2025",
-    yPosition: 0.15,
+    yPosition: 0.22,
     emphasis: "primary",
   },
   {
-    label: "TEAM LEAD",
+    label: "ACTING TEAM LEAD · SIEM MIGRATION",
     year: "2026",
-    yPosition: 0.1,
+    yPosition: 0.13,
+    emphasis: "primary",
+  },
+  {
+    /*
+      "TEAM LEAD · 2026" used to end the line, which read as his current title.
+      It was acting, for four months, and he has since moved to OrionIQ. NOW
+      rather than a fourth 2026 removes the misread in one word.
+    */
+    label: "ORIONIQ · SECOND ENGINEER",
+    year: "NOW",
+    yPosition: 0.05,
     emphasis: "primary",
   },
 ];
@@ -126,7 +137,16 @@ export default function Timeline() {
             {EVENTS.map((event, i) => {
               const pos = positions[i];
               const isPrimary = event.emphasis === "primary";
-              const labelBelow = event.yPosition <= 0.5;
+              /*
+                Labels are nowrap and grow rightward from their dot. The last
+                dot sits PADDING_X from the right edge, so a left-anchored label
+                runs past the container and across the sidebar's left rule —
+                and right-anchoring it alone drops it onto the line, which
+                climbs steeply into that dot. So the final label is anchored
+                right AND placed above, into the empty space over the dot.
+              */
+              const isLast = i === EVENTS.length - 1;
+              const labelBelow = isLast ? false : event.yPosition <= 0.5;
 
               return (
                 <div
@@ -145,9 +165,9 @@ export default function Timeline() {
 
                   {/* Label */}
                   <span
-                    className={`absolute left-0 font-mono text-xs whitespace-nowrap ${
-                      labelBelow ? "top-4" : "bottom-3"
-                    }`}
+                    className={`absolute font-mono text-xs whitespace-nowrap ${
+                      isLast ? "right-0" : "left-0"
+                    } ${labelBelow ? "top-4" : "bottom-3"}`}
                   >
                     {event.label}
                   </span>

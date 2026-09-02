@@ -254,7 +254,12 @@ function FlatLogo() {
       className="w-full h-full flex items-center justify-center"
       aria-hidden="true"
     >
-      <Logo className="w-2/3 h-2/3 text-lapis" />
+      {/*
+        Half size at 40% rather than filling the frame: the canvas it stands in
+        for draws delicate additive-blended lines, and a solid mark at full
+        weight reads as a slab where the wireframe read as a sketch.
+      */}
+      <Logo className="w-1/2 h-1/2 text-lapis opacity-40" />
     </div>
   );
 }

@@ -36,34 +36,46 @@ export default function AboutPage() {
             <RotatingText
               prefix="I am a"
               words={[
-                "creative developer",
+                "full-stack engineer",
+                "AI product engineer",
                 "design engineer",
-                "craft-driven builder",
               ]}
               className="font-sans text-2xl md:text-5xl leading-tight font-bold tracking-tight"
             />
             <RotatingText
               prefix="My philosophy is"
               words={[
-                "precision and purpose",
                 "less but better",
-                "motion with meaning",
-                "craft over convention",
                 "constraint as catalyst",
+                "motion with meaning",
               ]}
               className="font-sans text-2xl md:text-5xl leading-tight font-bold tracking-tight"
             />
           </motion.div>
 
+          {/*
+            This paragraph is the LCP element on mobile. It used to animate
+            opacity 0 -> 1 behind a 0.3s delay, which meant it did not paint
+            until React had hydrated — 4.7 s, of which 4.26 s (90%) was render
+            delay with nothing downloading. Animating transform only, with
+            opacity left at 1, lets it paint with the server-rendered HTML and
+            still arrive with a reveal.
+
+            The 0.3s delay is gone rather than shortened: any opacity gate on
+            this element ties the largest paint on the page to hydration on a
+            throttled CPU, which is the whole problem.
+          */}
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="font-sans text-base md:text-lg leading-relaxed opacity-80 mt-12"
+            initial={{ y: 12 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="font-sans text-base md:text-lg leading-relaxed opacity-80 mt-12 max-w-2xl"
           >
-            Frontend engineer based in Munich. 2.5 years building observability
-            tools at Logz.io. <br />I care about performance, design systems,
-            and making complex data feel simple.
+            Full-stack engineer at Logz.io since 2023. I am the second engineer
+            on OrionIQ, an agent that takes an alert and works out what broke,
+            and I own its interface end to end. Before that I built the
+            company&apos;s design system, and moved the entire SIEM product onto
+            a new platform single-handed. Based in Israel, moving to Munich.
           </motion.p>
 
           <motion.div
@@ -89,12 +101,12 @@ export default function AboutPage() {
                 Professional Stack
               </h3>
               <ul className="font-sans text-sm md:text-base space-y-2">
-                <li>React / TypeScript / Next.js</li>
-                <li>Zustand / React Query</li>
-                <li>Tailwind CSS / Emotion</li>
-                <li>Highcharts / Framer Motion</li>
-                <li>Vite / Storybook / Git</li>
-                <li>Node.js / PostgreSQL</li>
+                <li>TypeScript / React / Node.js</li>
+                <li>TanStack Query and Router</li>
+                <li>Emotion / @xstyled</li>
+                <li>AWS Bedrock / Prisma / SQL</li>
+                <li>Nx / Storybook / Playwright</li>
+                <li>Web Workers / OPFS / SSE</li>
               </ul>
             </div>
 
@@ -104,10 +116,10 @@ export default function AboutPage() {
                 Areas of Expertise
               </h3>
               <ul className="font-sans text-sm md:text-base space-y-2">
-                <li>Design Systems</li>
+                <li>AI Product Engineering</li>
                 <li>Data Visualization</li>
+                <li>Design Systems</li>
                 <li>Performance Engineering</li>
-                <li>Frontend Architecture</li>
               </ul>
             </div>
           </motion.div>
