@@ -1,4 +1,5 @@
 import { type ResearchSection } from "@/components/animationResearch/types";
+import { PALETTE } from "@/lib/tokens";
 
 export const sections: ResearchSection[] = [
   {
@@ -80,8 +81,8 @@ export const sections: ResearchSection[] = [
     demoHint: "Press Play. Watch how the same distance feels different.",
     demoLegend: [
       { label: "Linear", color: "rgba(0,0,0,0.4)" },
-      { label: "Ease-out", color: "#004e98" },
-      { label: "Expo", color: "#b85b40" },
+      { label: "Ease-out", color: PALETTE.lapis },
+      { label: "Expo", color: PALETTE.terracotta },
     ],
     checklist: {
       useWhen: [
@@ -264,7 +265,7 @@ export const sections: ResearchSection[] = [
     demoHint: "Press Play. Compare the path your eye prefers.",
     demoLegend: [
       { label: "Straight", color: "rgba(0,0,0,0.4)" },
-      { label: "Arc", color: "#b85b40" },
+      { label: "Arc", color: PALETTE.terracotta },
     ],
     callouts: [
       {

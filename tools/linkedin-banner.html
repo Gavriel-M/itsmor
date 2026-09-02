@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>LinkedIn banner — 1584 × 396</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="tokens.generated.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /*
+    Palette comes from tokens.generated.css, written from src/lib/tokens.ts.
+    This file used to carry its own copy, with a comment recording which value
+    was out of sync with the Tailwind config — a drift note where a shared token
+    belonged. Moved here from ~/logzio/career/assets/ on 2 Sep 2026 so all three
+    jigs read one module; career/assets/ now holds exported PNGs only.
+  */
+      :root {
+        /* 1584 x 396 is exactly 24 x 6 cells at this size. The site uses 64px. */
+        --cell: 66px;
+
+        /* Text block origin. Raise to 600px to clear the conservative 568px
+       profile-photo reserve; see the note under the banner. */
+        --text-x: 396px;
+        --text-y: 118px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: #ffffff;
+        font-family: "Inter", "Helvetica Neue", sans-serif;
+        color: var(--color-text);
+      }
+
+      /* ---- the artefact ------------------------------------------------------ */
+
+      #banner {
+        position: relative;
+        width: 1584px;
+        height: 396px;
+        overflow: hidden;
+        background: var(--color-background);
+      }
+
+      .grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+          linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+        background-size:
+          var(--cell) 100%,
+          100% var(--cell);
+      }
+
+      /* Ring: 8 cells across, 0.62 cell of border, same ratio as the homepage.
+     Centred at x 1386 / y 198 so it bleeds exactly one cell off the top,
+     the bottom and the right. */
+      .ring {
+        position: absolute;
+        left: 1122px;
+        top: -66px;
+        width: 528px;
+        height: 528px;
+        border: 41px solid var(--color-terracotta);
+        border-radius: 50%;
+      }
+
+      /* Vertical bar sits tangent to the ring's left extremity, as on the site. */
+      .bar-v {
+        position: absolute;
+        left: 1056px;
+        top: -66px;
+        width: var(--cell);
+        height: 528px;
+        background: var(--color-lapis);
+      }
+
+      /* Horizontal bar crosses the vertical one and runs into the ring's band. */
+      .bar-h {
+        position: absolute;
+        left: 924px;
+        top: 264px;
+        width: 264px;
+        height: var(--cell);
+        background: var(--color-lapis);
+      }
+
+      /* Knocked out in cream on the bar, the way "Portfolio 2026" is on the site.
+     Delete this element if you would rather the banner carried no URL. */
+      .bar-h span {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 500;
+        font-size: 14px;
+        letter-spacing: 0.18em;
+        color: var(--color-background);
+      }
+
+      .copy {
+        position: absolute;
+        left: var(--text-x);
+        top: var(--text-y);
+      }
+
+      .copy h1 {
+        font-size: 56px;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: var(--color-text);
+      }
+
+      .copy p {
+        margin-top: 18px;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 21px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.09em;
+        color: var(--color-lapis);
+      }
+
+      /* ---- guides (off by default, never in the export) ---------------------- */
+
+      .guides {
+        position: absolute;
+        inset: 0;
+        display: none;
+      }
+      body.guides-on .guides {
+        display: block;
+      }
+
+      .guides div {
+        position: absolute;
+      }
+      .guides label {
+        position: absolute;
+        top: 2px;
+        left: 4px;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        color: #00000080;
+      }
+
+      .g-safe {
+        left: 117px;
+        top: 88px;
+        width: 1350px;
+        height: 220px;
+        outline: 1px dashed #00000066;
+      }
+      .g-photo {
+        left: 0;
+        top: 132px;
+        width: 568px;
+        height: 264px;
+        background: repeating-linear-gradient(
+          45deg,
+          #00000012 0 6px,
+          transparent 6px 12px
+        );
+        outline: 1px dashed #00000066;
+      }
+      .g-mobile-l {
+        left: 317px;
+        top: 0;
+        width: 1px;
+        height: 396px;
+        background: #00000059;
+      }
+      .g-mobile-r {
+        left: 1267px;
+        top: 0;
+        width: 1px;
+        height: 396px;
+        background: #00000059;
+      }
+
+      /* ---- page chrome, all of it below the banner --------------------------- */
+
+      .chrome {
+        max-width: 900px;
+        padding: 40px 32px 80px;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .chrome h2 {
+        font-size: 15px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .chrome p,
+      .chrome ol,
+      .chrome table {
+        margin-bottom: 28px;
+      }
+      .chrome ol {
+        padding-left: 20px;
+      }
+      .chrome li {
+        margin-bottom: 6px;
+      }
+      .chrome code {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 13px;
+        background: var(--color-background);
+        padding: 1px 5px;
+      }
+      .chrome table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      .chrome th,
+      .chrome td {
+        text-align: left;
+        padding: 6px 12px 6px 0;
+        border-bottom: 1px solid #e5e5e5;
+        vertical-align: top;
+      }
+      .chrome th {
+        font-weight: 500;
+        color: #666;
+        white-space: nowrap;
+      }
+      .toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 28px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="banner">
+      <div class="grid"></div>
+      <div class="ring"></div>
+      <div class="bar-v"></div>
+      <div class="bar-h"><span>ITSMOR.COM</span></div>
+
+      <div class="copy">
+        <h1>Full-Stack Engineer</h1>
+        <p>AI PRODUCTS · DESIGN SYSTEMS · PERFORMANCE</p>
+      </div>
+
+      <div class="guides">
+        <div class="g-safe"><label>SAFE ZONE 1350 × 220</label></div>
+        <div class="g-photo">
+          <label>PROFILE PHOTO RESERVE 568 × 264</label>
+        </div>
+        <div class="g-mobile-l"></div>
+        <div class="g-mobile-r"></div>
+      </div>
+    </div>
+
+    <div class="chrome">
+      <label class="toggle"
+        ><input type="checkbox" id="guides" /> Show guides (or press
+        <code>G</code>, or load <code>?guides</code>)</label
+      >
+
+      <h2>How to export it</h2>
+      <ol>
+        <li>Right-click the banner → <strong>Inspect</strong>.</li>
+        <li>
+          In the Elements panel, right-click
+          <code>&lt;div id="banner"&gt;</code> →
+          <strong>Capture node screenshot</strong>.
+        </li>
+        <li>
+          You get exactly 1584 × 396, whatever the window size or page zoom.
+          Guides are excluded unless you leave them on.
+        </li>
+      </ol>
+      <p>
+        Two generated copies are already sitting next to this file:
+        <code>linkedin-banner.png</code> at 1584 × 396, which is the one to
+        upload, and <code>linkedin-banner@2x.png</code> at 3168 × 792 if
+        LinkedIn's recompression looks soft on a retina screen.
+      </p>
+
+      <h2>Spec</h2>
+      <table>
+        <tr>
+          <th>Size</th>
+          <td>1584 × 396, 4:1. Exactly 24 × 6 grid cells at 66px.</td>
+        </tr>
+        <tr>
+          <th>Safe zone</th>
+          <td>
+            Centre 1350 × 220, so x 117–1467 and y 88–308. Both text lines sit
+            inside it.
+          </td>
+        </tr>
+        <tr>
+          <th>Photo reserve</th>
+          <td>
+            Bottom-left 568 × 264. This is the one place
+            <code>02-linkedin.md</code> contradicts itself: it also asks for the
+            text to start around x 396, which lands inside the reserve. The
+            layout figure won, because every LinkedIn layout in use puts the
+            avatar lower and further left than the 568 × 264 estimate. Turn the
+            guides on, upload, and look — if the avatar really does cover the
+            headline, the fix is to move the geometry a cell right and the text
+            with it, not to shrink the type.
+          </td>
+        </tr>
+        <tr>
+          <th>Mobile crop</th>
+          <td>
+            Roughly x 317–1267. Headline runs 396–898, the mono line 396–1006.
+            Both survive with room either side.
+          </td>
+        </tr>
+        <tr>
+          <th>Geometry</th>
+          <td>
+            Ring centred at x 1386, bleeding one cell off the top, the bottom
+            and the right. Lapis vertical bar tangent to the ring's left
+            extremity and bleeding top and bottom; horizontal bar crosses it and
+            stops inside the ring's band. Same relationships as the homepage
+            hero, recomposed for 4:1 — at the site's own offsets the horizontal
+            bar falls off the bottom of a 396px canvas.
+          </td>
+        </tr>
+        <tr>
+          <th>Type</th>
+          <td>Inter Bold 56px, IBM Plex Mono 500 21px at 0.09em.</td>
+        </tr>
+        <tr>
+          <th>Colour</th>
+          <td>
+            Every value comes from <code>tokens.generated.css</code>, written
+            from <code>src/lib/tokens.ts</code>. Deliberately not restated here:
+            this row used to name the terracotta that was retired on 2 Sep 2026
+            for failing AA, and a hex in a spec table is the one copy no check
+            catches.
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <script>
+      const box = document.getElementById("guides");
+      box.checked = new URLSearchParams(location.search).has("guides");
+      const sync = () =>
+        document.body.classList.toggle("guides-on", box.checked);
+      sync();
+      box.addEventListener("change", sync);
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "g" || e.key === "G") {
+          box.checked = !box.checked;
+          sync();
+        }
+      });
+    </script>
+  </body>
+</html>

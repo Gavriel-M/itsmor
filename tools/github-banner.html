@@ -5,6 +5,7 @@
     <title>GitHub profile banner — 1536 × 384</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="tokens.generated.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
@@ -32,29 +33,13 @@
 
         No name on the canvas: the README's H1 sits directly beneath it.
       */
-      :root {
-        --cell: 64px;
-        --color-background: #f2f0e6;
-        --color-text: #1a1a1a;
-        --color-terracotta: #b85b40;
-        --color-lapis: #004e98;
-        --banner-grid: #e5e5e5;
-      }
-
       /*
-        Dark is derived from the light tokens, not inverted. The ground keeps
-        the cream's warmth — both sit near 45deg hue — at very low lightness,
-        and lapis is lifted along its own 209deg hue until it clears 4.5:1
-        there; #004e98 manages only 2.2:1 on this ground and all but disappears.
-        The grid line is tuned to the same 1.10:1 against its ground that
-        #e5e5e5 has against the cream.
+        Palette and the dark override both come from tokens.generated.css,
+        written from src/lib/tokens.ts. This file used to carry its own copy of
+        each, which is how it ended up rendering the retired terracotta.
       */
-      html[data-variant="dark"] {
-        --color-background: #161410;
-        --color-text: #e8e4d6;
-        --color-terracotta: #c2634a;
-        --color-lapis: #4d9be8;
-        --banner-grid: #211e17;
+      :root {
+        --cell: var(--grid-cell);
       }
 
       * {
@@ -89,8 +74,8 @@
         position: absolute;
         inset: 0;
         background-image:
-          linear-gradient(to right, var(--banner-grid) 1px, transparent 1px),
-          linear-gradient(to bottom, var(--banner-grid) 1px, transparent 1px);
+          linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+          linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
         background-size:
           var(--cell) 100%,
           100% var(--cell);

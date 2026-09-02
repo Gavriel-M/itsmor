@@ -1,38 +1,63 @@
 # tools/
 
-Screenshot jigs. **Deliberately not part of the site.**
+Screenshot jigs and the token guard. **The jigs are deliberately not part of the site.**
 
 `output: "export"` in `next.config.ts` publishes every route under `src/app/`, and
 `deploy.sh` syncs the whole of `out/` to S3 with `--delete`. So a render jig living at
 `src/app/banner/` becomes a real public page at `itsmor.com/banner` the moment it is
-committed and deployed — which is what these files exist to avoid. Same reasoning, and
-the same pattern, as `~/logzio/career/assets/linkedin-banner.html`.
+committed and deployed — which is what these files exist to avoid.
 
-| File                 | Canvas     | Feeds                                                                            |
-| -------------------- | ---------- | -------------------------------------------------------------------------------- |
-| `og-card.html`       | 1200 × 630 | `src/app/opengraph-image.png` and `src/app/twitter-image.png` — the link preview |
-| `github-banner.html` | 1536 × 384 | The GitHub profile README banner. `?variant=dark` for the dark capture           |
+## The jigs
+
+All three live here, and all three read one token module. Consolidated 2 Sep 2026 per
+`~/logzio/career/08-tokens.md > Jigs`.
+
+| File                   | Canvas     | Feeds                                                                     |
+| ---------------------- | ---------- | ------------------------------------------------------------------------- |
+| `og-card.html`         | 1200 × 630 | `src/app/opengraph-image.png` + `twitter-image.png` — ships with the site |
+| `github-banner.html`   | 1536 × 384 | The GitHub profile README banner. `?variant=dark` for the dark capture    |
+| `linkedin-banner.html` | 1584 × 396 | The LinkedIn profile banner                                               |
 
 ```bash
-./tools/capture.sh       # renders everything into tools/out/, installs the OG card
+./tools/capture.sh    # regenerates tokens, renders everything, installs the OG card
+pnpm tokens:check     # asserts nothing has drifted
 ```
 
-`tools/out/` is gitignored: it is generated output, and the two files the site actually
-needs are copied into `src/app/` by the script.
+`linkedin-banner.html` was moved here from `~/logzio/career/assets/`, which now holds
+exported PNGs only. Sources live with the code; exports live with the docs that
+reference them.
+
+## Tokens
+
+`src/lib/tokens.ts` is the single source. Nothing here hardcodes a palette hex, and
+`pnpm tokens:check` fails if anything starts to.
+
+- `gen-tokens.mjs` writes `tokens.generated.css` from the module. The jigs are
+  standalone HTML opened over `file://`, so they cannot import TypeScript — they link
+  the generated stylesheet instead. It is **committed**, not gitignored, so opening a
+  jig directly in a browser still renders correctly; it is verified the way a lockfile
+  is, and `capture.sh` regenerates it before every render.
+- `check-tokens.mjs` asserts three things the career directory's `check.sh --tokens`
+  cannot see into: that `globals.css`'s `@theme` block agrees with the module, that no
+  palette hex appears anywhere in `src/` outside the module, and that no jig carries
+  one either. A count-based guard would pass a migration that just moves a literal from
+  one file to another; this one is location-based.
+
+Each jig's comment header says which part of `Hero.tsx` / `MagneticCircle.tsx` /
+`GridBackground.tsx` its shapes came from. Nothing is approximated by eye.
 
 ## Notes
 
-- Both jigs carry the site's tokens as literals rather than importing `globals.css`, so a
-  token change in the app does not silently reach them. If `--color-terracotta` or
-  `--color-lapis` move, update both files. The comment blocks at the top of each say
-  which part of `Hero.tsx` / `MagneticCircle.tsx` / `GridBackground.tsx` each shape came
-  from.
-- Fonts come from Google Fonts over the network, so `capture.sh` needs connectivity.
-  `--virtual-time-budget` gives them time to land; if type ever renders as a fallback,
-  raise it.
-- Chrome writes the screenshot and then does not exit. `capture.sh` backgrounds it and
-  reaps it once the PNG size holds steady, with a hard ceiling, rather than waiting on a
-  process that never returns.
-- The GitHub banner PNGs stay in `tools/out/`. Copy the one you want into
-  `~/logzio/career/assets/` and record it there — that directory is the register for
-  profile assets, and nothing in `03-github.md` mentions this banner yet.
+- **Fonts come from Google Fonts over the network**, so `capture.sh` needs
+  connectivity. `--virtual-time-budget` gives them time to land; if type ever renders
+  in a fallback face, raise it.
+- **Chrome writes the screenshot and then does not exit.** `capture.sh` backgrounds it
+  and reaps it once the PNG size holds steady, with a hard ceiling, rather than waiting
+  on a process that never returns.
+- **`tools/out/` is gitignored and disposable.** The canonical exports are the ones
+  committed next to the README or profile that references them. See
+  `03-github.md > Banner assets`.
+- **Re-rendering a banner changes its glyph rasterisation** even when no colour moved,
+  by roughly 1.5% of pixels confined to the text block. That is not a reason to
+  re-upload. Diff the colour tallies, not the byte count, before declaring an asset
+  stale.

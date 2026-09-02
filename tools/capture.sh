@@ -73,11 +73,19 @@ shot() {
     "$(sips -g pixelWidth -g pixelHeight "$target" | awk '/pixel/{printf "%s ", $2}')"
 }
 
+# Tokens first. Rendering before regenerating produces assets that match
+# nothing, which is the whole failure this consolidation exists to prevent.
+echo "🎨 Regenerating tokens from src/lib/tokens.ts…"
+node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON "$ROOT/tools/gen-tokens.mjs"
+echo ""
+
 echo "📸 Capturing jigs…"
-shot og-card.png            1200 630 "file://$ROOT/tools/og-card.html"
-shot github-banner.png      1536 384 "file://$ROOT/tools/github-banner.html"
-shot github-banner-dark.png 1536 384 "file://$ROOT/tools/github-banner.html?variant=dark"
-shot github-banner@2x.png   1536 384 "file://$ROOT/tools/github-banner.html" 2
+shot og-card.png             1200 630 "file://$ROOT/tools/og-card.html"
+shot github-banner.png       1536 384 "file://$ROOT/tools/github-banner.html"
+shot github-banner-dark.png  1536 384 "file://$ROOT/tools/github-banner.html?variant=dark"
+shot github-banner@2x.png    1536 384 "file://$ROOT/tools/github-banner.html" 2
+shot linkedin-banner.png     1584 396 "file://$ROOT/tools/linkedin-banner.html"
+shot linkedin-banner@2x.png  1584 396 "file://$ROOT/tools/linkedin-banner.html" 2
 
 echo ""
 echo "📦 Installing the OG card where Next's file convention finds it…"
@@ -87,5 +95,8 @@ echo "   src/app/opengraph-image.png"
 echo "   src/app/twitter-image.png"
 
 echo ""
-echo "✅ Done. GitHub banner PNGs stay in tools/out/ — copy the one you want to"
-echo "   ~/logzio/career/assets/ and record it there."
+echo "✅ Done. Everything in tools/out/ is disposable. The canonical exports are"
+echo "   the ones committed next to the README or profile that references them:"
+echo "     github-banner*.png  -> the GitHub profile repo's assets/"
+echo "     linkedin-banner.png -> ~/logzio/career/assets/, then re-upload"
+echo "   The OG card is installed into src/app/ above and ships with the site."

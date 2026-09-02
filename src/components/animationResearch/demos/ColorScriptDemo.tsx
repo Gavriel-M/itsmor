@@ -4,9 +4,12 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { usePrefersReducedMotion } from "@/lib/motion/usePrefersReducedMotion";
 import { ToggleButton } from "./shared";
+import { PALETTE } from "@/lib/tokens";
 
+// Only the head of each ramp is a palette token. The rest are ramp steps
+// mixed by eye for this demo and are not brand colours.
 const WARM = [
-  "#b85b40",
+  PALETTE.terracotta,
   "#c96b50",
   "#d4845a",
   "#a84e35",
@@ -16,7 +19,7 @@ const WARM = [
   "#a04530",
 ];
 const COOL = [
-  "#004e98",
+  PALETTE.lapis,
   "#1a6ab5",
   "#3380c2",
   "#005aa0",

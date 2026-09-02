@@ -1,8 +1,10 @@
 import { useRef, useEffect } from "react";
+import { PALETTE } from "@/lib/tokens";
 
-const COLOR_TERRACOTTA = "#b85b40";
-const COLOR_LAPIS = "#004e98";
-const COLOR_BACKGROUND = "#f2f0e6";
+// Terracotta was here too, unused: the two passes are lapis outside and
+// the ground inside, which is what knocks the crackle out of the node.
+const COLOR_LAPIS = PALETTE.lapis;
+const COLOR_BACKGROUND = PALETTE.background;
 
 const POINTS_PER_SIDE = 14;
 const FLICKER_INTERVAL = 60; // ms between displacement regeneration

@@ -5,6 +5,7 @@
     <title>Open Graph card — 1200 × 630</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="tokens.generated.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
@@ -37,13 +38,14 @@
                   point of the ring's hole, so it can never poke through it.
                   Drawn before the ring, so the circle stays unbroken.
       */
+      /*
+        Palette comes from tokens.generated.css, which is written from
+        src/lib/tokens.ts. Only the geometry pitch is local: 630 = 10 x 63
+        exactly, so the card divides cleanly on the short axis and bleeds on
+        the long one, which is what the live page does at any viewport.
+      */
       :root {
         --cell: 63px;
-        --color-background: #f2f0e6;
-        --color-text: #1a1a1a;
-        --color-terracotta: #b85b40;
-        --color-lapis: #004e98;
-        --grid-line: #e5e5e5;
       }
 
       * {

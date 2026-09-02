@@ -5,6 +5,7 @@ import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import Logo from "@/components/ui/Logo";
 import { Center } from "@react-three/drei";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
+import { PALETTE } from "@/lib/tokens";
 import * as THREE from "three";
 
 /**
@@ -189,21 +190,10 @@ function LogoMesh() {
 
           return (
             <group key={part.id}>
-              {/* Child 1: Semi-transparent base mesh for volume */}
-              {/* <mesh geometry={part.extrudedGeometry}>
-                <meshStandardMaterial
-                  color="#B85B40"
-                  transparent={true}
-                  opacity={0}
-                  roughness={1}
-                  metalness={0.1}
-                />
-              </mesh> */}
-
               {/* Child 2: Glowing edge lines for wireframe effect */}
               <lineSegments geometry={part.edgesGeometry}>
                 <lineBasicMaterial
-                  color="#004e98"
+                  color={PALETTE.lapis}
                   linewidth={1}
                   blending={THREE.AdditiveBlending}
                   transparent={true}
@@ -224,9 +214,9 @@ function LogoMesh() {
  * A 3D rotating wireframe representation of the brand logo mark.
  * Engineered aesthetic with glowing blueprint-style edges.
  *
- * Brand Colors:
- * - Terracotta: #B85B40
- * - Off-white Background: #F2F0E6
+ * Colours come from src/lib/tokens.ts. They are not restated here: the two
+ * hexes this comment used to name were the retired terracotta and the ground,
+ * and a stale value in a doc comment is the one kind no check catches.
  *
  * @example
  * ```tsx

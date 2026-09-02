@@ -3,12 +3,15 @@
 import { usePathname } from "next/navigation";
 import Logo from "@/components/ui/Logo";
 import TransitionLink from "@/components/ui/TransitionLink";
+import { PALETTE, withAlpha } from "@/lib/tokens";
 
 const navItems = [
   { label: "WORK", href: "/work" },
   { label: "ABOUT", href: "/about" },
   { label: "CONTACT", href: "/contact" },
 ];
+
+const NAV_FADE = withAlpha(PALETTE.background, 192 / 255);
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -20,9 +23,10 @@ export default function Navigation() {
         aria-hidden="true"
         style={{
           height: "200px",
+          // 192/255 reproduces the original `c0` alpha suffix exactly.
           background: `
-            radial-gradient(ellipse 35vw 110px at 0% 0%, #f2f0e6c0 60%, transparent 100%),
-            radial-gradient(ellipse 60vw 110px at 100% 0%, #f2f0e6c0 60%, transparent 100%)
+            radial-gradient(ellipse 35vw 110px at 0% 0%, ${NAV_FADE} 60%, transparent 100%),
+            radial-gradient(ellipse 60vw 110px at 100% 0%, ${NAV_FADE} 60%, transparent 100%)
           `,
         }}
       />

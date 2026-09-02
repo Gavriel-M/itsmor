@@ -4,6 +4,7 @@ import { useRef, useEffect, useCallback, useState } from "react";
 import { usePrefersReducedMotion } from "@/lib/motion/usePrefersReducedMotion";
 import { easeOutExpo, easeInQuad, easeOutQuad } from "@/lib/motion/easing";
 import { PlayButton, DemoLabel } from "./shared";
+import { PALETTE } from "@/lib/tokens";
 
 const DOT_RADIUS = 6;
 const DURATION_MS = 1000;
@@ -68,7 +69,7 @@ export default function ArcVsLineDemo() {
     };
 
     drawTrail(straightTrail.current, "rgba(0,0,0,0.4)");
-    drawTrail(arcTrail.current, "#b85b40");
+    drawTrail(arcTrail.current, PALETTE.terracotta);
 
     // Draw dots
     ctx.beginPath();
@@ -78,7 +79,7 @@ export default function ArcVsLineDemo() {
 
     ctx.beginPath();
     ctx.arc(ax, ay, DOT_RADIUS, 0, Math.PI * 2);
-    ctx.fillStyle = "#b85b40";
+    ctx.fillStyle = PALETTE.terracotta;
     ctx.fill();
   }, []);
 

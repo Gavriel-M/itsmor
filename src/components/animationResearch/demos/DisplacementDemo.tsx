@@ -2,6 +2,7 @@
 
 import { motion, useAnimationControls } from "framer-motion";
 import { usePrefersReducedMotion } from "@/lib/motion/usePrefersReducedMotion";
+import { PALETTE } from "@/lib/tokens";
 import { DemoLabel } from "./shared";
 
 export default function DisplacementDemo() {
@@ -14,11 +15,11 @@ export default function DisplacementDemo() {
       x: [0, -6, 6, -4, 4, -2, 2, 0],
       borderColor: [
         "rgba(0,0,0,0.1)",
-        "#b85b40",
-        "#b85b40",
-        "#b85b40",
-        "#b85b40",
-        "#b85b40",
+        PALETTE.terracotta,
+        PALETTE.terracotta,
+        PALETTE.terracotta,
+        PALETTE.terracotta,
+        PALETTE.terracotta,
         "rgba(0,0,0,0.1)",
         "rgba(0,0,0,0.1)",
       ],
@@ -35,7 +36,7 @@ export default function DisplacementDemo() {
               ? undefined
               : {
                   y: -6,
-                  borderColor: "#b85b40",
+                  borderColor: PALETTE.terracotta,
                 }
           }
           whileTap={
@@ -44,7 +45,7 @@ export default function DisplacementDemo() {
               : {
                   y: -4,
                   scale: 0.98,
-                  borderColor: "#b85b40",
+                  borderColor: PALETTE.terracotta,
                 }
           }
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -61,7 +62,7 @@ export default function DisplacementDemo() {
               ? undefined
               : {
                   scale: 0.96,
-                  borderColor: "#b85b40",
+                  borderColor: PALETTE.terracotta,
                 }
           }
           transition={{ type: "spring", stiffness: 400, damping: 25 }}

@@ -7,6 +7,7 @@ import { SeparatedLogo } from "./SeparatedLogo";
 import { useCursorTracking } from "./useCursorTracking";
 import { useLightningEffect } from "./useLightningEffect";
 import type { NetworkLink } from "./types";
+import { PALETTE } from "@/lib/tokens";
 
 // Network links configuration
 export const LINKS: NetworkLink[] = [
@@ -134,7 +135,7 @@ const ContactNetwork = () => {
                     y1={cy}
                     x2={cx + link.x}
                     y2={cy + link.y}
-                    stroke="#004e98"
+                    stroke={PALETTE.lapis}
                     strokeWidth="1"
                     className="transition-all duration-300"
                     style={{ opacity: hoveredNode === link.id ? 0.6 : 0.3 }}
