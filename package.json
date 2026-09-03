@@ -4,8 +4,9 @@
   "private": true,
   "packageManager": "pnpm@11.9.0",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "pnpm build:package && next dev",
+    "build": "pnpm build:package && next build",
+    "build:package": "pnpm --filter text-cascade build",
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write .",

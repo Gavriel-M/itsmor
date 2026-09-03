@@ -11,6 +11,7 @@ Personal portfolio site ("itsmor") — a performance-optimized, interactive port
 ```bash
 pnpm dev           # Dev server at localhost:3000
 pnpm build         # Static export build (output: "export")
+pnpm build:package # Build packages/text-cascade — dev and build run this first
 pnpm lint          # ESLint
 pnpm format        # Prettier format all files
 pnpm format:check  # Prettier validation
@@ -24,6 +25,13 @@ CI (`.github/workflows/checks.yml`) runs `verify` on every PR. `tools/*.mjs` imp
 `engines.node >= 22.18`.
 
 Package manager is **pnpm**. The `packages/text-cascade` local package has vitest for tests (`pnpm --filter text-cascade test`). No test runner for the main app.
+
+**The app imports the workspace package, and its `dist/` is gitignored.** `globals.css`
+imports `text-cascade/styles` and `Section.tsx` imports `TextCascade`, both resolving
+through the package's `exports` map into `dist/`. So a clean checkout cannot build or dev
+until the package is built — which is why `dev` and `build` both run `build:package` first.
+`deploy.sh` calls `pnpm run build`, so it is covered too. The package has no `prepare` hook
+on purpose: its `prepack`/`prepublishOnly` gating is left alone.
 
 ## Architecture
 
