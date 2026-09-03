@@ -18,8 +18,8 @@ export default function AboutPage() {
         </div>
         <div className="md:col-span-12 mb-12">
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ y: 20 }}
+            animate={{ y: 0 }}
             className="font-sans font-bold text-6xl md:text-8xl tracking-tighter text-text"
           >
             ABOUT
@@ -29,9 +29,9 @@ export default function AboutPage() {
         {/* Main Content */}
         <div className="md:col-span-8">
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
+            initial={{ y: 12 }}
+            animate={{ y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5, ease: EASE_OUT_EXPO }}
             className="font-sans text-2xl md:text-5xl leading-tight font-bold tracking-tight space-y-8"
           >
             <RotatingText
@@ -68,9 +68,9 @@ export default function AboutPage() {
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
+            initial={{ y: 12 }}
+            animate={{ y: 0 }}
+            transition={{ delay: 0.4, duration: 0.5, ease: EASE_OUT_EXPO }}
           >
             <Timeline />
           </motion.div>
@@ -79,9 +79,9 @@ export default function AboutPage() {
         {/* Sidebar / Details */}
         <div className="md:col-span-4 md:pl-8 border-l border-black/10">
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 }}
+            initial={{ x: 20 }}
+            animate={{ x: 0 }}
+            transition={{ delay: 0.4, duration: 0.5, ease: EASE_OUT_EXPO }}
             className="space-y-12"
           >
             {/* Stack */}

@@ -56,7 +56,7 @@ Components live in `src/components/` organized by page domain:
 
 - `home/` — Hero section, MagneticCircle (mouse-tracking)
 - `work/` — ProjectCard (handles internal + external links), WireframeLogo3D (React Three Fiber)
-- `about/` — Timeline (SVG path animation), RotatingText (cycling text with Framer Motion)
+- `about/` — Timeline (see [Progressive Enhancement](#progressive-enhancement)), RotatingText (cycling text with Framer Motion)
 - `animationResearch/` — Research page system: ResearchLayout, DemoCard, DemoPopover (draggable mobile panel), Section, Toc, HeroHeader, and 7 lazy-loaded demo components in `demos/`
 - `contact/` — Network visualization with canvas-based lightning hover effect, cursor-tracking logo rotation
 - `layout/` — Navigation, GridBackground, PageTransition, ScrollNavigationLoader
@@ -206,6 +206,39 @@ cannot import TypeScript. See `tools/README.md`.
 Two things that will otherwise waste time: **Chrome writes a screenshot and then never
 exits**, so `capture.sh` backgrounds and reaps it; and **the jigs pull fonts from Google
 Fonts over the network**, so capture needs connectivity.
+
+### Progressive Enhancement
+
+**`/about` renders completely with JavaScript disabled** — heading, rotating headline, body
+copy, the whole timeline chart and both sidebar lists. Only the decorative 3D mark needs JS.
+That is a property worth keeping; there is a paint check in
+`~/logzio/career` session notes, and the quick version is to disable JS in devtools and
+confirm nothing vanishes.
+
+Two rules make it hold:
+
+- **No content behind an `opacity: 0` initial.** Every reveal on the page animates transform
+  only. See [Motion](#motion).
+- **No layout gated on measurement.** `Timeline` used to render nothing until a
+  `ResizeObserver` reported a width, so it was absent from the static HTML entirely. It now
+  positions from percentages: the dots carry `--x`/`--y` custom properties and the SVG uses a
+  `0 0 100 100` viewBox with `preserveAspectRatio="none"`, so line and dots agree without
+  either being measured. `vector-effect="non-scaling-stroke"` keeps the stroke uniform under
+  that non-uniform stretch.
+
+`Timeline` is one DOM in two layouts. Below `lg` it is a plain ordered list of year + label,
+because the chart genuinely does not fit — at 390px the label slots are 40px and the widest
+label is 259px. At `lg` and up the same list items become absolutely positioned dots. Label
+anchoring is decided against `CHART_MIN_PX`, the narrowest the chart ever gets: a
+left-anchored label that clears that clears every wider one, so it needs no measurement.
+
+The line reveals with a CSS `clip-path` wipe (`.timeline-line` in `globals.css`), not
+framer-motion, so it animates without JS. A stroke-dash draw was tried first and does not
+work here — under `preserveAspectRatio="none"` plus `non-scaling-stroke`, `stroke-dasharray`
+is measured in px against viewBox units and renders the line dashed rather than drawn, even
+with `pathLength="1"`. The base state is visible and the animation fills `backwards`, so the
+line is hidden only during the delay; the other way round would leave it invisible wherever
+the animation never runs.
 
 ### Motion
 
