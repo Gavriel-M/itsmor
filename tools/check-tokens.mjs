@@ -6,7 +6,7 @@
  * moves a literal between files still fails.
  */
 import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, join, relative } from "node:path";
 import { execFileSync } from "node:child_process";
 import { renderTokensCss, tokensCssIsCurrent } from "./gen-tokens.mjs";
@@ -15,7 +15,9 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const TOKENS_FILE = "src/lib/tokens.ts";
 const RETIRED = ["#b85b40"];
 
-const { PALETTE } = await import(join(ROOT, TOKENS_FILE));
+const { PALETTE, DARK_BANNER, GRID_LINE } = await import(
+  pathToFileURL(join(ROOT, TOKENS_FILE)).href
+);
 const problems = [];
 
 const css = readFileSync(join(ROOT, "src/app/globals.css"), "utf8");
@@ -43,7 +45,14 @@ for (const name of declared.keys()) {
   }
 }
 
-const pattern = `#(${[...Object.values(PALETTE), ...RETIRED]
+// Every exported colour, not just PALETTE: GRID_LINE and DARK_BANNER were
+// unguarded, and a jig had already hardcoded the grid line.
+const pattern = `#(${[
+  ...Object.values(PALETTE),
+  ...Object.values(DARK_BANNER),
+  GRID_LINE,
+  ...RETIRED,
+]
   .map((h) => h.slice(1))
   .join("|")})`;
 
@@ -59,11 +68,28 @@ function grep(...args) {
   }
 }
 
-const strays = grep("src", "--include=*.ts", "--include=*.tsx")
+// *.css included so a hex below globals.css's @theme block cannot hide; the
+// @theme literals themselves are validated above, so those lines are skipped.
+const themeLines = new Set(
+  theme
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean)
+);
+const strays = grep(
+  "src",
+  "--include=*.ts",
+  "--include=*.tsx",
+  "--include=*.css"
+)
   .split("\n")
   .filter(Boolean)
-  .map((line) => line.split(":")[0])
-  .filter((file) => relative(".", file) !== TOKENS_FILE);
+  .filter((line) => {
+    const [file, , match] = line.split(":");
+    if (relative(".", file) === TOKENS_FILE) return false;
+    return ![...themeLines].some((t) => t.includes(match));
+  })
+  .map((line) => line.split(":")[0]);
 
 for (const [file, n] of Object.entries(
   strays.reduce((a, f) => ((a[f] = (a[f] || 0) + 1), a), {})

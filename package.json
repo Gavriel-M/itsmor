@@ -10,7 +10,9 @@
     "lint": "eslint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "tokens:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON tools/check-tokens.mjs"
+    "tokens:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON tools/check-tokens.mjs",
+    "routes:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON tools/check-routes.mjs",
+    "verify": "pnpm format:check && pnpm lint && pnpm tokens:check && pnpm build && pnpm routes:check"
   },
   "dependencies": {
     "text-cascade": "workspace:*",
@@ -39,5 +41,8 @@
     "prettier": "^3.7.4",
     "tailwindcss": "^4.1.17",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=22.18"
   }
 }

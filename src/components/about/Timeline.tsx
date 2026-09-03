@@ -62,6 +62,8 @@ const EVENTS: TimelineEvent[] = [
 ];
 
 const PADDING_X = 40;
+/** IBM Plex Mono advance at text-xs: 12px x 0.6em. */
+const LABEL_CHAR_PX = 7.2;
 const PADDING_Y = 0;
 
 export default function Timeline() {
@@ -132,10 +134,19 @@ export default function Timeline() {
             {EVENTS.map((event, i) => {
               const pos = positions[i];
               const isPrimary = event.emphasis === "primary";
-              // The final label is anchored right and placed above, to stay
-              // inside the container and off the line climbing into its dot.
-              const isLast = i === EVENTS.length - 1;
-              const labelBelow = isLast ? false : event.yPosition <= 0.5;
+              /*
+                Labels are whitespace-nowrap and grow rightward from their dot,
+                so any label near the right edge runs past the container and
+                across the sidebar's rule. The width is estimable because the
+                type is monospace, so the ones that would overflow are anchored
+                right instead — and placed above, since the line climbs steeply
+                through the right-hand dots.
+              */
+              const overflowsRight =
+                pos.x + event.label.length * LABEL_CHAR_PX > dimensions.width;
+              const labelBelow = overflowsRight
+                ? false
+                : event.yPosition <= 0.5;
 
               return (
                 <div
@@ -155,7 +166,7 @@ export default function Timeline() {
                   {/* Label */}
                   <span
                     className={`absolute font-mono text-xs whitespace-nowrap ${
-                      isLast ? "right-0" : "left-0"
+                      overflowsRight ? "right-0" : "left-0"
                     } ${labelBelow ? "top-4" : "bottom-3"}`}
                   >
                     {event.label}

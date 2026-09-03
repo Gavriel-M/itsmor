@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
-import { INDEXABLE_ROUTES, SITE_URL } from "@/lib/site";
+import { SITE_URL } from "@/lib/site";
+import { INDEXABLE_ROUTES } from "@/lib/routes";
 
 export const dynamic = "force-static";
 

@@ -79,11 +79,9 @@ shot linkedin-banner.png     1584 396 "file://$ROOT/tools/linkedin-banner.html"
 shot linkedin-banner@2x.png  1584 396 "file://$ROOT/tools/linkedin-banner.html" 2
 
 echo ""
-echo "📦 Installing the OG card where Next's file convention finds it…"
-cp "$OUT/og-card.png" "$ROOT/src/app/opengraph-image.png"
-cp "$OUT/og-card.png" "$ROOT/src/app/twitter-image.png"
-echo "   src/app/opengraph-image.png"
-echo "   src/app/twitter-image.png"
+echo "📦 Installing the OG card…"
+cp "$OUT/og-card.png" "$ROOT/src/assets/og-card.png"
+echo "   src/assets/og-card.png"
 
 echo ""
 echo "✅ Done. Everything in tools/out/ is disposable. The canonical exports are"

@@ -14,21 +14,35 @@ const ROUTES = [
   { label: "Contact", href: "/contact" },
 ];
 
-/** Lands after the hero's "Portfolio 2026" beat at 1.2s. */
-const DELAY = 1.5;
+/**
+ * Transform only, with opacity left at 1, for the reason `/about`'s body copy
+ * is: this is the page's only positioning line and its only two CTAs, and an
+ * opacity gate keeps them invisible until React hydrates — or forever, if the
+ * bundle fails. It ships visible in the prerendered HTML and rises after.
+ *
+ * The delay stays short for the same reason; the hero's own beats run to 1.2s
+ * and this no longer waits for them.
+ *
+ * Reduced motion is applied through `transition`, not `initial`.
+ * `usePrefersReducedMotion` returns false on the server snapshot, so the first
+ * client render always sees false, and framer-motion never re-reads `initial`
+ * after mount — gating it there silently does nothing.
+ */
+const DELAY = 0.4;
+const DISTANCE = 12;
 
 export default function HeroInfoSlot() {
   const reduceMotion = usePrefersReducedMotion();
 
   return (
     <motion.div
-      initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        delay: reduceMotion ? 0 : DELAY,
-        duration: reduceMotion ? 0.3 : 0.8,
-        ease: EASE_OUT_EXPO,
-      }}
+      initial={{ y: DISTANCE }}
+      animate={{ y: 0 }}
+      transition={
+        reduceMotion
+          ? { duration: 0 }
+          : { delay: DELAY, duration: 0.6, ease: EASE_OUT_EXPO }
+      }
       className="absolute z-20 left-4 right-4 bottom-28 md:left-[var(--grid-cell)] md:right-auto md:bottom-[var(--grid-cell)] md:max-w-md"
     >
       <p className="cursor-default font-mono text-xs md:text-sm leading-relaxed text-text/70 text-balance">

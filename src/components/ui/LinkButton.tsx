@@ -1,5 +1,6 @@
 "use client";
 
+import { twMerge } from "tailwind-merge";
 import { isExternalHref, newTabProps } from "@/lib/links";
 import TransitionLink from "@/components/ui/TransitionLink";
 
@@ -21,7 +22,13 @@ export default function LinkButton({
   size = "sm",
   className = "",
 }: LinkButtonProps) {
-  const classes = `inline-block font-mono uppercase tracking-widest border border-text/15 hover:bg-text hover:text-background focus-visible:bg-text focus-visible:text-background transition-colors duration-300 ${SIZES[size]} ${className}`;
+  // twMerge, not concatenation: a caller passing px-6 would otherwise lose to
+  // SIZES' px-3 or beat it depending on Tailwind's emit order.
+  const classes = twMerge(
+    "inline-block font-mono uppercase tracking-widest border border-text/15 hover:bg-text hover:text-background focus-visible:bg-text focus-visible:text-background transition-colors duration-300",
+    SIZES[size],
+    className
+  );
 
   if (isExternalHref(href)) {
     return (

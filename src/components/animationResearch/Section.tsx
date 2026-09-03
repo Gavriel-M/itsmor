@@ -142,9 +142,9 @@ export default function Section({ section }: SectionProps) {
       {section.checklist && (
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div>
-            <h4 className="font-mono text-xs text-terracotta uppercase tracking-widest mb-3">
+            <h3 className="font-mono text-xs text-terracotta uppercase tracking-widest mb-3">
               Use When
-            </h4>
+            </h3>
             <ul className="space-y-2">
               {section.checklist.useWhen.map((item, i) => (
                 <li
@@ -157,9 +157,9 @@ export default function Section({ section }: SectionProps) {
             </ul>
           </div>
           <div>
-            <h4 className="font-mono text-xs uppercase tracking-widest mb-3 opacity-60">
+            <h3 className="font-mono text-xs uppercase tracking-widest mb-3 opacity-60">
               Avoid When
-            </h4>
+            </h3>
             <ul className="space-y-2">
               {section.checklist.avoidWhen.map((item, i) => (
                 <li
@@ -172,9 +172,9 @@ export default function Section({ section }: SectionProps) {
             </ul>
           </div>
           <div>
-            <h4 className="font-mono text-xs text-lapis uppercase tracking-widest mb-3">
+            <h3 className="font-mono text-xs text-lapis uppercase tracking-widest mb-3">
               A11y & Perf
-            </h4>
+            </h3>
             <ul className="space-y-2">
               {section.checklist.a11yPerf.map((item, i) => (
                 <li

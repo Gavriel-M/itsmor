@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, realpathSync, writeFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -7,7 +7,7 @@ export const TOKENS_CSS = join(HERE, "tokens.generated.css");
 
 export async function renderTokensCss() {
   const { PALETTE, DARK_BANNER, GRID_LINE } = await import(
-    join(HERE, "../src/lib/tokens.ts")
+    pathToFileURL(join(HERE, "../src/lib/tokens.ts")).href
   );
   const vars = (obj, rename = {}) =>
     Object.entries(obj)
@@ -35,7 +35,9 @@ export function tokensCssIsCurrent(expected) {
   }
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+// realpathSync because Node resolves import.meta.url through the real path: a
+// symlinked checkout would otherwise skip the write and exit 0.
+if (import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href) {
   writeFileSync(TOKENS_CSS, await renderTokensCss());
   console.log("wrote tools/tokens.generated.css");
 }

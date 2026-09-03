@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import ogCard from "@/assets/og-card.png";
 
 /** itsmor.com 301s here, so www is the host every absolute URL must name. */
 export const SITE_URL = "https://www.itsmor.com";
@@ -12,23 +13,12 @@ const DESCRIPTION =
   "works out what broke. I own the interface end to end, and enough of the " +
   "backend to argue about it.";
 
-/** Drives sitemap.ts. /cv is absent because it is noindexed. */
-export const INDEXABLE_ROUTES = [
-  "/",
-  "/work",
-  "/work/2d-web-animation",
-  "/about",
-  "/contact",
-] as const;
-
 const OG_IMAGE = {
-  url: "/opengraph-image.png",
-  width: 1200,
-  height: 630,
+  url: ogCard.src,
+  width: ogCard.width,
+  height: ogCard.height,
   alt: TITLE,
 } as const;
-
-const TWITTER_IMAGE = { ...OG_IMAGE, url: "/twitter-image.png" } as const;
 
 function socialCard(title: string, description: string, type: OgType) {
   return {
@@ -45,7 +35,7 @@ function socialCard(title: string, description: string, type: OgType) {
       card: "summary_large_image" as const,
       title,
       description,
-      images: [TWITTER_IMAGE],
+      images: [OG_IMAGE],
     },
   };
 }
