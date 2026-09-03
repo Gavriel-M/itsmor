@@ -5,6 +5,9 @@ import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { Center } from "@react-three/drei";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
 import * as THREE from "three";
+import Logo from "@/components/ui/Logo";
+import { PALETTE } from "@/lib/tokens";
+import { useWebGLSupport } from "@/lib/webgl";
 
 /**
  * LogoPart Interface
@@ -188,21 +191,10 @@ function LogoMesh() {
 
           return (
             <group key={part.id}>
-              {/* Child 1: Semi-transparent base mesh for volume */}
-              {/* <mesh geometry={part.extrudedGeometry}>
-                <meshStandardMaterial
-                  color="#B85B40"
-                  transparent={true}
-                  opacity={0}
-                  roughness={1}
-                  metalness={0.1}
-                />
-              </mesh> */}
-
               {/* Child 2: Glowing edge lines for wireframe effect */}
               <lineSegments geometry={part.edgesGeometry}>
                 <lineBasicMaterial
-                  color="#004e98"
+                  color={PALETTE.lapis}
                   linewidth={1}
                   blending={THREE.AdditiveBlending}
                   transparent={true}
@@ -217,26 +209,27 @@ function LogoMesh() {
   );
 }
 
-/**
- * WireframeLogo3D Component
- *
- * A 3D rotating wireframe representation of the brand logo mark.
- * Engineered aesthetic with glowing blueprint-style edges.
- *
- * Brand Colors:
- * - Terracotta: #B85B40
- * - Off-white Background: #F2F0E6
- *
- * @example
- * ```tsx
- * <div className="w-full h-96">
- *   <WireframeLogo3D />
- * </div>
- * ```
- */
+function FlatLogo() {
+  return (
+    <div
+      className="w-full h-full flex items-center justify-center"
+      aria-hidden="true"
+    >
+      <Logo className="w-1/2 h-1/2 text-lapis opacity-40" />
+    </div>
+  );
+}
+
+/** A 3D wireframe of the brand mark, with a flat fallback where WebGL is absent. */
 export default function WireframeLogo3D({ zoom }: { zoom: number }) {
+  const webglSupported = useWebGLSupport();
+
+  if (webglSupported === null) return null;
+  if (!webglSupported) return <FlatLogo />;
+
   return (
     <Canvas
+      fallback={<FlatLogo />}
       orthographic
       camera={{
         zoom,

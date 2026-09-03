@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Open Graph card — 1200 × 630</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="tokens.generated.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /*
+        Geometry derived from Hero.tsx and MagneticCircle.tsx, not by eye:
+          ring    the 8-cell circle (504px) at the site's 0.62-cell stroke,
+                  bleeding 2 cells off the right, 1 cell clear top and bottom
+          column  the vertical lapis bar, tangent to the ring's left extremity
+          rail    the horizontal bar, stopping at ring centre - inner radius so
+                  it can never enter the hole. Drawn first, under the ring.
+        Pitch is 63px, not the site's 64: 630 = 10 x 63 exactly, so the card
+        divides cleanly on the short axis and bleeds on the long one.
+      */
+      :root {
+        --cell: 63px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        overflow: hidden;
+        background: var(--color-background);
+      }
+
+      body {
+        width: 1200px;
+        height: 630px;
+        font-family: "Inter", "Helvetica Neue", sans-serif;
+        color: var(--color-text);
+      }
+
+      #canvas {
+        position: relative;
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: var(--color-background);
+      }
+
+      .grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+          linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+        background-size:
+          var(--cell) 100%,
+          100% var(--cell);
+        background-position: 0 0;
+      }
+
+      svg {
+        position: absolute;
+        inset: 0;
+      }
+
+      .copy {
+        position: absolute;
+        left: 126px; /* 2 cells */
+        top: 170px;
+      }
+
+      .copy h1 {
+        font-size: 80px;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: var(--color-text);
+      }
+
+      .copy .role {
+        margin-top: 26px;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 26px;
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: 0.12em;
+        color: var(--color-text);
+      }
+
+      .copy .domain {
+        margin-top: 18px;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.09em;
+        color: var(--color-lapis);
+      }
+
+      .url {
+        position: absolute;
+        left: 268px;
+        top: 378px;
+        height: 63px;
+        display: flex;
+        align-items: center;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        color: var(--color-background);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="canvas">
+      <div class="grid"></div>
+
+      <svg width="1200" height="630" viewBox="0 0 1200 630" aria-hidden="true">
+        <!-- rail: x 252 -> 858 (ring centre 1071 - inner radius 213) -->
+        <rect
+          x="252"
+          y="378"
+          width="606"
+          height="63"
+          fill="var(--color-lapis)"
+        />
+        <!-- ring: outer r 252, stroke 39, so the drawn r is 252 - 39/2 -->
+        <circle
+          cx="1071"
+          cy="315"
+          r="232.5"
+          fill="none"
+          stroke="var(--color-terracotta)"
+          stroke-width="39"
+        />
+        <!-- column: tangent to the ring's left extremity (1071 - 252 = 819) -->
+        <rect
+          x="756"
+          y="-63"
+          width="63"
+          height="756"
+          fill="var(--color-lapis)"
+        />
+      </svg>
+
+      <div class="copy">
+        <h1>Gavriel Mor</h1>
+        <p class="role">FULL-STACK ENGINEER</p>
+        <p class="domain">AI PRODUCTS · DESIGN SYSTEMS · PERFORMANCE</p>
+      </div>
+
+      <div class="url">ITSMOR.COM</div>
+    </div>
+  </body>
+</html>

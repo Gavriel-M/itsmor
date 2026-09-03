@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>GitHub profile banner — 1536 × 384</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="tokens.generated.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /*
+        Geometry is Hero.tsx + MagneticCircle.tsx re-laid on the site's real
+        64px grid, so 1536 x 384 is exactly 24 x 6 cells:
+          ring    the 8-cell circle with its 40px border, centred on the
+                  vertical midline so it bleeds one cell top and bottom
+          column  the vertical lapis bar, tangent to the ring's right edge
+          rail    the horizontal bar, crossing the column and passing behind
+                  the ring so the circle stays unbroken
+        No name on the canvas: the README's H1 sits directly beneath it.
+      */
+      :root {
+        --cell: var(--grid-cell);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        overflow: hidden;
+        background: var(--color-background);
+      }
+
+      body {
+        width: 1536px;
+        height: 384px;
+        font-family: "Inter", "Helvetica Neue", sans-serif;
+        color: var(--color-text);
+      }
+
+      #canvas {
+        position: relative;
+        width: 1536px;
+        height: 384px;
+        overflow: hidden;
+        background: var(--color-background);
+      }
+
+      .grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+          linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+        background-size:
+          var(--cell) 100%,
+          100% var(--cell);
+        background-position:
+          center top,
+          left center;
+      }
+
+      svg {
+        position: absolute;
+        inset: 0;
+      }
+
+      .copy {
+        position: absolute;
+        left: 128px; /* 2 cells */
+        top: 104px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+      }
+
+      .copy h1 {
+        font-size: 72px;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: var(--color-text);
+      }
+
+      .copy p {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 22px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.09em;
+        color: var(--color-lapis);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="canvas">
+      <div class="grid"></div>
+
+      <!-- Rail first — the ring draws over it, keeping the circle unbroken. -->
+      <svg width="1536" height="384" viewBox="0 0 1536 384" aria-hidden="true">
+        <rect
+          x="832"
+          y="256"
+          width="640"
+          height="64"
+          fill="var(--color-lapis)"
+        />
+        <circle
+          cx="1152"
+          cy="192"
+          r="236"
+          fill="none"
+          stroke="var(--color-terracotta)"
+          stroke-width="40"
+        />
+        <rect
+          x="1408"
+          y="-64"
+          width="64"
+          height="512"
+          fill="var(--color-lapis)"
+        />
+      </svg>
+
+      <div class="copy">
+        <h1>Full-Stack Engineer</h1>
+        <p>AI PRODUCTS · DESIGN SYSTEMS · PERFORMANCE</p>
+      </div>
+    </div>
+
+    <script>
+      // ?variant=dark for the dark capture. capture.sh drives both.
+      const v = new URLSearchParams(location.search).get("variant");
+      if (v === "dark") document.documentElement.dataset.variant = "dark";
+    </script>
+  </body>
+</html>

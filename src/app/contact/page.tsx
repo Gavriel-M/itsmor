@@ -33,7 +33,7 @@ export default function ContactPage() {
               gavriel.mor@itsmor.com
             </a>
             <p className="font-mono text-xs uppercase tracking-widest opacity-50 mt-4">
-              Based in Munich, CET timezone
+              Based in Israel &middot; moving to Munich
             </p>
           </motion.div>
         </div>

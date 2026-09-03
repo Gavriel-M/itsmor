@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import RotatingText from "@/components/about/RotatingText";
 import Timeline from "@/components/about/Timeline";
+import { EASE_OUT_EXPO } from "@/lib/motion/easing";
 import WireframeLogo3D from "@/components/work/WireframeLogo3D";
 
 export default function AboutPage() {
@@ -36,34 +37,34 @@ export default function AboutPage() {
             <RotatingText
               prefix="I am a"
               words={[
-                "creative developer",
+                "full-stack engineer",
+                "AI product engineer",
                 "design engineer",
-                "craft-driven builder",
               ]}
               className="font-sans text-2xl md:text-5xl leading-tight font-bold tracking-tight"
             />
             <RotatingText
               prefix="My philosophy is"
               words={[
-                "precision and purpose",
                 "less but better",
-                "motion with meaning",
-                "craft over convention",
                 "constraint as catalyst",
+                "motion with meaning",
               ]}
               className="font-sans text-2xl md:text-5xl leading-tight font-bold tracking-tight"
             />
           </motion.div>
 
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="font-sans text-base md:text-lg leading-relaxed opacity-80 mt-12"
+            initial={{ y: 12 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.5, ease: EASE_OUT_EXPO }}
+            className="font-sans text-base md:text-lg leading-relaxed opacity-80 mt-12 max-w-2xl"
           >
-            Frontend engineer based in Munich. 2.5 years building observability
-            tools at Logz.io. <br />I care about performance, design systems,
-            and making complex data feel simple.
+            Full-stack engineer at Logz.io since 2023. I am the second engineer
+            on OrionIQ, an agent that takes an alert and works out what broke,
+            and I own its interface end to end. Before that I built the
+            company&apos;s design system, and moved the entire SIEM product onto
+            a new platform single-handed. Based in Israel, moving to Munich.
           </motion.p>
 
           <motion.div
@@ -76,7 +77,7 @@ export default function AboutPage() {
         </div>
 
         {/* Sidebar / Details */}
-        <div className="md:col-span-4 md:pl-8 border-l border-black/10 dark:border-white/10">
+        <div className="md:col-span-4 md:pl-8 border-l border-black/10">
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -89,12 +90,12 @@ export default function AboutPage() {
                 Professional Stack
               </h3>
               <ul className="font-sans text-sm md:text-base space-y-2">
-                <li>React / TypeScript / Next.js</li>
-                <li>Zustand / React Query</li>
-                <li>Tailwind CSS / Emotion</li>
-                <li>Highcharts / Framer Motion</li>
-                <li>Vite / Storybook / Git</li>
-                <li>Node.js / PostgreSQL</li>
+                <li>TypeScript / React / Node.js</li>
+                <li>TanStack Query and Router</li>
+                <li>Emotion / @xstyled</li>
+                <li>AWS Bedrock / Prisma / SQL</li>
+                <li>Nx / Storybook / Playwright</li>
+                <li>Web Workers / OPFS / SSE</li>
               </ul>
             </div>
 
@@ -104,10 +105,10 @@ export default function AboutPage() {
                 Areas of Expertise
               </h3>
               <ul className="font-sans text-sm md:text-base space-y-2">
-                <li>Design Systems</li>
+                <li>AI Product Engineering</li>
                 <li>Data Visualization</li>
+                <li>Design Systems</li>
                 <li>Performance Engineering</li>
-                <li>Frontend Architecture</li>
               </ul>
             </div>
           </motion.div>

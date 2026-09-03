@@ -11,12 +11,27 @@ Personal portfolio site ("itsmor") — a performance-optimized, interactive port
 ```bash
 pnpm dev           # Dev server at localhost:3000
 pnpm build         # Static export build (output: "export")
+pnpm build:package # Build packages/text-cascade — dev and build run this first
 pnpm lint          # ESLint
 pnpm format        # Prettier format all files
 pnpm format:check  # Prettier validation
+pnpm tokens:check  # Palette guard — see Design Tokens
+pnpm routes:check  # Asserts out/ publishes only intended routes (needs a build)
+pnpm verify        # All of the above, in the order CI runs them
 ```
 
+CI (`.github/workflows/checks.yml`) runs `verify` on every PR. `tools/*.mjs` import
+`src/lib/*.ts` directly, which needs Node's unflagged TypeScript stripping — hence
+`engines.node >= 22.18`.
+
 Package manager is **pnpm**. The `packages/text-cascade` local package has vitest for tests (`pnpm --filter text-cascade test`). No test runner for the main app.
+
+**The app imports the workspace package, and its `dist/` is gitignored.** `globals.css`
+imports `text-cascade/styles` and `Section.tsx` imports `TextCascade`, both resolving
+through the package's `exports` map into `dist/`. So a clean checkout cannot build or dev
+until the package is built — which is why `dev` and `build` both run `build:package` first.
+`deploy.sh` calls `pnpm run build`, so it is covered too. The package has no `prepare` hook
+on purpose: its `prepack`/`prepublishOnly` gating is left alone.
 
 ## Architecture
 
@@ -25,6 +40,15 @@ Package manager is **pnpm**. The `packages/text-cascade` local package has vites
 - **Next.js 16 App Router** with `output: "export"` (fully static, no SSR/API routes)
 - Images are unoptimized (`next.config.ts`) since they're served via CloudFront
 - Path alias: `@/*` → `./src/*`
+
+**`output: "export"` publishes every route under `src/app/`, and `deploy.sh` syncs all of
+`out/` to S3 with `--delete`.** Anything placed in `src/app/` becomes a public page on
+itsmor.com. Render jigs and other dev-only pages belong in `tools/` as standalone HTML —
+see [Render Jigs](#render-jigs).
+
+**Metadata route conventions need `export const dynamic = "force-static"`** under
+`output: "export"`, or the build fails collecting page data. Applies to `robots.ts` and
+`sitemap.ts`.
 
 ### Component Organization
 
@@ -38,6 +62,18 @@ Components live in `src/components/` organized by page domain:
 - `layout/` — Navigation, GridBackground, PageTransition, ScrollNavigationLoader
 - `ui/` — Shared primitives (Logo, AnimatedLogoFrame, TransitionLink)
 
+### Shared Modules
+
+`src/lib/` holds everything not tied to one component:
+
+- `site.ts` — SEO strings and metadata builders, see [Metadata & SEO](#metadata--seo)
+- `routes.ts` — the sitemap's route list. Deliberately free of bundler-only imports so
+  `tools/check-routes.mjs` can read it from plain Node
+- `tokens.ts` — the palette, see [Design Tokens](#design-tokens)
+- `links.ts` — external-href detection and new-tab props
+- `webgl.ts` — `useWebGLSupport`, see [WebGL](#webgl)
+- `motion/easing.ts`, `motion/usePrefersReducedMotion.ts` — shared motion primitives
+
 ### Content Data
 
 Content-heavy pages store structured data in `src/data/` (e.g., `animationResearchContent.ts` defines all 14 research sections with paragraphs, callouts, checklists, and demo references).
@@ -49,7 +85,7 @@ Content-heavy pages store structured data in `src/data/` (e.g., `animationResear
 - `/work/2d-web-animation` — 14-section research article with interactive demos
 - `/about` — Rotating titles, bio, timeline, tech stack, expertise
 - `/contact` — Email, social network visualization, copyright footer
-- `/cv` — Embedded PDF viewer with download fallback for mobile
+- `/cv` — Interim state (`CvInterim`), `noindex`. The PDF it used to serve was removed from `public/` as well as unlinked, because S3 serves file paths directly
 
 ### Page Transitions
 
@@ -100,13 +136,110 @@ The contact page has the most complex component architecture:
 
 - `ContactNetwork.tsx` — Main canvas-based network visualization
 - `SeparatedLogo.tsx` + `useCursorTracking.ts` — Logo that rotates to follow cursor with shortest-path angle normalization and smooth lerp interpolation
-- `useLightningEffect.ts` — Canvas-based lightning crackling on hovered link nodes (two-pass: terracotta outside, background inside)
+- `useLightningEffect.ts` — Canvas-based lightning crackling on hovered link nodes (two-pass: lapis outside, the cream ground inside, which knocks the crackle out of the node)
 - Types shared via `src/components/contact/types.ts`
+
+### Metadata & SEO
+
+`src/lib/site.ts` owns every SEO string and shape. `layout.tsx` re-exports `rootMetadata`;
+every other route calls `routeMetadata({ title, description?, type?, nested? })`.
+
+Three Next.js behaviours the helper exists to contain:
+
+- **A child segment's `openGraph` replaces the parent's rather than merging.** A partial
+  one silently drops `og:image`, `og:site_name`, `og:locale` and `og:url`. Omitting it
+  entirely is the opposite failure — the route inherits the root's `og:title` and its
+  social card claims to be the homepage. `routeMetadata` has no partial form, so neither
+  is reachable. Do not hand-roll a route metadata object.
+- **`alternates.canonical` and `openGraph.url` must be `"./"`, not `"/"`.** A literal `/`
+  pins every page's canonical and `og:url` to the homepage.
+- **A plain-string `title` consumes the parent's template and passes nothing down.** A
+  layout with children needs `nested: true` so nested routes keep the name in their title.
+
+`INDEXABLE_ROUTES` in `src/lib/routes.ts` drives `sitemap.ts`, and `pnpm routes:check`
+asserts it against what the export actually publishes — a list nothing checks cannot stop a
+stray route shipping, which is how `/banner` nearly went live. `/cv` is published but
+unlisted. `robots.ts` deliberately does not `Disallow: /cv` — a disallow stops the crawl,
+so the crawler never reads the noindex.
+
+**The OG card is a static import from `src/assets/og-card.png`, not Next's
+`opengraph-image` file convention.** The convention only hashes the URL for the segment
+that declares the file, so child routes advertised an unhashed `/opengraph-image.png` — and
+`deploy.sh` caches assets for a year, which would freeze five routes' link previews on the
+old card. A static import is content-hashed for every route. One asset serves both `og` and
+`twitter`. Regenerate with `./tools/capture.sh`.
+
+### Design Tokens
+
+**`src/lib/tokens.ts` is the only place a palette hex may appear.** Everything else reads
+`PALETTE` — canvas code, three.js material colours, raw CSS strings, the data file.
+`src/app/globals.css`'s `@theme` block necessarily repeats the values, because Tailwind v4
+needs literals in CSS to generate utilities; `pnpm tokens:check` asserts the two agree,
+that no hex has leaked elsewhere in `src/` or into a jig, and that the jigs' generated
+stylesheet is current. The guard is location-based, not count-based, so a migration that
+only moves a literal between files still fails.
+
+The palette contract, contrast measurements and use rules live in
+`~/logzio/career/08-tokens.md`. Two rules that are easy to get wrong:
+
+- **Opacity is part of the colour.** `terracotta` under `opacity-80` composites to 3.25:1
+  and fails AA. No opacity below 100% clears 4.5:1 with it — remove the opacity rather
+  than reducing it, and measure composites, never the token.
+- **`gold` and `amber` may never carry text or state.** Both are under 1.5:1 on the cream
+  ground. Decoration only; `--cascade-glow-color` is the legitimate use.
+
+There is no `tailwind.config.ts`. Tailwind v4 reads a config only via an `@config`
+directive and there is none, so a config file would be dead weight that looks live.
+
+`DARK_BANNER` is the GitHub banner's dark ground, derived for that ground rather than
+inverted — `lapis` manages only 2.2:1 there. It is independent of `PALETTE` on purpose, so
+a light-token change does not restyle the dark banner.
+
+### Render Jigs
+
+`tools/` holds three standalone HTML jigs — the OG card, the GitHub profile banner and the
+LinkedIn banner — plus `capture.sh` to render them with headless Chrome. They are **not**
+Next routes, for the reason in [Framework & Deployment](#framework--deployment). All three
+link `tools/tokens.generated.css`, written from the token module, because standalone HTML
+cannot import TypeScript. See `tools/README.md`.
+
+Two things that will otherwise waste time: **Chrome writes a screenshot and then never
+exits**, so `capture.sh` backgrounds and reaps it; and **the jigs pull fonts from Google
+Fonts over the network**, so capture needs connectivity.
+
+### Motion
+
+Framer Motion **never re-reads `initial` after mount**, and
+`usePrefersReducedMotion` returns `false` for the server snapshot so the first client render
+always sees `false`. Gating `initial` on reduced motion therefore does nothing — gate
+`transition` (or `animate`) instead.
+
+**Do not put primary content behind an `opacity: 0` initial.** It stays invisible until
+hydration, and forever if the bundle fails. `/about`'s body copy and the homepage's
+positioning slot both animate transform only, with opacity left at 1, for that reason. The
+hero's own wordmark and geometry are decorative and still fade.
+
+The hero uses `h-dvh`, not `h-screen`: `100vh` is the _large_ viewport on iOS Safari, which
+put the homepage's CTAs under the browser chrome.
+
+### WebGL
+
+`WireframeLogo3D` mounts a `<Canvas>` only after `useWebGLSupport()` confirms support.
+R3F's own `fallback` prop is not sufficient on its own: it catches the throw but only
+after three.js has attempted the context and logged two errors, which Lighthouse records.
+The support check has to come first.
 
 ## Code Conventions
 
 - Prettier: 2-space indent, trailing commas (es5), double quotes (single quotes disabled)
 - All interactive components use `"use client"` directive
 - Most components are client components due to heavy interactivity
-- `ProjectCard` detects external URLs (`http` prefix) and renders `<a target="_blank">` instead of Next.js `<Link>`
+- Link handling goes through `src/lib/links.ts`. `isExternalHref` decides `<a>` vs Next
+  `Link`; `newTabProps` adds `target`/`rel` for http(s) only, since `mailto:` and `tel:`
+  hand off to another app and would leave an empty tab behind
+- `src/components/ui/LinkButton.tsx` is the shared bordered mono link, and picks `<a>` or
+  `TransitionLink` from the href
+- Reduced motion uses `usePrefersReducedMotion` from `src/lib/motion/`, not framer-motion's
+  `useReducedMotion`. Easing curves come from `src/lib/motion/easing.ts` — do not inline
+  `[0.22, 1, 0.36, 1]`
 - Project data lives inline in page components (no separate config/JSON files)

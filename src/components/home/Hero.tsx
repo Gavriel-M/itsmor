@@ -2,10 +2,11 @@
 
 import { motion } from "framer-motion";
 import { MagneticCircle } from "./MagneticCircle";
+import HeroInfoSlot from "./HeroInfoSlot";
 
 export default function Hero() {
   return (
-    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+    <section className="relative h-dvh w-full flex items-center justify-center overflow-hidden">
       <div className="relative z-10 flex flex-col items-center justify-center">
         <div className="absolute inset-0 pointer-events-none">
           {/* Red Circle */}
@@ -68,6 +69,9 @@ export default function Hero() {
           itsmor
         </motion.h1>
       </div>
+
+      {/* Sibling of the wordmark wrapper, not a child — see HeroInfoSlot. */}
+      <HeroInfoSlot />
     </section>
   );
 }

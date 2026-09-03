@@ -1,0 +1,31 @@
+name: Checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # tools/*.mjs import src/lib/*.ts directly, which needs Node's
+          # unflagged TypeScript stripping. Kept in step with package.json's
+          # engines field.
+          node-version: 22.18
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm format:check
+      - run: pnpm lint
+      - run: pnpm tokens:check
+      - run: pnpm build
+      - run: pnpm routes:check
+      - run: pnpm --filter text-cascade test

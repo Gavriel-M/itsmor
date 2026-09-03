@@ -1,8 +1,5 @@
 import { useRef, useEffect } from "react";
-
-const COLOR_TERRACOTTA = "#b85b40";
-const COLOR_LAPIS = "#004e98";
-const COLOR_BACKGROUND = "#f2f0e6";
+import { PALETTE } from "@/lib/tokens";
 
 const POINTS_PER_SIDE = 14;
 const FLICKER_INTERVAL = 60; // ms between displacement regeneration
@@ -188,7 +185,7 @@ export const useLightningEffect = ({
       ctx.lineWidth = STROKE_WIDTH;
 
       // Pass 1: Lapis stroke (visible outside button)
-      ctx.strokeStyle = COLOR_LAPIS;
+      ctx.strokeStyle = PALETTE.lapis;
       drawLightningPath(ctx, points);
       ctx.stroke();
 
@@ -200,7 +197,7 @@ export const useLightningEffect = ({
       ctx.rect(left, top, nodeRect.width, nodeRect.height);
       ctx.clip();
 
-      ctx.strokeStyle = COLOR_BACKGROUND;
+      ctx.strokeStyle = PALETTE.background;
       ctx.lineWidth = STROKE_WIDTH;
       ctx.lineJoin = "bevel";
       ctx.lineCap = "butt";

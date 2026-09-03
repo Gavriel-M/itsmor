@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { EASE_OUT_EXPO } from "@/lib/motion/easing";
+import { ARTICLE } from "@/data/animationResearchContent";
 
 export default function HeroHeader() {
   return (
@@ -22,9 +23,7 @@ export default function HeroHeader() {
         transition={{ duration: 0.6, ease: EASE_OUT_EXPO, delay: 0.15 }}
         className="cursor-default font-mono text-sm md:text-base max-w-xl leading-relaxed opacity-80"
       >
-        Translating classical animation principles into the constraints and
-        opportunities of web UI motion — timing, easing, staging, and
-        perception.
+        {ARTICLE.standfirst}
       </motion.p>
     </header>
   );

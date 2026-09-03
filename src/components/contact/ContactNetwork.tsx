@@ -7,6 +7,7 @@ import { SeparatedLogo } from "./SeparatedLogo";
 import { useCursorTracking } from "./useCursorTracking";
 import { useLightningEffect } from "./useLightningEffect";
 import type { NetworkLink } from "./types";
+import { PALETTE } from "@/lib/tokens";
 
 // Network links configuration
 export const LINKS: NetworkLink[] = [
@@ -26,7 +27,16 @@ export const LINKS: NetworkLink[] = [
   },
   {
     id: "readcv",
-    label: "Resume",
+    /*
+      Not "Resume". /cv currently serves an interim state, and a node promising a
+      document that the page does not hand over is the stale-PDF defect in a
+      smaller size. This says what the page actually delivers.
+
+      It makes a timing claim, which is the one thing here that can go stale — it
+      reverts to "CV" the day the new export lands. If the CV slips well past
+      that, change the word rather than leaving "SOON" standing.
+    */
+    label: "CV soon",
     href: "/cv",
     x: 0,
     y: 120,
@@ -125,7 +135,7 @@ const ContactNetwork = () => {
                     y1={cy}
                     x2={cx + link.x}
                     y2={cy + link.y}
-                    stroke="#004e98"
+                    stroke={PALETTE.lapis}
                     strokeWidth="1"
                     className="transition-all duration-300"
                     style={{ opacity: hoveredNode === link.id ? 0.6 : 0.3 }}

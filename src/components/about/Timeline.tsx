@@ -36,26 +36,34 @@ const EVENTS: TimelineEvent[] = [
     emphasis: "primary",
   },
   {
-    label: "EXPLORE · ALERTS · DASHBOARDS",
+    label: "EXPLORE · ALERTS · FIRST AI FEATURES",
     year: "2024",
-    yPosition: 0.3,
+    yPosition: 0.32,
     emphasis: "secondary",
   },
   {
     label: "DESIGN SYSTEM LEAD",
     year: "2025",
-    yPosition: 0.15,
+    yPosition: 0.22,
     emphasis: "primary",
   },
   {
-    label: "TEAM LEAD",
+    label: "ACTING TEAM LEAD · SIEM MIGRATION",
     year: "2026",
-    yPosition: 0.1,
+    yPosition: 0.13,
+    emphasis: "primary",
+  },
+  {
+    label: "ORIONIQ · SECOND ENGINEER",
+    year: "NOW",
+    yPosition: 0.05,
     emphasis: "primary",
   },
 ];
 
 const PADDING_X = 40;
+/** IBM Plex Mono advance at text-xs: 12px x 0.6em. */
+const LABEL_CHAR_PX = 7.2;
 const PADDING_Y = 0;
 
 export default function Timeline() {
@@ -126,7 +134,19 @@ export default function Timeline() {
             {EVENTS.map((event, i) => {
               const pos = positions[i];
               const isPrimary = event.emphasis === "primary";
-              const labelBelow = event.yPosition <= 0.5;
+              /*
+                Labels are whitespace-nowrap and grow rightward from their dot,
+                so any label near the right edge runs past the container and
+                across the sidebar's rule. The width is estimable because the
+                type is monospace, so the ones that would overflow are anchored
+                right instead — and placed above, since the line climbs steeply
+                through the right-hand dots.
+              */
+              const overflowsRight =
+                pos.x + event.label.length * LABEL_CHAR_PX > dimensions.width;
+              const labelBelow = overflowsRight
+                ? false
+                : event.yPosition <= 0.5;
 
               return (
                 <div
@@ -145,9 +165,9 @@ export default function Timeline() {
 
                   {/* Label */}
                   <span
-                    className={`absolute left-0 font-mono text-xs whitespace-nowrap ${
-                      labelBelow ? "top-4" : "bottom-3"
-                    }`}
+                    className={`absolute font-mono text-xs whitespace-nowrap ${
+                      overflowsRight ? "right-0" : "left-0"
+                    } ${labelBelow ? "top-4" : "bottom-3"}`}
                   >
                     {event.label}
                   </span>
