@@ -54,11 +54,6 @@ const EVENTS: TimelineEvent[] = [
     emphasis: "primary",
   },
   {
-    /*
-      "TEAM LEAD · 2026" used to end the line, which read as his current title.
-      It was acting, for four months, and he has since moved to OrionIQ. NOW
-      rather than a fourth 2026 removes the misread in one word.
-    */
     label: "ORIONIQ · SECOND ENGINEER",
     year: "NOW",
     yPosition: 0.05,
@@ -137,14 +132,8 @@ export default function Timeline() {
             {EVENTS.map((event, i) => {
               const pos = positions[i];
               const isPrimary = event.emphasis === "primary";
-              /*
-                Labels are nowrap and grow rightward from their dot. The last
-                dot sits PADDING_X from the right edge, so a left-anchored label
-                runs past the container and across the sidebar's left rule —
-                and right-anchoring it alone drops it onto the line, which
-                climbs steeply into that dot. So the final label is anchored
-                right AND placed above, into the empty space over the dot.
-              */
+              // The final label is anchored right and placed above, to stay
+              // inside the container and off the line climbing into its dot.
               const isLast = i === EVENTS.length - 1;
               const labelBelow = isLast ? false : event.yPosition <= 0.5;
 

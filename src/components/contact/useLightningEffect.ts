@@ -1,11 +1,6 @@
 import { useRef, useEffect } from "react";
 import { PALETTE } from "@/lib/tokens";
 
-// Terracotta was here too, unused: the two passes are lapis outside and
-// the ground inside, which is what knocks the crackle out of the node.
-const COLOR_LAPIS = PALETTE.lapis;
-const COLOR_BACKGROUND = PALETTE.background;
-
 const POINTS_PER_SIDE = 14;
 const FLICKER_INTERVAL = 60; // ms between displacement regeneration
 const STROKE_WIDTH = 1.5;
@@ -190,7 +185,7 @@ export const useLightningEffect = ({
       ctx.lineWidth = STROKE_WIDTH;
 
       // Pass 1: Lapis stroke (visible outside button)
-      ctx.strokeStyle = COLOR_LAPIS;
+      ctx.strokeStyle = PALETTE.lapis;
       drawLightningPath(ctx, points);
       ctx.stroke();
 
@@ -202,7 +197,7 @@ export const useLightningEffect = ({
       ctx.rect(left, top, nodeRect.width, nodeRect.height);
       ctx.clip();
 
-      ctx.strokeStyle = COLOR_BACKGROUND;
+      ctx.strokeStyle = PALETTE.background;
       ctx.lineWidth = STROKE_WIDTH;
       ctx.lineJoin = "bevel";
       ctx.lineCap = "butt";

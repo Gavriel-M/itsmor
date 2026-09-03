@@ -1,6 +1,13 @@
 import { type ResearchSection } from "@/components/animationResearch/types";
 import { PALETTE } from "@/lib/tokens";
 
+export const ARTICLE = {
+  title: "2D Animation on the Web",
+  standfirst:
+    "Translating classical animation principles into the constraints and " +
+    "opportunities of web UI motion — timing, easing, staging, and perception.",
+} as const;
+
 export const sections: ResearchSection[] = [
   {
     id: "preface",

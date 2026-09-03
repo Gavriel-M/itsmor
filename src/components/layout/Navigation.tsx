@@ -23,7 +23,6 @@ export default function Navigation() {
         aria-hidden="true"
         style={{
           height: "200px",
-          // 192/255 reproduces the original `c0` alpha suffix exactly.
           background: `
             radial-gradient(ellipse 35vw 110px at 0% 0%, ${NAV_FADE} 60%, transparent 100%),
             radial-gradient(ellipse 60vw 110px at 100% 0%, ${NAV_FADE} 60%, transparent 100%)

@@ -1,13 +1,7 @@
 #!/bin/bash
 #
 # Renders the jigs in this directory to PNGs with headless Chrome.
-#
-# These jigs are deliberately NOT Next.js routes. `output: "export"` publishes
-# every route under src/app/, so a jig living there becomes a public page on
-# itsmor.com the moment it is committed and deployed. Same reasoning as
-# career/assets/linkedin-banner.html.
-#
-# Usage: ./tools/capture.sh
+# See tools/README.md.
 #
 set -euo pipefail
 
@@ -24,9 +18,8 @@ mkdir -p "$OUT"
 
 # shot <name> <width> <height> <url> <scale>
 #
-# Chrome writes the screenshot and then does not exit — true for both the new
-# and the old headless mode — so the process is backgrounded and reaped as soon
-# as the PNG appears, with a hard ceiling so a genuine failure cannot hang.
+# Chrome writes the screenshot and then never exits, so it is backgrounded and
+# reaped once the PNG size holds steady, with a hard ceiling.
 shot() {
   local name="$1" w="$2" h="$3" url="$4" scale="${5:-1}"
   local target="$OUT/$name"
@@ -49,8 +42,7 @@ shot() {
   pid=$!
 
   for i in $(seq 1 60); do
-    # The file appears before Chrome is finished writing it, so require the
-    # size to hold steady for a beat before declaring it done.
+    # The file appears before Chrome finishes writing it.
     if [ -s "$target" ]; then
       local a b
       a=$(wc -c < "$target")
@@ -73,8 +65,7 @@ shot() {
     "$(sips -g pixelWidth -g pixelHeight "$target" | awk '/pixel/{printf "%s ", $2}')"
 }
 
-# Tokens first. Rendering before regenerating produces assets that match
-# nothing, which is the whole failure this consolidation exists to prevent.
+# Tokens first: rendering before regenerating produces assets matching nothing.
 echo "🎨 Regenerating tokens from src/lib/tokens.ts…"
 node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON "$ROOT/tools/gen-tokens.mjs"
 echo ""

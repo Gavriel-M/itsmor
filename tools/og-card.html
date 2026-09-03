@@ -12,37 +12,14 @@
     />
     <style>
       /*
-        The link-preview card. Captured to src/app/opengraph-image.png, which
-        Next's file convention picks up and emits as absolute og:image and
-        twitter:image tags.
-
-        Same technique as career/assets/linkedin-banner.html and
-        tools/github-banner.html: the site's own tokens and the Hero's own
-        geometry, recomposed for this aspect ratio, screenshotted with headless
-        Chrome. Nothing here is approximated by eye.
-
-        Grid pitch is 63px, not the site's 64px, for the same reason the
-        LinkedIn banner uses 66px: 630 = 10 x 63 exactly, so the card divides
-        cleanly on the short axis and bleeds on the long one, which is what the
-        live page does at any viewport. Every measurement below is an integer
-        multiple of 63 and the grid is phased to 0 0 so geometry and grid agree
-        — unlike the live page, where the phase is incidental.
-
-          ring    MagneticCircle's 8-cell circle (504px) with its border at the
-                  site's own 0.62-cell ratio (39px), bleeding 2 cells off the
-                  right edge, 1 cell clear top and bottom
-          column  Hero's vertical lapis bar, 1 cell wide, tangent to the ring's
-                  left extremity, bleeding past top and bottom
-          rail    Hero's horizontal lapis bar, 1 cell tall, crossing the column
-                  and stopping at x = ring centre - inner radius, the leftmost
-                  point of the ring's hole, so it can never poke through it.
-                  Drawn before the ring, so the circle stays unbroken.
-      */
-      /*
-        Palette comes from tokens.generated.css, which is written from
-        src/lib/tokens.ts. Only the geometry pitch is local: 630 = 10 x 63
-        exactly, so the card divides cleanly on the short axis and bleeds on
-        the long one, which is what the live page does at any viewport.
+        Geometry derived from Hero.tsx and MagneticCircle.tsx, not by eye:
+          ring    the 8-cell circle (504px) at the site's 0.62-cell stroke,
+                  bleeding 2 cells off the right, 1 cell clear top and bottom
+          column  the vertical lapis bar, tangent to the ring's left extremity
+          rail    the horizontal bar, stopping at ring centre - inner radius so
+                  it can never enter the hole. Drawn first, under the ring.
+        Pitch is 63px, not the site's 64: 630 = 10 x 63 exactly, so the card
+        divides cleanly on the short axis and bleeds on the long one.
       */
       :root {
         --cell: 63px;
@@ -126,8 +103,6 @@
         color: var(--color-lapis);
       }
 
-      /* Knocked out in cream on the rail, the way "Portfolio 2026" is on the
-         live homepage and "ITSMOR.COM" is on the LinkedIn banner. */
       .url {
         position: absolute;
         left: 268px;

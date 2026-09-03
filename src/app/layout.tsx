@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import GridBackground from "@/components/layout/GridBackground";
@@ -6,7 +5,7 @@ import Navigation from "@/components/layout/Navigation";
 import PageTransition from "@/components/layout/PageTransition";
 import { ScrollNavigationLoader } from "@/components/layout/ScrollNavigationLoader";
 import { NavigationProvider } from "@/contexts/NavigationContext";
-import { DESCRIPTION, NAME, SITE_URL, TITLE, TITLE_TEMPLATE } from "@/lib/site";
+import { rootMetadata } from "@/lib/site";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -21,46 +20,7 @@ const plexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  // Child routes set a bare title ("Work"); the template keeps the name on
-  // every tab and every search result without repeating it in each route.
-  title: { default: TITLE, template: TITLE_TEMPLATE },
-  description: DESCRIPTION,
-  applicationName: "itsmor",
-  authors: [{ name: NAME, url: SITE_URL }],
-  creator: NAME,
-  // "./" resolves against the current route rather than pinning every page's
-  // canonical to the homepage, which is what a literal "/" here would do.
-  alternates: { canonical: "./" },
-  openGraph: {
-    type: "website",
-    siteName: "itsmor",
-    title: TITLE,
-    description: DESCRIPTION,
-    // "./" for the same reason as the canonical: a literal SITE_URL here
-    // makes every page claim og:url of the homepage, so a pasted /work link
-    // previews as the homepage.
-    url: "./",
-    locale: "en_US",
-    // No `images` key on purpose: src/app/opengraph-image.png is picked up by
-    // Next's file convention, which emits the absolute URL plus width, height
-    // and type. Declaring images here would override that and drop them.
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: TITLE,
-    description: DESCRIPTION,
-  },
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/itsmor-logo-full-split.svg", type: "image/svg+xml" },
-    ],
-    shortcut: "/favicon.ico",
-    apple: "/itsmor-logo-full-split.svg",
-  },
-};
+export const metadata = rootMetadata;
 
 export default function RootLayout({
   children,

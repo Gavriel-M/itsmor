@@ -1,19 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
+import LinkButton from "@/components/ui/LinkButton";
 
-/**
- * COPY NOTE. One status sentence, deliberately not a positioning statement —
- * positioning for this site is owned by the copy spec being written against
- * ~/logzio/career/04-portfolio.md. Replace this string, not the structure, when
- * the new CV export lands; at that point delete this component and restore the
- * PDF viewer with `git show 2cd2bad:src/app/cv/page.tsx`.
- */
-const STATUS = "The CV is being rewritten.";
-const SUBSTATUS =
+const HEADLINE = "The CV is being rewritten.";
+const STANDFIRST =
   "Rather than leave the old one here, these are the surfaces that are current.";
 
-const ROUTES = [
+const CURRENT_SURFACES = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/gavriel-mor/" },
   { label: "GitHub", href: "https://github.com/Gavriel-M" },
   { label: "Email", href: "mailto:gavriel.mor@itsmor.com" },
@@ -38,10 +32,10 @@ export default function CvInterim() {
           className="max-w-xl"
         >
           <p className="font-sans text-xl md:text-2xl tracking-tight text-text mb-3">
-            {STATUS}
+            {HEADLINE}
           </p>
           <p className="font-mono text-sm md:text-base leading-relaxed opacity-70">
-            {SUBSTATUS}
+            {STANDFIRST}
           </p>
         </motion.div>
 
@@ -51,17 +45,11 @@ export default function CvInterim() {
           transition={{ delay: 0.3 }}
           className="mt-12 flex flex-wrap gap-3"
         >
-          {ROUTES.map((route) => (
-            <li key={route.label}>
-              <a
-                href={route.href}
-                {...(route.href.startsWith("http")
-                  ? { target: "_blank", rel: "noopener noreferrer" }
-                  : {})}
-                className="inline-block font-mono text-sm uppercase tracking-widest border border-black/10 px-4 py-2 hover:bg-black hover:text-white transition-all duration-300"
-              >
-                {route.label}
-              </a>
+          {CURRENT_SURFACES.map((surface) => (
+            <li key={surface.label}>
+              <LinkButton href={surface.href} size="md">
+                {surface.label}
+              </LinkButton>
             </li>
           ))}
         </motion.ul>

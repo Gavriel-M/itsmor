@@ -1,18 +1,11 @@
 import { routeMetadata } from "@/lib/site";
-import { sections } from "@/data/animationResearchContent";
+import { ARTICLE, sections } from "@/data/animationResearchContent";
 import ResearchLayout from "@/components/animationResearch/ResearchLayout";
 import HeroHeader from "@/components/animationResearch/HeroHeader";
 
-/**
- * Both strings are the page's own, lifted from the work index entry and from
- * HeroHeader's standfirst rather than written fresh. This is the only page on
- * the site with an argument long enough to be worth finding on its own terms.
- */
 export const metadata = routeMetadata({
-  title: "2D Animation on the Web",
-  description:
-    "Translating classical animation principles into the constraints and " +
-    "opportunities of web UI motion — timing, easing, staging, and perception.",
+  title: ARTICLE.title,
+  description: ARTICLE.standfirst,
   type: "article",
 });
 

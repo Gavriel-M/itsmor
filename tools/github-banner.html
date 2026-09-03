@@ -12,31 +12,14 @@
     />
     <style>
       /*
-        Ported verbatim from the React jig that used to live at src/app/banner/.
-        It was moved out because `output: "export"` publishes every route under
-        src/app/, so committing it would have made itsmor.com/banner a public
-        page. Same pattern as career/assets/linkedin-banner.html: a standalone
-        screenshot jig, deliberately not part of the site.
-
-        Canvas is 1536 x 384 — exactly 24 x 6 cells of the site's real
-        --grid-cell (4rem / 64px, from src/app/globals.css). The geometry is
-        Hero.tsx + MagneticCircle.tsx re-laid on that grid rather than
-        approximated by eye:
-
-          ring    MagneticCircle's 8-cell circle with its 40px border, centred
-                  on the vertical midline so it bleeds exactly one cell past
-                  top and bottom
-          column  Hero's vertical lapis bar, 1 cell wide, tangent to the ring's
-                  right edge, bleeding past both edges
-          rail    Hero's horizontal lapis bar, 1 cell tall, crossing the column
-                  and passing behind the ring so the circle stays unbroken
-
+        Geometry is Hero.tsx + MagneticCircle.tsx re-laid on the site's real
+        64px grid, so 1536 x 384 is exactly 24 x 6 cells:
+          ring    the 8-cell circle with its 40px border, centred on the
+                  vertical midline so it bleeds one cell top and bottom
+          column  the vertical lapis bar, tangent to the ring's right edge
+          rail    the horizontal bar, crossing the column and passing behind
+                  the ring so the circle stays unbroken
         No name on the canvas: the README's H1 sits directly beneath it.
-      */
-      /*
-        Palette and the dark override both come from tokens.generated.css,
-        written from src/lib/tokens.ts. This file used to carry its own copy of
-        each, which is how it ended up rendering the retired terracotta.
       */
       :root {
         --cell: var(--grid-cell);
@@ -69,7 +52,6 @@
         background: var(--color-background);
       }
 
-      /* GridBackground.tsx, at the same 64px pitch and the same phase. */
       .grid {
         position: absolute;
         inset: 0;

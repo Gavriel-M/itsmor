@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import RotatingText from "@/components/about/RotatingText";
 import Timeline from "@/components/about/Timeline";
+import { EASE_OUT_EXPO } from "@/lib/motion/easing";
 import WireframeLogo3D from "@/components/work/WireframeLogo3D";
 
 export default function AboutPage() {
@@ -53,22 +54,10 @@ export default function AboutPage() {
             />
           </motion.div>
 
-          {/*
-            This paragraph is the LCP element on mobile. It used to animate
-            opacity 0 -> 1 behind a 0.3s delay, which meant it did not paint
-            until React had hydrated — 4.7 s, of which 4.26 s (90%) was render
-            delay with nothing downloading. Animating transform only, with
-            opacity left at 1, lets it paint with the server-rendered HTML and
-            still arrive with a reveal.
-
-            The 0.3s delay is gone rather than shortened: any opacity gate on
-            this element ties the largest paint on the page to hydration on a
-            throttled CPU, which is the whole problem.
-          */}
           <motion.p
             initial={{ y: 12 }}
             animate={{ y: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.5, ease: EASE_OUT_EXPO }}
             className="font-sans text-base md:text-lg leading-relaxed opacity-80 mt-12 max-w-2xl"
           >
             Full-stack engineer at Logz.io since 2023. I am the second engineer

@@ -4,8 +4,6 @@
 @theme {
   --color-background: #f2f0e6;
   --color-text: #1a1a1a;
-  /* Repeated from src/lib/tokens.ts because Tailwind v4's @theme needs
-     literals in CSS. Agreement is asserted by `pnpm tokens:check`. */
   --color-terracotta: #a9543b;
   --color-lapis: #004e98;
   --color-gold: #ffd700;

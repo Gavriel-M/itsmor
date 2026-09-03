@@ -32,15 +32,6 @@ export default function ContactPage() {
             >
               gavriel.mor@itsmor.com
             </a>
-            {/*
-              Copy from ~/logzio/career/04-portfolio.md. "Based in Munich, CET
-              timezone" was the same false location claim the About fix was
-              meant to close, on a page that spec did not cover, plus a second
-              false claim on top: CET is wrong from Israel, which is UTC+2/+3.
-              The timezone is dropped rather than corrected — a relocating
-              candidate who states one invites a scheduling assumption that is
-              wrong twice, once now and once after the move.
-            */}
             <p className="font-mono text-xs uppercase tracking-widest opacity-50 mt-4">
               Based in Israel &middot; moving to Munich
             </p>

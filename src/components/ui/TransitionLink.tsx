@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useNavigation } from "@/contexts/NavigationContext";
+import { isExternalHref } from "@/lib/links";
 import { type ComponentProps, type MouseEvent } from "react";
 
 type LinkProps = ComponentProps<typeof Link>;
@@ -21,7 +22,7 @@ export default function TransitionLink({
 
     const hrefString = typeof href === "string" ? href : href.pathname || "/";
 
-    if (hrefString.startsWith("http") || hrefString.startsWith("//")) {
+    if (isExternalHref(hrefString)) {
       return;
     }
 
