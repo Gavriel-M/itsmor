@@ -8,10 +8,24 @@ export const SITE_NAME = "itsmor";
 const AUTHOR = "Gavriel Mor";
 const TITLE = "Gavriel Mor — Full-Stack Engineer";
 const TITLE_TEMPLATE = `%s | ${AUTHOR}`;
-const DESCRIPTION =
-  "Second engineer on OrionIQ at Logz.io, an agent that takes an alert and " +
-  "works out what broke. I own the interface end to end, and enough of the " +
-  "backend to argue about it.";
+/**
+ * The canonical opener from `07-voice.md > Worked example`, carried verbatim by
+ * `02-linkedin.md` and `04-portfolio.md`. Do not reword it here — if the product
+ * description changes, change `00-evidence.md` §8 first and propagate.
+ *
+ * It runs 167 characters, and Google truncates a meta description around 155,
+ * so the two slots take different lengths of the same sentence rather than a
+ * fourth variant: search gets the first sentence, which is complete on its own,
+ * and the social card gets all of it, where the budget is far larger.
+ */
+const SOCIAL_DESCRIPTION =
+  "Second engineer on OrionIQ at Logz.io, an agent platform that investigates " +
+  "production and acts on it. I own the interface, and enough of the backend " +
+  "to argue about it.";
+
+const META_DESCRIPTION =
+  "Second engineer on OrionIQ at Logz.io, an agent platform that investigates " +
+  "production and acts on it.";
 
 const OG_IMAGE = {
   url: ogCard.src,
@@ -45,12 +59,12 @@ type OgType = "website" | "article";
 export const rootMetadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: TITLE, template: TITLE_TEMPLATE },
-  description: DESCRIPTION,
+  description: META_DESCRIPTION,
   applicationName: SITE_NAME,
   authors: [{ name: AUTHOR, url: SITE_URL }],
   creator: AUTHOR,
   alternates: { canonical: "./" },
-  ...socialCard(TITLE, DESCRIPTION, "website"),
+  ...socialCard(TITLE, SOCIAL_DESCRIPTION, "website"),
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -76,12 +90,12 @@ export function routeMetadata(opts: {
   type?: OgType;
   nested?: boolean;
 }): Metadata {
-  const { title, description = DESCRIPTION, type = "website", nested } = opts;
-  const social = TITLE_TEMPLATE.replace("%s", title);
+  const { title, description, type = "website", nested } = opts;
+  const socialTitle = TITLE_TEMPLATE.replace("%s", title);
 
   return {
     title: nested ? { default: title, template: TITLE_TEMPLATE } : title,
-    description,
-    ...socialCard(social, description, type),
+    description: description ?? META_DESCRIPTION,
+    ...socialCard(socialTitle, description ?? SOCIAL_DESCRIPTION, type),
   };
 }

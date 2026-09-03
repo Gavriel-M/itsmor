@@ -61,8 +61,8 @@ export default function AboutPage() {
             className="font-sans text-base md:text-lg leading-relaxed opacity-80 mt-12 max-w-2xl"
           >
             Full-stack engineer at Logz.io since 2023. I am the second engineer
-            on OrionIQ, an agent that takes an alert and works out what broke,
-            and I own its interface end to end. Before that I built the
+            on OrionIQ, an agent platform that investigates production and acts
+            on it, and I own its interface end to end. Before that I built the
             company&apos;s design system, and moved the entire SIEM product onto
             a new platform single-handed. Based in Israel, moving to Munich.
           </motion.p>
