@@ -46,7 +46,7 @@ export default function AboutPage() {
             on OrionIQ, an agent platform that investigates production and acts
             on it, and I own its interface end to end. Before that I built the
             company&apos;s design system, and moved the entire SIEM product onto
-            a new platform single-handed. Based in Israel, moving to Munich.
+            a new platform single-handed. Munich-based. EU citizen.
           </motion.p>
 
           <motion.div
