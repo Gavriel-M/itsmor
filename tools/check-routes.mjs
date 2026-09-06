@@ -18,7 +18,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "out");
 
 /** Published but deliberately not in the sitemap. */
-const UNLISTED = new Set(["/cv", "/404", "/_not-found"]);
+const UNLISTED = new Set(["/404", "/_not-found"]);
 
 if (!existsSync(OUT)) {
   console.error("✗ no out/ — run pnpm build first");

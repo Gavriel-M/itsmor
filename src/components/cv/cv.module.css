@@ -1,0 +1,431 @@
+/*
+ * Ported from the source the PDFs export from, so the page and the downloads
+ * cannot drift. Scoped with :global() descendants rather than renamed, so the
+ * markup stays a faithful copy.
+ *
+ * Two deliberate departures from that source:
+ *   --ink-3 is #6E6A5C, not #938E7E. The original measures 2.87:1 on this
+ *     ground and fails AA at every size; it carries every mono label, the stats
+ *     strip, all dates and the footer, so on a web page it is nine failures.
+ *     #6E6A5C is 4.74:1 and still reads tertiary.
+ *   No dark-mode block. This site is light-only, so the source's
+ *     prefers-color-scheme and [data-theme] overrides would put a dark panel on
+ *     a cream page.
+ */
+.root {
+  --paper: #f2f0e6;
+  --rail: #eceadc;
+  --ink: #1a1a1a;
+  --ink-2: #575347;
+  --ink-3: #6e6a5c;
+  --rule: #d9d4c4;
+  --rule-soft: #e4e0d2;
+  --blue: #004e98;
+  --terra: #a9543b;
+  --doc-sans: var(--font-inter), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --doc-mono:
+    var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* The document's own width, as in the source it is ported from. Without it
+     the page stretches to the site container while the text measure stays
+     capped, leaving a dead gutter. */
+  max-width: 900px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--doc-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  border: 1px solid var(--rule);
+  box-shadow: 0 24px 60px rgba(26, 26, 26, 0.07);
+}
+
+.root * {
+  box-sizing: border-box;
+}
+
+/* ============ HEADER ============ */
+.root :global(header) {
+  padding: 34px 44px 16px;
+}
+.root :global(.head-grid) {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: 30px;
+}
+.root :global(.name) {
+  margin: 0;
+  font-size: clamp(2.3rem, 5vw, 2.95rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 0.92;
+}
+.root :global(.name .stop) {
+  color: var(--terra);
+}
+.root :global(.tagline) {
+  margin: 12px 0 0;
+  font-family: var(--doc-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+.root :global(.role) {
+  margin: 5px 0 0;
+  font-family: var(--doc-mono);
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.root :global(.stats) {
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 3px 16px;
+  font-family: var(--doc-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.01em;
+  color: var(--ink-3);
+}
+.root :global(.stats .s) {
+  white-space: nowrap;
+}
+.root :global(.stats .s b) {
+  color: var(--ink);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============ BODY ============ */
+.root :global(.body) {
+  display: grid;
+  grid-template-columns: 224px 1fr;
+}
+.root :global(.rail) {
+  padding: 24px 26px 30px 44px;
+  border-right: 1px solid var(--rule);
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+}
+.root :global(.rail > section + section) {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule-soft);
+}
+.root :global(main) {
+  padding: 24px 44px 30px 32px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.root :global(.label) {
+  font-family: var(--doc-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 11px;
+}
+
+.root :global(.contact) {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.root :global(.contact .row .k) {
+  font-family: var(--doc-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 2px;
+}
+.root :global(.contact .row .v) {
+  font-size: 0.8rem;
+  color: var(--ink-2);
+  line-height: 1.5;
+}
+.root :global(.contact a) {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--blue);
+  padding-bottom: 1px;
+}
+
+.root :global(.stack .grp) {
+  margin-bottom: 10px;
+}
+.root :global(.stack .grp:last-child) {
+  margin-bottom: 0;
+}
+.root :global(.stack .grp .h) {
+  font-family: var(--doc-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--blue);
+  display: block;
+  margin-bottom: 3px;
+}
+.root :global(.stack .grp .v) {
+  font-size: 0.78rem;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+
+.root :global(.edu + .edu) {
+  margin-top: 11px;
+}
+.root :global(.edu .t) {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.3;
+  display: block;
+}
+.root :global(.edu .m) {
+  font-family: var(--doc-mono);
+  font-size: 0.57rem;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+  margin-top: 2px;
+  display: block;
+}
+.root :global(.lang) {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.root :global(.lang:last-child) {
+  border-bottom: none;
+}
+.root :global(.lang b) {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.root :global(.lang span) {
+  font-family: var(--doc-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+}
+
+/* ============ MAIN ============ */
+.root :global(.sec-title) {
+  font-size: 0.71rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0 0 11px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.root :global(.sec-title::after) {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+.root :global(.summary) {
+  font-size: 0.865rem;
+  line-height: 1.56;
+  color: var(--ink-2);
+  margin: 0;
+  max-width: 66ch;
+}
+.root :global(.summary strong) {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.root :global(.job-head) {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.root :global(.job-head .co) {
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.root :global(.job-head .when) {
+  font-family: var(--doc-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.03em;
+  color: var(--ink-3);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.root :global(.prog) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  margin: 12px 0 14px;
+  padding: 0 0 13px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.root :global(.prog .stage) {
+  display: flex;
+  flex-direction: column;
+}
+.root :global(.prog .stage .r) {
+  font-family: var(--doc-mono);
+  font-size: 0.66rem;
+  color: var(--ink-2);
+  letter-spacing: 0.01em;
+}
+.root :global(.prog .stage.cur .r) {
+  color: var(--blue);
+  font-weight: 600;
+}
+.root :global(.prog .stage .d) {
+  font-family: var(--doc-mono);
+  font-size: 0.56rem;
+  color: var(--ink-3);
+  margin-top: 1px;
+  letter-spacing: 0.02em;
+}
+.root :global(.prog .sep) {
+  color: var(--terra);
+  align-self: flex-start;
+  font-family: var(--doc-mono);
+  font-size: 0.66rem;
+  padding-top: 1px;
+}
+
+.root :global(.cluster) {
+  margin-bottom: 13px;
+}
+.root :global(.cluster:last-child) {
+  margin-bottom: 0;
+}
+.root :global(.cluster .label) {
+  color: var(--blue);
+  margin-bottom: 8px;
+}
+
+.root :global(ul.bullets) {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.root :global(ul.bullets li) {
+  position: relative;
+  padding-left: 16px;
+  font-size: 0.825rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 68ch;
+}
+.root :global(ul.bullets li::before) {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.68em;
+  width: 9px;
+  height: 1.5px;
+  background: var(--ink-3);
+}
+.root :global(ul.bullets li strong) {
+  color: var(--ink);
+  font-weight: 600;
+}
+.root :global(ul.bullets li code) {
+  font-family: var(--doc-mono);
+  font-size: 0.85em;
+  color: var(--terra);
+}
+
+.root :global(footer) {
+  padding: 14px 44px 20px;
+  border-top: 1px solid var(--rule);
+}
+.root :global(footer p) {
+  margin: 0;
+  font-family: var(--doc-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  color: var(--ink-3);
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 720px) {
+  .root {
+    border: none;
+    box-shadow: none;
+  }
+  .root :global(header) {
+    padding: 26px 22px 16px;
+  }
+  .root :global(.body) {
+    grid-template-columns: 1fr;
+  }
+  .root :global(.rail) {
+    border-right: none;
+    padding: 24px 22px;
+  }
+  .root :global(main) {
+    padding: 24px 22px 30px;
+  }
+  .root :global(footer) {
+    padding: 14px 22px 20px;
+  }
+}
+
+/* ============ PRINT ============ */
+@page {
+  size: A4;
+  margin: 15mm 11mm 11mm 11mm;
+}
+
+@media print {
+  .root {
+    border: none;
+    box-shadow: none;
+  }
+  .root :global(.job-head),
+  .root :global(.edu),
+  .root :global(.lang),
+  .root :global(.stack .grp),
+  .root :global(.contact .row),
+  .root :global(ul.bullets li),
+  .root :global(footer) {
+    break-inside: avoid;
+  }
+  .root :global(.sec-title),
+  .root :global(.cluster .label),
+  .root :global(.prog),
+  .root :global(.rail .label) {
+    break-after: avoid;
+  }
+  .root :global(a) {
+    color: var(--ink);
+  }
+}

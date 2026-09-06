@@ -27,16 +27,7 @@ export const LINKS: NetworkLink[] = [
   },
   {
     id: "readcv",
-    /*
-      Not "Resume". /cv currently serves an interim state, and a node promising a
-      document that the page does not hand over is the stale-PDF defect in a
-      smaller size. This says what the page actually delivers.
-
-      It makes a timing claim, which is the one thing here that can go stale — it
-      reverts to "CV" the day the new export lands. If the CV slips well past
-      that, change the word rather than leaving "SOON" standing.
-    */
-    label: "CV soon",
+    label: "CV",
     href: "/cv",
     x: 0,
     y: 120,
