@@ -77,6 +77,38 @@ body {
   }
 }
 
+/*
+  The timeline's line reveals itself in CSS rather than through framer-motion, so
+  it works with JS disabled.
+
+  A left-to-right wipe rather than a stroke-dash draw: the path lives in a
+  normalised viewBox stretched by preserveAspectRatio="none", and under that plus
+  non-scaling-stroke a dasharray is measured in px against user units, which
+  renders the line dashed instead of drawn.
+
+  The base state is fully visible and the animation fills backwards, so the line
+  is clipped only for the delay, wipes in, then holds. The other way round would
+  leave it hidden wherever the animation never runs.
+*/
+@keyframes timeline-wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.timeline-line {
+  animation: timeline-wipe 1.5s ease-out 0.4s backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeline-line {
+    animation: none;
+  }
+}
+
 @keyframes pulse-slow {
   0%,
   100% {

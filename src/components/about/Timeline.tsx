@@ -1,12 +1,8 @@
-"use client";
-
-import { useRef, useState, useEffect } from "react";
-import { motion } from "framer-motion";
-
 interface TimelineEvent {
   label: string;
   year: string;
-  yPosition: number; // 0-1 normalized (0=top, 1=bottom)
+  /** 0 = top, 1 = bottom. Only used by the chart layout. */
+  yPosition: number;
   emphasis: "primary" | "secondary";
 }
 
@@ -61,122 +57,96 @@ const EVENTS: TimelineEvent[] = [
   },
 ];
 
-const PADDING_X = 40;
+/** Percent, so positions need no measurement. */
+const PAD_X = 5;
+
 /** IBM Plex Mono advance at text-xs: 12px x 0.6em. */
 const LABEL_CHAR_PX = 7.2;
-const PADDING_Y = 0;
+
+/**
+ * Narrowest the chart ever gets, at the `lg` breakpoint where it appears. Label
+ * anchoring is decided against this rather than a measured width: a left-anchored
+ * label that clears the narrowest chart clears every wider one too.
+ */
+const CHART_MIN_PX = 620;
+
+const positionOf = (i: number) => ({
+  x: PAD_X + (i / (EVENTS.length - 1)) * (100 - PAD_X * 2),
+  y: EVENTS[i].yPosition * 100,
+});
+
+const PATH = EVENTS.map((_, i) => {
+  const { x, y } = positionOf(i);
+  return `${i === 0 ? "M" : "L"} ${x},${y}`;
+}).join(" ");
 
 export default function Timeline() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const measure = () => {
-      const rect = container.getBoundingClientRect();
-      setDimensions({ width: rect.width, height: rect.height });
-    };
-
-    measure();
-
-    const observer = new ResizeObserver(measure);
-    observer.observe(container);
-
-    return () => observer.disconnect();
-  }, []);
-
-  // Calculate positions for each event
-  const positions = EVENTS.map((event, i) => {
-    const usableWidth = dimensions.width - PADDING_X * 2;
-    const x =
-      EVENTS.length > 1
-        ? PADDING_X + (i / (EVENTS.length - 1)) * usableWidth
-        : dimensions.width / 2;
-    const usableHeight = dimensions.height - PADDING_Y * 2;
-    const y = PADDING_Y + event.yPosition * usableHeight;
-    return { x, y };
-  });
-
-  // Generate SVG path from positions (straight line segments)
-  const pathD =
-    positions.length > 0 && dimensions.width > 0
-      ? positions
-          .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x},${p.y}`)
-          .join(" ")
-      : "";
-
   return (
     <div className="w-full mt-12">
       <h3 className="font-mono text-xs text-terracotta uppercase tracking-widest mb-8">
         Personal Timeline
       </h3>
 
-      <div ref={containerRef} className="relative h-80 w-full overflow-visible">
-        {dimensions.width > 0 && (
-          <>
-            {/* SVG Line */}
-            <svg className="absolute inset-0 w-full h-full overflow-visible">
-              <motion.path
-                d={pathD}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="text-lapis"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ delay: 0.5, duration: 1.5, ease: "linear" }}
+      <ol className="relative lg:h-80">
+        {/*
+          viewBox units are percentages of the box, matching the dots' left/top,
+          so the line and the dots agree without either being measured.
+          preserveAspectRatio="none" stretches those units to the box;
+          vector-effect keeps the stroke from stretching with them.
+        */}
+        <svg
+          className="timeline-line hidden lg:block absolute inset-0 w-full h-full overflow-visible text-lapis"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path
+            d={PATH}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            vectorEffect="non-scaling-stroke"
+          />
+        </svg>
+
+        {EVENTS.map((event, i) => {
+          const { x, y } = positionOf(i);
+          const anchorRight =
+            (x / 100) * CHART_MIN_PX + event.label.length * LABEL_CHAR_PX >
+            CHART_MIN_PX;
+
+          return (
+            <li
+              key={event.year + event.label}
+              style={{ "--x": `${x}%`, "--y": `${y}%` } as React.CSSProperties}
+              className="flex items-center gap-3 py-1.5 lg:absolute lg:block lg:py-0 lg:left-[var(--x)] lg:top-[var(--y)] lg:-translate-x-1/2 lg:-translate-y-1/2"
+            >
+              <span
+                aria-hidden="true"
+                className={`block shrink-0 rounded-full ${
+                  event.emphasis === "primary"
+                    ? "w-3 h-3 bg-amber border-4 border-terracotta"
+                    : "w-2 h-2 mx-0.5 bg-terracotta lg:mx-0"
+                }`}
               />
-            </svg>
 
-            {/* Event dots + labels */}
-            {EVENTS.map((event, i) => {
-              const pos = positions[i];
-              const isPrimary = event.emphasis === "primary";
-              /*
-                Labels are whitespace-nowrap and grow rightward from their dot,
-                so any label near the right edge runs past the container and
-                across the sidebar's rule. The width is estimable because the
-                type is monospace, so the ones that would overflow are anchored
-                right instead — and placed above, since the line climbs steeply
-                through the right-hand dots.
-              */
-              const overflowsRight =
-                pos.x + event.label.length * LABEL_CHAR_PX > dimensions.width;
-              const labelBelow = overflowsRight
-                ? false
-                : event.yPosition <= 0.5;
+              <span className="shrink-0 w-10 font-mono text-xs text-lapis lg:hidden">
+                {event.year}
+              </span>
 
-              return (
-                <div
-                  key={event.year + event.label}
-                  className="absolute -translate-x-1/2 -translate-y-1/2"
-                  style={{ left: pos.x, top: pos.y }}
-                >
-                  {/* Dot */}
-                  <div
-                    className={`rounded-full ${
-                      isPrimary
-                        ? "w-3 h-3 bg-amber border-4 border-terracotta"
-                        : "w-2 h-2 bg-terracotta"
-                    }`}
-                  />
-
-                  {/* Label */}
-                  <span
-                    className={`absolute font-mono text-xs whitespace-nowrap ${
-                      overflowsRight ? "right-0" : "left-0"
-                    } ${labelBelow ? "top-4" : "bottom-3"}`}
-                  >
-                    {event.label}
-                  </span>
-                </div>
-              );
-            })}
-          </>
-        )}
-      </div>
+              <span
+                className={`font-mono text-xs lg:absolute lg:whitespace-nowrap ${
+                  anchorRight ? "lg:right-0 lg:bottom-3" : "lg:left-0"
+                } ${!anchorRight && event.yPosition <= 0.5 ? "lg:top-4" : ""} ${
+                  !anchorRight && event.yPosition > 0.5 ? "lg:bottom-3" : ""
+                }`}
+              >
+                {event.label}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
     </div>
   );
 }
