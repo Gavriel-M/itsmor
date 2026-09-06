@@ -1,6 +1,6 @@
 /**
- * Asserts what `~/logzio/career/check.sh --tokens` cannot see into: that
- * globals.css agrees with the token module, that no palette hex appears
+ * Asserts that globals.css agrees with the token module, that no palette hex
+ * appears
  * anywhere else in src/ or in a jig, and that the jigs' generated stylesheet is
  * current. Location-based rather than count-based, so a migration that only
  * moves a literal between files still fails.

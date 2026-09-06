@@ -179,8 +179,7 @@ that no hex has leaked elsewhere in `src/` or into a jig, and that the jigs' gen
 stylesheet is current. The guard is location-based, not count-based, so a migration that
 only moves a literal between files still fails.
 
-The palette contract, contrast measurements and use rules live in
-`~/logzio/career/08-tokens.md`. Two rules that are easy to get wrong:
+Two rules that are easy to get wrong:
 
 - **Opacity is part of the colour.** `terracotta` under `opacity-80` composites to 3.25:1
   and fails AA. No opacity below 100% clears 4.5:1 with it — remove the opacity rather
@@ -211,8 +210,7 @@ Fonts over the network**, so capture needs connectivity.
 
 **`/about` renders completely with JavaScript disabled** — heading, rotating headline, body
 copy, the whole timeline chart and both sidebar lists. Only the decorative 3D mark needs JS.
-That is a property worth keeping; there is a paint check in
-`~/logzio/career` session notes, and the quick version is to disable JS in devtools and
+That is a property worth keeping; the quick check is to disable JS in devtools and
 confirm nothing vanishes.
 
 Two rules make it hold:

@@ -1,7 +1,7 @@
 /**
  * The palette. Canonical for everything that is not a Tailwind class.
- * Contract and contrast measurements: `~/logzio/career/08-tokens.md`.
- * Enforced by `pnpm tokens:check`.
+ * Contrast is measured against the cream ground; every value here clears
+ * WCAG AA for its documented use. Enforced by `pnpm tokens:check`.
  */
 export const PALETTE = {
   background: "#f2f0e6",
