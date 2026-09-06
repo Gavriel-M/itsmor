@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import RotatingText from "@/components/about/RotatingText";
 import Timeline from "@/components/about/Timeline";
 import { EASE_OUT_EXPO } from "@/lib/motion/easing";
 import WireframeLogo3D from "@/components/work/WireframeLogo3D";
@@ -28,31 +27,14 @@ export default function AboutPage() {
 
         {/* Main Content */}
         <div className="md:col-span-8">
-          <motion.div
+          <motion.h2
             initial={{ y: 12 }}
             animate={{ y: 0 }}
             transition={{ delay: 0.2, duration: 0.5, ease: EASE_OUT_EXPO }}
-            className="font-sans text-2xl md:text-5xl leading-tight font-bold tracking-tight space-y-8"
+            className="font-sans text-2xl md:text-5xl leading-tight font-bold tracking-tight text-balance"
           >
-            <RotatingText
-              prefix="I am a"
-              words={[
-                "full-stack engineer",
-                "AI product engineer",
-                "design engineer",
-              ]}
-              className="font-sans text-2xl md:text-5xl leading-tight font-bold tracking-tight"
-            />
-            <RotatingText
-              prefix="My philosophy is"
-              words={[
-                "less but better",
-                "constraint as catalyst",
-                "motion with meaning",
-              ]}
-              className="font-sans text-2xl md:text-5xl leading-tight font-bold tracking-tight"
-            />
-          </motion.div>
+            Code is the medium. The experience is the point.
+          </motion.h2>
 
           <motion.p
             initial={{ y: 12 }}
