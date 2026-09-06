@@ -9,9 +9,8 @@ const AUTHOR = "Gavriel Mor";
 const TITLE = "Gavriel Mor — Full-Stack Engineer";
 const TITLE_TEMPLATE = `%s | ${AUTHOR}`;
 /**
- * The canonical opener from `07-voice.md > Worked example`, carried verbatim by
- * `02-linkedin.md` and `04-portfolio.md`. Do not reword it here — if the product
- * description changes, change `00-evidence.md` §8 first and propagate.
+ * One product, one sentence. This wording is shared verbatim with the other
+ * places the product is described, so it is not reworded here.
  *
  * It runs 167 characters, and Google truncates a meta description around 155,
  * so the two slots take different lengths of the same sentence rather than a

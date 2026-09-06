@@ -9,8 +9,7 @@ committed and deployed — which is what these files exist to avoid.
 
 ## The jigs
 
-All three live here, and all three read one token module. Consolidated 2 Sep 2026 per
-`~/logzio/career/08-tokens.md > Jigs`.
+All three live here, and all three read one token module.
 
 | File                   | Canvas     | Feeds                                                                        |
 | ---------------------- | ---------- | ---------------------------------------------------------------------------- |
@@ -23,9 +22,8 @@ All three live here, and all three read one token module. Consolidated 2 Sep 202
 pnpm tokens:check     # asserts nothing has drifted
 ```
 
-`linkedin-banner.html` was moved here from `~/logzio/career/assets/`, which now holds
-exported PNGs only. Sources live with the code; exports live with the docs that
-reference them.
+Sources live with the code; exported PNGs live with the README or profile that
+references them.
 
 ## Tokens
 
@@ -37,8 +35,7 @@ reference them.
   the generated stylesheet instead. It is **committed**, not gitignored, so opening a
   jig directly in a browser still renders correctly; it is verified the way a lockfile
   is, and `capture.sh` regenerates it before every render.
-- `check-tokens.mjs` asserts what the career directory's `check.sh --tokens` cannot see
-  into: that `globals.css`'s `@theme` block agrees with the module, that no palette hex
+- `check-tokens.mjs` asserts that `globals.css`'s `@theme` block agrees with the module, that no palette hex
   appears anywhere else in `src/` (including `.css` below the `@theme` block) or in a jig,
   and that the generated stylesheet is current. It covers every exported colour, not just
   `PALETTE` — `GRID_LINE` and `DARK_BANNER` were unguarded, and a jig had already
@@ -58,8 +55,7 @@ Each jig's comment header says which part of `Hero.tsx` / `MagneticCircle.tsx` /
   and reaps it once the PNG size holds steady, with a hard ceiling, rather than waiting
   on a process that never returns.
 - **`tools/out/` is gitignored and disposable.** The canonical exports are the ones
-  committed next to the README or profile that references them. See
-  `03-github.md > Banner assets`.
+  committed next to the README or profile that references them.
 - **Re-rendering a banner changes its glyph rasterisation** even when no colour moved,
   by roughly 1.5% of pixels confined to the text block. That is not a reason to
   re-upload. Diff the colour tallies, not the byte count, before declaring an asset
