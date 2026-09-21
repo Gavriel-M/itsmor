@@ -70,7 +70,7 @@ export default function Toc({ sections, activeSectionId }: TocProps) {
                 className={`w-full text-left py-1.5 px-3 font-sans text-sm transition-colors cursor-pointer duration-150 border-l-2 ${
                   isActive
                     ? "border-terracotta text-terracotta"
-                    : "border-transparent opacity-60 hover:opacity-100"
+                    : "border-transparent opacity-70 hover:opacity-100"
                 }`}
               >
                 <span className="font-mono text-xs mr-2">{section.number}</span>

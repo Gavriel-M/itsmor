@@ -70,7 +70,7 @@ export default function ProjectCard({
         {/* Description — revealed on hover */}
         {description && (
           <div className="max-h-0 overflow-hidden group-hover:max-h-20 transition-all duration-300 ease-out">
-            <p className="font-mono text-xs md:text-sm text-black/50 mt-3 md:ml-[calc(2/12*100%)] md:max-w-[50%]">
+            <p className="font-mono text-xs md:text-sm text-text/70 mt-3 md:ml-[calc(2/12*100%)] md:max-w-[50%]">
               {description}
             </p>
           </div>

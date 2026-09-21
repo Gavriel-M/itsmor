@@ -24,7 +24,7 @@ export function PlayButton({
 
 export function DemoLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="font-mono text-[10px] uppercase tracking-widest opacity-60">
+    <span className="font-mono text-[10px] uppercase tracking-widest opacity-70">
       {children}
     </span>
   );
@@ -50,7 +50,7 @@ export function ToggleButton({
     <button
       onClick={onClick}
       className={`font-mono text-[10px] uppercase tracking-widest px-2 py-1 transition-colors ${
-        active ? activeClass : "opacity-50 hover:opacity-80"
+        active ? activeClass : "opacity-70 hover:opacity-100"
       }`}
     >
       {children}

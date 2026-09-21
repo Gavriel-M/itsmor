@@ -109,6 +109,24 @@ body {
   animation: timeline-wipe 1.5s ease-out 0.4s backwards;
 }
 
+/*
+  Position the wipe against the chart entering the viewport rather than against
+  the clock. The chart starts ~780px down the page, so on a 720- or 768-tall
+  viewport it is entirely below the fold for the whole of the 0.4s delay plus
+  1.5s wipe, and the reveal finished before anyone could scroll to it.
+
+  animation-timeline must come after the shorthand, which resets it — which is
+  also why the reduced-motion block below still disables this.
+*/
+@supports (animation-timeline: view()) {
+  .timeline-line {
+    animation-timeline: view();
+    animation-range: entry 0% entry 100%;
+    animation-delay: 0s;
+    animation-duration: auto;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .timeline-line {
     animation: none;
