@@ -42,6 +42,9 @@ references them.
   hardcoded the grid line. Location-based, not count-based.
 - `check-routes.mjs` asserts `out/` publishes only intended routes. See
   `CLAUDE.md > Metadata & SEO`.
+- `check-cv.mjs` asserts the published CV set against `src/lib/cv.ts` — sizes, page counts,
+  and which variant embeds the photograph, the last because the export filenames cross over
+  with the published ones. See `CLAUDE.md > The CV`.
 
 Each jig's comment header says which part of `Hero.tsx` / `MagneticCircle.tsx` /
 `GridBackground.tsx` its shapes came from. Nothing is approximated by eye.

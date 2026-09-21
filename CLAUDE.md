@@ -21,6 +21,7 @@ pnpm lint          # ESLint
 pnpm format        # Prettier format all files
 pnpm format:check  # Prettier validation
 pnpm tokens:check  # Palette guard — see Design Tokens
+pnpm cv:check      # Published CV set matches src/lib/cv.ts — see The CV
 pnpm routes:check  # Asserts out/ publishes only intended routes (needs a build)
 pnpm verify        # All of the above, in the order CI runs them
 ```
@@ -90,7 +91,9 @@ Content-heavy pages store structured data in `src/data/` (e.g., `animationResear
 - `/work/2d-web-animation` — 14-section research article with interactive demos
 - `/about` — Rotating titles, bio, timeline, tech stack, expertise
 - `/contact` — Email, social network visualization, copyright footer
-- `/cv` — The CV as HTML plus versioned PDF downloads. Indexed and in the sitemap. The page shows the photographed layout; the primary download does not, deliberately — see `CvDocument.tsx`
+- `/cv` — The CV as HTML plus versioned PDF downloads. Indexed and in the sitemap. The page
+  shows the photographed layout; the primary download does not, deliberately — see
+  `CvDocument.tsx`, and [The CV](#the-cv) for what must not be got wrong when re-publishing it
 
 ### Page Transitions
 
@@ -221,6 +224,30 @@ directive and there is none, so a config file would be dead weight that looks li
 `DARK_BANNER` is the GitHub banner's dark ground, derived for that ground rather than
 inverted — `lapis` manages only 2.2:1 there. It is independent of `PALETTE` on purpose, so
 a light-token change does not restyle the dark banner.
+
+### The CV
+
+`src/lib/cv.ts` is the one declaration of the published set — version segment, filenames,
+sizes, page counts, whether each variant embeds the photograph, and the stats strip. Both CV
+components read it and `pnpm cv:check` asserts it against the files in `public/cv/<version>/`.
+It is free of bundler-only imports so the check can read it from plain Node, like `routes.ts`.
+
+Two things it exists to stop, both of which otherwise fail silently because every candidate
+file is a valid CV:
+
+- **Incoming filenames do not map onto published filenames.** The unsuffixed file arriving
+  from a re-export is the photographed variant; the published file of that same name is the
+  unphotographed primary. Copying by name therefore puts the photographed CV behind the
+  primary download. `hasPhoto` is verified by counting embedded images, so the check is on
+  content — **identify a re-export by what is inside each file, never by its name.**
+- **Bump the version segment on every re-export.** `deploy.sh` caches non-HTML for a year, so
+  re-publishing changed bytes to the same path leaves the old PDF in every browser that
+  already fetched one, and a CloudFront invalidation clears the edge rather than the client.
+  Exactly one version directory may exist, so the superseded one cannot stay downloadable at
+  a guessable URL.
+
+The page's photo is the JPEG stream lifted out of the photographed PDF without re-encoding,
+so the two are the same bytes. Retouch the source and re-export; do not fix one side.
 
 ### Render Jigs
 
