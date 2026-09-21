@@ -49,9 +49,16 @@
 }
 .root :global(.head-grid) {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr auto;
   align-items: start;
   gap: 30px;
+}
+.root :global(.photo) {
+  width: 104px;
+  height: 104px;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  display: block;
 }
 .root :global(.name) {
   margin: 0;
@@ -383,6 +390,14 @@
   }
   .root :global(header) {
     padding: 26px 22px 16px;
+  }
+  .root :global(.head-grid) {
+    grid-template-columns: 1fr;
+  }
+  .root :global(.photo) {
+    width: 78px;
+    height: 78px;
+    order: -1;
   }
   .root :global(.body) {
     grid-template-columns: 1fr;

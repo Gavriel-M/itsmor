@@ -11,6 +11,10 @@ import { EASE_OUT_EXPO } from "@/lib/motion/easing";
  * The download block sits beside the heading on wide screens and above the
  * document on narrow ones, so a phone visitor does not scroll two pages to
  * reach it.
+ *
+ * items-start, not items-end: the block is taller than the heading, and
+ * bottom-aligning pushed the h1 down the page so /cv started lower than every
+ * other route. Every page puts its h1 directly under the section padding.
  */
 export default function CvHeader() {
   return (
@@ -18,7 +22,7 @@ export default function CvHeader() {
       initial={{ y: 12 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5, ease: EASE_OUT_EXPO }}
-      className="grid grid-cols-1 gap-8 items-end lg:grid-cols-[1fr_minmax(320px,360px)] lg:gap-12"
+      className="grid grid-cols-1 gap-8 items-start lg:grid-cols-[1fr_minmax(320px,360px)] lg:gap-12"
     >
       <div>
         <h1 className="cursor-default font-sans font-bold text-6xl md:text-8xl tracking-tighter text-text">
