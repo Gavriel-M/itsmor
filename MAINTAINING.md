@@ -34,33 +34,57 @@ Two traps around it:
   blank.** The element can have a bounding box and `opacity: 1` of its own while an ancestor
   hides the subtree. Walk the ancestors. This exact mistake produced a false pass here.
 
-To verify: disable JavaScript in devtools and confirm nothing vanishes. `/about` and `/cv`
-both render completely without it.
+To verify: disable JavaScript in devtools and confirm nothing vanishes. **Only `/about` and
+`/cv` render completely without it** — measured, walking the ancestor chain, at 1440x900:
+
+| route                    | text nodes painting |
+| ------------------------ | ------------------- |
+| `/about`                 | 19 / 19             |
+| `/cv`                    | 23 / 23             |
+| `/`                      | 6 / 8               |
+| `/work`                  | 3 / 8               |
+| `/contact`               | 3 / 13              |
+| `/work/2d-web-animation` | **5 / 267**         |
+
+The homepage's two are the wordmark and its label, which are decoration and fade
+deliberately. The rest are finding 2.
 
 ### 2. Decorative marks sized against the viewport while content sits on the grid
 
-`/about` and `/work` both position their 3D mark with `w-[60vw] max-w-[600px]` plus
-`-right-1/6` / `-right-1/4` and `-translate-x-1/2` pulling against each other. The mark's
-horizontal position swings about 485 px between a 1440 and a 1024 viewport, so **the point
-where it collides with text moves as the window resizes** — there is no width at which it is
-correct, only widths where it happens to miss.
+**Fixed on both pages, 2026-09-21.** Kept here because the shape recurs.
 
-Both also carry `pointer-events-auto`, so a decorative canvas intercepts the pointer over
-live text. Measured: it captures every sampled point across itself at 1440, 1024 and 768.
+Both pages positioned their mark with `w-[60vw] max-w-[600px]` plus `-right-1/6` /
+`-right-1/4` and `-translate-x-1/2` pulling against each other. Measured: the mark's centre
+moved **485 px** on `/about` between a 1440 and a 1024 viewport, and its right edge sat 20 px
+past the content container at one width and 55 px short of it at another — there was no width
+at which it was correct, only widths where it happened to miss. On `/about` it also escaped
+the section's `overflow-x-hidden`, because its containing block was `main` rather than
+anything inside the section, and put a **20 px horizontal scrollbar** on the document at 1920. And it carried `pointer-events-auto` over live text: **8–9 sampled text nodes were
+intercepted at every width**, the `h1` among them.
 
-**The rule: decoration on these pages is a grid citizen.** Size it in column units of the
-same twelve columns the text uses, and make it `pointer-events-none` unless it is
-interactive on purpose.
+**The rule, now implemented identically on both pages:** the content container is the mark's
+containing block; the mark is sized against that container (`w-2/3 max-w-[600px]`, about
+eight of the same twelve columns the text uses); it bleeds exactly one gutter past it
+(`-right-8`) from a **single** offset; and it is `pointer-events-none`. The invariant to
+re-check after any change to either page: the mark's right edge is the container's right edge
+plus 32 px at every width, and `scrollWidth == clientWidth`.
 
-Two things to settle before implementing that, because they are in tension:
+It stayed `absolute`, deliberately. The tension this file used to flag — "grid citizen"
+versus "bleeds off the right edge" — resolves by making the grid container the mark's
+_containing block_ rather than making the mark a grid _item_. It is then measured in column
+units while reserving no columns, so it still costs no layout with JS off. A real grid item
+would leave a visible gap there, because the WebGL probe never resolves without JS.
 
-- "Grid citizen" and "bleeds off the right edge" conflict. The mark is currently `absolute`,
-  outside grid flow. Making it a real grid item means it stops bleeding; you likely want a
-  grid-positioned wrapper with an `overflow-visible` child rather than just swapping `vw`
-  for column units.
-- It changes the no-JS rendering. Absolutely positioned, its absence costs no layout. As a
-  grid item reserving columns, its absence leaves a visible gap — and with JS off the WebGL
-  probe never resolves, so it renders nothing. That interacts with class 1 above.
+Two corrections to what this file used to claim:
+
+- **They are not the same mark.** `/about` renders `WireframeLogo3D` (WebGL, behind the
+  support probe); `/work` renders `AnimatedLogoFrame` (SVG, always renders). The positioning
+  defect was identical; the components and their no-JS behaviour are not.
+- **`/work` never actually intercepted the pointer**, despite carrying
+  `pointer-events-auto`. Its header keeps the text in `relative z-10` wrappers, so hit
+  testing reached the text first — measured **0** interceptions at every width. `/about` had
+  no such wrappers, which is why only it was affected. Both are `pointer-events-none` now
+  regardless, so the next page that forgets a `z-10` wrapper does not reintroduce it.
 
 ### 3. Colour set through opacity where the composite fails AA
 
@@ -85,12 +109,20 @@ available — remove the opacity rather than reducing it. `gold` and `amber` may
 text, a border that means something, or an icon carrying state; the cascade glow is the one
 legitimate use.
 
-Ink under opacity, for reference: **50% is 3.24:1 and 60% is 4.35:1, both failing.**
-`opacity-70` is the floor for text, at 6.04:1.
+Ink under opacity, for reference: **50% is 3.24:1 and 60% is 4.37:1, both failing.**
+`opacity-70` is the floor for text, at 6.03:1.
+
+**The ground carries opacity too.** A callout label sat at `text-terracotta`, full opacity,
+on a `bg-terracotta/5` wash and measured **4.30:1** — the token's own 4.57:1 less what the
+wash took out from behind it. Because terracotta has no headroom, there is no wash strength
+that both reads as a wash and clears AA, so the wash went rather than the colour; the
+left border still carries which kind of callout it is. Measure the pixel, not the token, and
+remember the pixel includes what is behind it.
 
 This class has produced: `opacity-80` on terracotta (2.94:1), `opacity-50` twice on
 `/contact` (3.24:1), a `dark:border-white/10` on a site with no dark scheme that rendered
-white-on-cream, and 57 sub-AA text nodes on the research page.
+white-on-cream, and 62 sub-AA text nodes on the research page plus 2 on `/work` — all since
+cleared.
 
 **Prefer lapis for small mono meta.** It has 58% more headroom than terracotta.
 
@@ -139,13 +171,21 @@ The same reasoning applies to `pnpm routes:check`, which exists because a dev-on
 under `src/app/` nearly shipped as a public page. `output: "export"` publishes every route
 and `deploy.sh` syncs all of `out/`, so a list nothing checks cannot stop anything.
 
-**Two related traps:**
+**Three related traps:**
 
 - **Substring matches.** Searching for `ATS` hits `stats`; searching for `AI product
 engineer` hits `AI Product Engineering`, which is approved copy. Use word boundaries and
   verify what actually matched before acting on a count.
 - **A green build is not evidence the site changed.** `deploy.sh` must run, and the live URL
-  must be checked. Two rounds ended with correct work merged and the old copy still public.
+  must be checked. Two rounds ended with correct work merged and the old copy still public,
+  and a third ended with a merge to `main` that was never deployed.
+- **A thing can attach and still do nothing.** `animation-timeline: view()` on `/about`
+  produced a genuine `ViewTimeline` object and no animation whatsoever: `overflow-x: hidden`
+  on the section makes the other axis compute to `auto`, so the section was the nearest
+  scroll container, and it never scrolls. The animation resolved to a fixed 21% duration and
+  finished before first paint. `overflow-x: clip` clips the same and creates no scroll
+  container. Confirming the object exists is not confirming it works — read the computed
+  `clip-path` at several scroll positions.
 
 ---
 
@@ -172,24 +212,33 @@ def ratio(a, b):
 
 ## Open findings
 
-Ordered by what to do first. None is in progress.
+Ordered by what to do first. None is in progress. Ratios are measured in-browser against
+composited pixels, not derived from the tokens.
 
-1. **`/work/2d-web-animation` has 57 text nodes below AA.** Measured in-browser against
-   composited pixels. Almost all are one pattern: `opacity-60` on section summaries, table-of
-   contents entries and the twelve "Avoid When" labels, landing at **4.37:1** against a 4.5
-   requirement — one step to `opacity-70` clears all of them together. Two outliers are much
-   worse: "Demo Player" at **1.91:1** (`opacity-30`) and "No demo for this section" at
-   **1.51:1** (`opacity-20`), which is placeholder text nobody can read. Treat this as the
-   entry point to the research-page rework rather than a separate errand.
-2. **`/work` project descriptions are `text-black/50` at 3.87:1.** Revealed on hover, still
-   text.
-3. **The decorative mark on `/about` and `/work`** — class 2 above. `/work` is the one people
-   forget; fixing only `/about` leaves the pair inconsistent.
+1. **`/work`'s hover arrow is `text-black/30` at 2.09:1.** `aria-hidden` decoration that
+   duplicates an affordance the whole card already carries, so it is arguably exempt from
+   1.4.11 — but it is also invisible, and darkening it changes the card's resting
+   appearance. Left deliberately out of the contrast sweep. Settle it with the `/work`
+   case-study step, not on its own.
+2. **`/work`, `/contact` and `/work/2d-web-animation` are largely blank without
+   JavaScript** — class 1, at scale, and never previously written down. The research page
+   paints **5 of 267** text nodes: every `Section` is a `motion.section` with
+   `initial={{ opacity: 0 }}` and a `whileInView`, so the whole article is invisible until an
+   IntersectionObserver fires. `/work`'s `h1`, intro and every `ProjectCard` do the same;
+   `/contact` hides its heading, address and links. It is not a copy or layout defect, so the
+   layout pass did not touch it — but it is the largest single measured defect here, and the
+   fix is the one already applied twice: animate transform only and leave opacity at 1. Take
+   `/work` and `/contact` with their roadmap steps and the research page with step 5, where
+   its 262 nodes are all one component.
+3. **A callout treatment for the body copy on `/about`** — the third item of roadmap step 3.
+   The other two are done. This one is a design decision rather than a defect, and it was
+   left out of the brief that commissioned the rest, so it is unstarted.
 4. **The `/cv` page and the PDFs are two copies, not one source.** The page markup was ported
    from the same source the PDFs export from, which keeps them consistent at a point in time,
    but nothing keeps them so. Any upstream content edit updates the PDFs on the next export
-   and leaves the page behind, silently. They agree today. The stats decision below removes
-   the most drift-prone part of the problem; the rest is periodic re-porting.
+   and leaves the page behind, silently. They agree today — verified by extracting the text
+   from all three PDFs and diffing the stats against the page. The stats decision below
+   removes the most drift-prone part; the rest is periodic re-porting.
 5. **`CvDownloads`' hardcoded file sizes and page count** — class 4 above. Correct today.
    They go wrong on the next export, while the version segment in the path does change.
 6. **`Timeline`'s two magic numbers** — class 4 above.
@@ -198,18 +247,49 @@ Ordered by what to do first. None is in progress.
    `--x`/`--y` custom properties and the `0 0 100 100` viewBox with
    `preserveAspectRatio="none"` are load-bearing, not stylistic. Do not reintroduce a
    `ResizeObserver` here.
+8. **`overflow: clip` needs Safari 16+.** `/about` and `/work` rely on it to clip the mark's
+   bleed. Below that it falls back to `visible` and those pages get a short horizontal
+   scrollbar. Acceptable, but it is the reason the clip cannot go back to `hidden`.
 
----
+### Closed, with the numbers
+
+Recorded so nobody re-derives them.
+
+- **The research page's sub-AA text: 62 nodes → 0.** 14 section summaries, 26 table-of-
+  contents spans and 12 "Avoid When" headings at `opacity-60` (4.37:1); one callout source at
+  `opacity-50` (3.24:1); 7 terracotta callout labels on a `bg-terracotta/5` wash (4.30:1);
+  "Demo Player" at `opacity-30` (1.91:1) and "No demo for this section" at `opacity-20`
+  (1.51:1). Everything on ink went to `opacity-70` (6.03:1); the wash was dropped so
+  terracotta reads on cream (4.57:1). The count was **62, not the 57 this file used to
+  claim** — the 5 it missed were the tinted-ground labels, which the old figure had no class
+  for.
+- **`/work`'s project descriptions: `text-black/50` (3.87:1) → `text-text/70` (6.03:1).**
+  Pure black under an opacity was also the only place on the site not reading a token.
+- **The decorative mark on both pages** — class 2 above.
+- **`/about`'s timeline reveal.** It ran 1.5 s on a 0.4 s delay against the clock, so it
+  always finished 1.9 s after load. **This file claimed the chart is "far below the fold" and
+  that nobody had ever seen it; that is only true at some viewports.** Measured share of the
+  chart visible on load: 0% at 1280×720 and 1366×768, 38% at 1440×900, 94% at 1920×1080, and
+  it is never 100%. Below `lg` the chart is not rendered at all, so the animation is moot on
+  mobile. The defect was real at the two commonest laptop heights and the reveal was never
+  seen whole anywhere; the reasoning was overstated. It is now positioned against the chart
+  entering the viewport.
 
 ## Decisions recorded, not implemented
 
 Both need a second party, so neither is a code change to make alone.
 
-**The CV stats become floors.** `790+ PRs merged`, `700+ tickets shipped`, beside the `30+
-design docs` that already is one. The exact figures were already two behind within a day of
-shipping and drift upward continuously, and a reader cannot verify the digit anyway, so the
-precision is false. **This has to land on the page and in the PDFs in the same pass** — the
-page is a copy of the PDFs' source, and changing one alone is the drift in finding 4.
+**The CV stats become floors.** `790+ PRs merged` and `700+ tickets shipped`, beside the
+`30+ design docs authored` that already is one. The exact figures were already two behind
+within a day of shipping and drift upward continuously, and a reader cannot verify the digit
+anyway, so the precision is false.
+
+Still not implemented, and the blocker is specific rather than a missing decision. The page
+says `793` and `706` in `CvDocument.tsx`; all three PDFs in `public/cv/2026-09/` say `793 PRs
+merged` and `706 tickets shipped` — checked by extracting their text, so they agree today.
+The PDFs are committed binaries exported from elsewhere and cannot be edited here.
+**Changing the page alone is exactly the drift in finding 4**, so this needs re-exported PDFs
+in the same commit as the two-word page edit.
 
 **The CV photo's date-stamp gets cleaned at source.** The asset carries a camera date-stamp
 in the bottom-left and a small glyph bottom-right. It is illegible at the 104 px display size
@@ -227,16 +307,15 @@ The order is deliberate: each step removes a reason the next one would be wasted
    CV cannot be improved by layout work; you would be polishing a contradiction.
 2. **~~Put the real CV on `/cv`~~** — done. Before the layout pass, because `/cv` was the
    last route with placeholder content and a layout pass over a placeholder is thrown away.
-3. **Polish the About page layout.** Now unblocked. The three items are class 2 (the mark),
-   the timeline's reveal, and a callout treatment for the body copy. **The timeline's reveal
-   has never been seen by anyone**: `.timeline-line` runs a 1.5 s wipe on a 0.4 s delay, so
-   it completes 1.9 s after page load, unconditionally, and the timeline sits far below the
-   fold. `animation-timeline: view()` is the right instrument and degrades safely — where
-   unsupported it falls back to the current time-based behaviour, not to broken. Two things
-   to test first: with a view timeline the animation is _positioned_ rather than delayed, so
-   `backwards` fill behaves differently and the line may re-clip when the element leaves the
-   view range going up; and the reduced-motion guard uses the `animation` shorthand, which
-   also clears `animation-timeline`, so ordering matters.
+3. **Polish the About page layout** — two of three done. The mark (class 2) and the
+   timeline's reveal are shipped; **the callout treatment for the body copy is not**, and is
+   finding 3. `animation-timeline: view()` did degrade safely as predicted, and both
+   predicted gotchas were real: the line does re-clip when the chart leaves the view range
+   going up, which is benign and replays on the way back down; and the reduced-motion guard's
+   `animation` shorthand does reset `animation-timeline`, which is why the `@supports` block
+   is declared before it. The one thing nobody predicted is in class 5 — the section's own
+   `overflow-x-hidden` captured the timeline's scroll container and stopped it working at
+   all.
 4. **Case studies on `/work`.** After the layout pass, because the page's two existing items
    are well made but are not evidence for what the CV claims, and the shape of a case study
    depends on the layout language step 3 settles.
@@ -263,3 +342,16 @@ The order is deliberate: each step removes a reason the next one would be wasted
   pointer interception have all been settled this way.
 - **Rendering is not the same as painting.** An element can be in the DOM, have a bounding
   box, and still be invisible. See class 1.
+- **Check the instrument before believing a clean run.** Three measuring mistakes inside one
+  session, each of which produced a confident, wrong, reassuring answer:
+  - `python3 -m http.server` over `out/` serves a **directory listing** for `/work/` and
+    `/work/2d-web-animation/`, because those directories exist beside the `.html` files. An
+    audit of every route came back clean because it had been auditing Netscape-era file
+    lists. Request the `.html` paths, which is what CloudFront serves anyway.
+  - A colour parser matching `rgba?\(` **silently skips every Tailwind slash-opacity value**,
+    because `text-black/50` computes to `oklab(0 0 0 / 0.5)`. Normalise through a 1×1 canvas
+    and read the pixel back instead of matching a string.
+  - `elementsFromPoint` **omits anything with `pointer-events: none`**, so it is useless for
+    "what is painted under this text". The hero's cream label looked like 1.00:1 cream-on-
+    cream; it is fully inside a lapis bar at every width, at 7.23:1. Compare geometry, or
+    sample the rendered pixel.

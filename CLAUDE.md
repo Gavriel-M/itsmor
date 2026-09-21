@@ -114,12 +114,22 @@ Three distinct animation approaches coexist:
 ### Styling
 
 - **Tailwind CSS v4** (CSS-first mode via `@tailwindcss/postcss`)
-- Design tokens defined as CSS variables in `globals.css`:
-  - `--color-background: #f2f0e6`, `--color-text: #1a1a1a`
-  - `--color-terracotta: #b85b40`, `--color-lapis: #004e98`
-  - `--grid-cell: 4rem` (64px grid unit used in layout calculations)
+- Design tokens are CSS variables in `globals.css`'s `@theme`, mirroring `src/lib/tokens.ts`.
+  Read the values there rather than from a second copy — the copy that used to live in this
+  list had drifted to a retired terracotta. `--grid-cell: 4rem` is the 64px unit the layout
+  maths uses.
 - Fonts: `Inter` (sans-serif) and `IBM Plex Mono` (monospace), loaded via `next/font/google`
 - Custom keyframe animations: `bounce-gentle`, `pulse-slow`
+- **Clip decorative bleed with `overflow-*-clip`, not `overflow-*-hidden`.** `overflow-x:
+hidden` makes the other axis compute to `auto`, which makes the element a scroll container.
+  That silently captured `/about`'s view timeline: its scroll container became a `<section>`
+  whose content always fits, so the animation resolved to a fixed fraction and finished
+  before paint. `clip` clips identically and creates no scroll container.
+- **Decorative marks are grid citizens.** `/about` and `/work` both float a large faint mark
+  behind their header. Both size it against the content container (`w-2/3 max-w-[600px]`) and
+  bleed it exactly one gutter past that container (`-right-8`) from a single offset, with
+  `pointer-events-none`. Sized in `vw` with an inset and a translate fighting each other, the
+  point where it collides with text becomes a function of window width.
 
 ### Animation Research Demo System
 
@@ -195,9 +205,13 @@ stylesheet and the Tailwind utilities, and so the guard covers them.
 
 Two rules that are easy to get wrong:
 
-- **Opacity is part of the colour.** `terracotta` under `opacity-80` composites to 3.25:1
-  and fails AA. No opacity below 100% clears 4.5:1 with it — remove the opacity rather
-  than reducing it, and measure composites, never the token.
+- **Opacity is part of the colour, including the ground's.** `terracotta` under
+  `opacity-80` composites to 3.25:1. It also fails at 100% when what sits behind it is
+  tinted: on a `bg-terracotta/5` wash its own label measured 4.30:1. No opacity below 100%
+  clears 4.5:1 with it — remove the opacity rather than reducing it, and measure the
+  composite, never the token.
+- **`opacity-70` is the floor for text.** Ink at 70% is 6.03:1; 60% is 4.37:1 and 50% is
+  3.24:1, both failing.
 - **`gold` and `amber` may never carry text or state.** Both are under 1.5:1 on the cream
   ground. Decoration only; `--cascade-glow-color` is the legitimate use.
 
@@ -251,6 +265,13 @@ is measured in px against viewBox units and renders the line dashed rather than 
 with `pathLength="1"`. The base state is visible and the animation fills `backwards`, so the
 line is hidden only during the delay; the other way round would leave it invisible wherever
 the animation never runs.
+
+Where `animation-timeline: view()` exists the wipe is positioned against the chart entering
+the viewport rather than against the clock; unsupported engines drop the `@supports` block
+and keep the timed reveal. Two things hold it together: `animation-timeline` is declared
+**after** the `animation` shorthand, which resets it — which is also how the reduced-motion
+block still disables the whole thing — and if the document cannot scroll, the animation sits
+in its after phase and the line is simply visible, so it is never stranded.
 
 ### Motion
 

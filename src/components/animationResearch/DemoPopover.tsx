@@ -355,7 +355,7 @@ export default function DemoPopover({
               Demo
             </button>
             <p
-              className="min-w-0 font-mono text-[11px] uppercase tracking-widest opacity-50 truncate"
+              className="min-w-0 font-mono text-[11px] uppercase tracking-widest opacity-70 truncate"
               title={subtitle}
             >
               {subtitle}
@@ -397,7 +397,7 @@ export default function DemoPopover({
                               className="w-2 h-2 rounded-full"
                               style={{ backgroundColor: item.color }}
                             />
-                            <span className="font-mono text-[10px] uppercase tracking-widest opacity-50">
+                            <span className="font-mono text-[10px] uppercase tracking-widest opacity-70">
                               {item.label}
                             </span>
                           </div>
@@ -421,7 +421,7 @@ export default function DemoPopover({
                         <Suspense
                           fallback={
                             <div className="w-full h-full flex items-center justify-center">
-                              <p className="font-mono text-xs uppercase tracking-widest opacity-30">
+                              <p className="font-mono text-xs uppercase tracking-widest opacity-70">
                                 Loading…
                               </p>
                             </div>
@@ -440,10 +440,10 @@ export default function DemoPopover({
                         className="w-full h-full flex items-center justify-center text-center px-4"
                       >
                         <div>
-                          <p className="font-mono text-xs uppercase tracking-widest opacity-30">
+                          <p className="font-mono text-xs uppercase tracking-widest opacity-70">
                             Demo Player
                           </p>
-                          <p className="font-mono text-[10px] opacity-20 mt-1">
+                          <p className="font-mono text-[10px] opacity-70 mt-1">
                             No demo for this section
                           </p>
                         </div>

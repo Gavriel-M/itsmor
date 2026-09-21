@@ -28,7 +28,7 @@ export default function DemoCard({ demoId }: DemoCardProps) {
             <Suspense
               fallback={
                 <div className="w-full h-full flex items-center justify-center">
-                  <p className="font-mono text-xs uppercase tracking-widest opacity-30">
+                  <p className="font-mono text-xs uppercase tracking-widest opacity-70">
                     Loading…
                   </p>
                 </div>
@@ -39,10 +39,10 @@ export default function DemoCard({ demoId }: DemoCardProps) {
           </motion.div>
         ) : (
           <div className="text-center px-4">
-            <p className="font-mono text-xs uppercase tracking-widest opacity-30">
+            <p className="font-mono text-xs uppercase tracking-widest opacity-70">
               Demo Player
             </p>
-            <p className="font-mono text-[10px] opacity-20 mt-1">
+            <p className="font-mono text-[10px] opacity-70 mt-1">
               No demo for this section
             </p>
           </div>

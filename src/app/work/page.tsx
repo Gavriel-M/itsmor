@@ -25,7 +25,7 @@ const projects = [
 
 export default function WorkPage() {
   return (
-    <section className="min-h-screen w-full pt-32 md:pt-48 px-4 md:px-8 pb-20 overflow-hidden">
+    <section className="min-h-screen w-full pt-32 md:pt-48 px-4 md:px-8 pb-20 overflow-clip">
       <div className="max-w-screen-xl mx-auto">
         <header className="mb-20 md:mb-32 grid grid-cols-1 md:grid-cols-2 gap-8 items-end relative">
           <div className="relative z-10">
@@ -40,13 +40,7 @@ export default function WorkPage() {
             </motion.h1>
           </div>
 
-          {/* 
-            Logo Container 
-            - Positioned absolute relative to the header grid
-            - z-0 to sit behind text (z-10) but be interactive
-            - opacity-5 for subtle look
-          */}
-          <div className="absolute top-1/2 -right-1/4 -translate-x-1/2 -translate-y-1/2 w-[60vw] max-w-[600px] aspect-square z-0 opacity-20 pointer-events-auto">
+          <div className="absolute -top-32 md:-top-48 -right-8 w-2/3 max-w-[600px] aspect-square z-0 opacity-20 pointer-events-none">
             <AnimatedLogoFrame className="w-full h-full" />
           </div>
 

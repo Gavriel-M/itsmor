@@ -90,7 +90,7 @@ export default function Section({ section }: SectionProps) {
       </div>
 
       {section.summary && (
-        <p className="font-mono text-sm opacity-60 mb-6 max-w-2xl">
+        <p className="font-mono text-sm opacity-70 mb-6 max-w-2xl">
           {section.summary}
         </p>
       )}
@@ -110,8 +110,8 @@ export default function Section({ section }: SectionProps) {
               key={i}
               className={`border-l-2 pl-4 py-3 ${
                 callout.type === "studio"
-                  ? "border-terracotta/40 bg-terracotta/5"
-                  : "border-lapis/40 bg-lapis/5"
+                  ? "border-terracotta/40"
+                  : "border-lapis/40"
               }`}
             >
               <p
@@ -130,7 +130,7 @@ export default function Section({ section }: SectionProps) {
                 {callout.body}
               </p>
               {callout.source && (
-                <p className="font-mono text-xs opacity-50 mt-2">
+                <p className="font-mono text-xs opacity-70 mt-2">
                   {callout.source}
                 </p>
               )}
@@ -157,7 +157,7 @@ export default function Section({ section }: SectionProps) {
             </ul>
           </div>
           <div>
-            <h3 className="font-mono text-xs uppercase tracking-widest mb-3 opacity-60">
+            <h3 className="font-mono text-xs uppercase tracking-widest mb-3 opacity-70">
               Avoid When
             </h3>
             <ul className="space-y-2">
