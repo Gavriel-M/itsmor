@@ -36,7 +36,7 @@ const ALTERNATES = [
 export default function CvDownloads() {
   return (
     <div className="border border-black/10">
-      <p className="flex justify-between font-mono text-[0.6rem] font-semibold uppercase tracking-[0.14em] text-[#6e6a5c] px-4 py-3 border-b border-black/10">
+      <p className="flex justify-between font-mono text-[0.6rem] font-semibold uppercase tracking-[0.14em] text-ink-3 px-4 py-3 border-b border-black/10">
         <span>Download</span>
         <span>PDF</span>
       </p>
@@ -57,7 +57,7 @@ export default function CvDownloads() {
           </span>
         </a>
 
-        <p className="font-mono text-[0.66rem] leading-relaxed text-[#575347] mt-3.5 mb-3 pb-3 border-b border-black/10">
+        <p className="font-mono text-[0.66rem] leading-relaxed text-ink-2 mt-3.5 mb-3 pb-3 border-b border-black/10">
           Same text in all three. Only the layout differs.
         </p>
 
@@ -72,7 +72,7 @@ export default function CvDownloads() {
                 <span className="text-[0.86rem] font-semibold underline decoration-black/35 underline-offset-4 group-hover:text-lapis group-hover:decoration-lapis group-focus-visible:text-lapis">
                   {alt.what}
                 </span>
-                <span className="font-mono text-[0.62rem] whitespace-nowrap text-[#6e6a5c]">
+                <span className="font-mono text-[0.62rem] whitespace-nowrap text-ink-3">
                   {alt.size}
                 </span>
               </a>

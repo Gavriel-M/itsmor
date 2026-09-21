@@ -68,14 +68,24 @@ function grep(...args) {
   }
 }
 
-// *.css included so a hex below globals.css's @theme block cannot hide; the
-// @theme literals themselves are validated above, so those lines are skipped.
-const themeLines = new Set(
-  theme
-    .split("\n")
-    .map((l) => l.trim())
-    .filter(Boolean)
-);
+/*
+ * The @theme literals are validated above, so those lines alone are exempt —
+ * and the exemption is by FILE AND LINE, not by value.
+ *
+ * It used to compare the bare hex against the text of every @theme line, so any
+ * occurrence anywhere in src/ of a value that also appeared in @theme was
+ * excluded. That left the guard passing a live token hardcoded into a
+ * component and catching only values absent from @theme, which is the opposite
+ * of its purpose. A whole stylesheet of hardcoded tokens went through it.
+ */
+const THEME_FILE = "src/app/globals.css";
+const themeStartLine = css.slice(0, css.indexOf("@theme")).split("\n").length;
+const themeEndLine = themeStartLine + theme.split("\n").length - 1;
+const isThemeDeclaration = (file, line) =>
+  relative(".", file) === THEME_FILE &&
+  Number(line) >= themeStartLine &&
+  Number(line) <= themeEndLine;
+
 const strays = grep(
   "src",
   "--include=*.ts",
@@ -84,12 +94,12 @@ const strays = grep(
 )
   .split("\n")
   .filter(Boolean)
-  .filter((line) => {
-    const [file, , match] = line.split(":");
+  .filter((entry) => {
+    const [file, line] = entry.split(":");
     if (relative(".", file) === TOKENS_FILE) return false;
-    return ![...themeLines].some((t) => t.includes(match));
+    return !isThemeDeclaration(file, line);
   })
-  .map((line) => line.split(":")[0]);
+  .map((entry) => entry.split(":")[0]);
 
 for (const [file, n] of Object.entries(
   strays.reduce((a, f) => ((a[f] = (a[f] || 0) + 1), a), {})
