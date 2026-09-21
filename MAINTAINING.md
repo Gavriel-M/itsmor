@@ -34,8 +34,20 @@ Two traps around it:
   blank.** The element can have a bounding box and `opacity: 1` of its own while an ancestor
   hides the subtree. Walk the ancestors. This exact mistake produced a false pass here.
 
-To verify: disable JavaScript in devtools and confirm nothing vanishes. `/about` and `/cv`
-both render completely without it.
+To verify: disable JavaScript in devtools and confirm nothing vanishes. **Only `/about` and
+`/cv` render completely without it** — measured, walking the ancestor chain, at 1440x900:
+
+| route                    | text nodes painting |
+| ------------------------ | ------------------- |
+| `/about`                 | 19 / 19             |
+| `/cv`                    | 23 / 23             |
+| `/`                      | 6 / 8               |
+| `/work`                  | 3 / 8               |
+| `/contact`               | 3 / 13              |
+| `/work/2d-web-animation` | **5 / 267**         |
+
+The homepage's two are the wordmark and its label, which are decoration and fade
+deliberately. The rest are finding 2.
 
 ### 2. Decorative marks sized against the viewport while content sits on the grid
 
@@ -208,24 +220,34 @@ composited pixels, not derived from the tokens.
    1.4.11 — but it is also invisible, and darkening it changes the card's resting
    appearance. Left deliberately out of the contrast sweep. Settle it with the `/work`
    case-study step, not on its own.
-2. **A callout treatment for the body copy on `/about`** — the third item of roadmap step 3.
+2. **`/work`, `/contact` and `/work/2d-web-animation` are largely blank without
+   JavaScript** — class 1, at scale, and never previously written down. The research page
+   paints **5 of 267** text nodes: every `Section` is a `motion.section` with
+   `initial={{ opacity: 0 }}` and a `whileInView`, so the whole article is invisible until an
+   IntersectionObserver fires. `/work`'s `h1`, intro and every `ProjectCard` do the same;
+   `/contact` hides its heading, address and links. It is not a copy or layout defect, so the
+   layout pass did not touch it — but it is the largest single measured defect here, and the
+   fix is the one already applied twice: animate transform only and leave opacity at 1. Take
+   `/work` and `/contact` with their roadmap steps and the research page with step 5, where
+   its 262 nodes are all one component.
+3. **A callout treatment for the body copy on `/about`** — the third item of roadmap step 3.
    The other two are done. This one is a design decision rather than a defect, and it was
    left out of the brief that commissioned the rest, so it is unstarted.
-3. **The `/cv` page and the PDFs are two copies, not one source.** The page markup was ported
+4. **The `/cv` page and the PDFs are two copies, not one source.** The page markup was ported
    from the same source the PDFs export from, which keeps them consistent at a point in time,
    but nothing keeps them so. Any upstream content edit updates the PDFs on the next export
    and leaves the page behind, silently. They agree today — verified by extracting the text
    from all three PDFs and diffing the stats against the page. The stats decision below
    removes the most drift-prone part; the rest is periodic re-porting.
-4. **`CvDownloads`' hardcoded file sizes and page count** — class 4 above. Correct today.
+5. **`CvDownloads`' hardcoded file sizes and page count** — class 4 above. Correct today.
    They go wrong on the next export, while the version segment in the path does change.
-5. **`Timeline`'s two magic numbers** — class 4 above.
-6. **`Timeline` renders nothing for a crawler if it ever regains a measurement gate.** It was
+6. **`Timeline`'s two magic numbers** — class 4 above.
+7. **`Timeline` renders nothing for a crawler if it ever regains a measurement gate.** It was
    fixed to position from percentages precisely so it appears in the static HTML. The
    `--x`/`--y` custom properties and the `0 0 100 100` viewBox with
    `preserveAspectRatio="none"` are load-bearing, not stylistic. Do not reintroduce a
    `ResizeObserver` here.
-7. **`overflow: clip` needs Safari 16+.** `/about` and `/work` rely on it to clip the mark's
+8. **`overflow: clip` needs Safari 16+.** `/about` and `/work` rely on it to clip the mark's
    bleed. Below that it falls back to `visible` and those pages get a short horizontal
    scrollbar. Acceptable, but it is the reason the clip cannot go back to `hidden`.
 
@@ -266,7 +288,7 @@ Still not implemented, and the blocker is specific rather than a missing decisio
 says `793` and `706` in `CvDocument.tsx`; all three PDFs in `public/cv/2026-09/` say `793 PRs
 merged` and `706 tickets shipped` — checked by extracting their text, so they agree today.
 The PDFs are committed binaries exported from elsewhere and cannot be edited here.
-**Changing the page alone is exactly the drift in finding 3**, so this needs re-exported PDFs
+**Changing the page alone is exactly the drift in finding 4**, so this needs re-exported PDFs
 in the same commit as the two-word page edit.
 
 **The CV photo's date-stamp gets cleaned at source.** The asset carries a camera date-stamp
@@ -287,7 +309,7 @@ The order is deliberate: each step removes a reason the next one would be wasted
    last route with placeholder content and a layout pass over a placeholder is thrown away.
 3. **Polish the About page layout** — two of three done. The mark (class 2) and the
    timeline's reveal are shipped; **the callout treatment for the body copy is not**, and is
-   finding 2. `animation-timeline: view()` did degrade safely as predicted, and both
+   finding 3. `animation-timeline: view()` did degrade safely as predicted, and both
    predicted gotchas were real: the line does re-clip when the chart leaves the view range
    going up, which is benign and replays on the way back down; and the reduced-motion guard's
    `animation` shorthand does reset `animation-timeline`, which is why the `@supports` block
