@@ -22,15 +22,13 @@ const ALTERNATES = [
   {
     href: base("Gavriel-Mor-Full-Stack-Engineer-CV-Photo.pdf"),
     filename: "Gavriel-Mor-Full-Stack-Engineer-CV-Photo.pdf",
-    what: "With a photo",
-    why: "The German convention",
+    what: "With photo",
     size: "209 KB",
   },
   {
     href: base("Gavriel-Mor-Full-Stack-Engineer-CV-Plain.pdf"),
     filename: "Gavriel-Mor-Full-Stack-Engineer-CV-Plain.pdf",
-    what: "Single column, plain",
-    why: "For CV parsers and application portals",
+    what: "Single column",
     size: "186 KB",
   },
 ];
@@ -69,16 +67,13 @@ export default function CvDownloads() {
               <a
                 href={alt.href}
                 download={alt.filename}
-                className="group grid grid-cols-[1fr_auto] items-baseline gap-3 py-2.5"
+                className="group grid grid-cols-[1fr_auto] items-baseline gap-3 py-2"
               >
                 <span className="text-[0.86rem] font-semibold underline decoration-black/35 underline-offset-4 group-hover:text-lapis group-hover:decoration-lapis group-focus-visible:text-lapis">
                   {alt.what}
                 </span>
                 <span className="font-mono text-[0.62rem] whitespace-nowrap text-[#6e6a5c]">
                   {alt.size}
-                </span>
-                <span className="col-span-2 font-mono text-[0.64rem] tracking-[0.02em] text-[#6e6a5c] mt-0.5">
-                  {alt.why}
                 </span>
               </a>
             </li>

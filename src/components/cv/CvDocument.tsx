@@ -1,3 +1,4 @@
+import photo from "@/assets/cv-photo.jpg";
 import styles from "./cv.module.css";
 
 /**
@@ -5,14 +6,21 @@ import styles from "./cv.module.css";
  * the first page of an embedded PDF as a static image, and this document is two
  * pages. HTML is also selectable, indexable, reflows, and needs no JS.
  *
- * This is the no-photo layout. A public URL cannot know who is reading it, and
- * a photo gets a CV binned in several markets on discrimination-liability
- * grounds, so the photographed variant exists only as a download.
+ * The page carries the photo and the primary download does not. That mismatch
+ * is deliberate and both halves matter, so do not flatten it:
  *
- * The phone number is deliberately absent and the address is the domain one:
- * the PDFs carry the full contact block, but this markup lives in a public
- * repository and is served to crawlers, where noindex stops search engines and
- * not scrapers.
+ *   The page is a showcase on his own site, in a market where the photo is the
+ *   convention. Nobody bins a portfolio page, and it is the one place the CV
+ *   should look like its best self.
+ *
+ *   A download enters a company's hiring pipeline, which is where the
+ *   discrimination-liability concern actually bites. The asymmetry is the safe
+ *   direction: a recruiter who expects a photo and receives none notices
+ *   nothing, while one who bins photographed CVs on policy would bin it.
+ *
+ * The phone number is absent and the address is the domain one. The PDFs carry
+ * the full contact block, but this markup is public and served to crawlers,
+ * where noindex stops search engines and not scrapers.
  */
 export default function CvDocument() {
   return (
@@ -28,6 +36,14 @@ export default function CvDocument() {
             </p>
             <p className="role">Full-Stack Software Engineer</p>
           </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="photo"
+            src={photo.src}
+            width={photo.width}
+            height={photo.height}
+            alt="Gavriel Mor"
+          />
         </div>
         <div className="stats">
           <span className="s">
