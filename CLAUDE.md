@@ -2,6 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+**Before changing anything visual, read `MAINTAINING.md`.** It carries the defect classes this
+codebase actually produces, the contrast floors and which have no headroom, the open findings,
+and why the remaining roadmap is ordered as it is. This file says how the code works; that one
+says what goes wrong.
+
 ## Project Overview
 
 Personal portfolio site ("itsmor") — a performance-optimized, interactive portfolio built with Next.js 16, React 19, and TypeScript. Features cursor-tracking animations, 3D WebGL rendering, canvas-based lightning effects, and page transitions. Deployed as a static export to AWS S3 + CloudFront.
@@ -56,7 +61,7 @@ Components live in `src/components/` organized by page domain:
 
 - `home/` — Hero section, MagneticCircle (mouse-tracking)
 - `work/` — ProjectCard (handles internal + external links), WireframeLogo3D (React Three Fiber)
-- `about/` — Timeline (see [Progressive Enhancement](#progressive-enhancement)), RotatingText (cycling text with Framer Motion)
+- `about/` — Timeline (see [Progressive Enhancement](#progressive-enhancement))
 - `animationResearch/` — Research page system: ResearchLayout, DemoCard, DemoPopover (draggable mobile panel), Section, Toc, HeroHeader, and 7 lazy-loaded demo components in `demos/`
 - `contact/` — Network visualization with canvas-based lightning hover effect, cursor-tracking logo rotation
 - `layout/` — Navigation, GridBackground, PageTransition, ScrollNavigationLoader
@@ -85,7 +90,7 @@ Content-heavy pages store structured data in `src/data/` (e.g., `animationResear
 - `/work/2d-web-animation` — 14-section research article with interactive demos
 - `/about` — Rotating titles, bio, timeline, tech stack, expertise
 - `/contact` — Email, social network visualization, copyright footer
-- `/cv` — Interim state (`CvInterim`), `noindex`. The PDF it used to serve was removed from `public/` as well as unlinked, because S3 serves file paths directly
+- `/cv` — The CV as HTML plus versioned PDF downloads. Indexed and in the sitemap. The page shows the photographed layout; the primary download does not, deliberately — see `CvDocument.tsx`
 
 ### Page Transitions
 
@@ -158,9 +163,8 @@ Three Next.js behaviours the helper exists to contain:
 
 `INDEXABLE_ROUTES` in `src/lib/routes.ts` drives `sitemap.ts`, and `pnpm routes:check`
 asserts it against what the export actually publishes — a list nothing checks cannot stop a
-stray route shipping, which is how `/banner` nearly went live. `/cv` is published but
-unlisted. `robots.ts` deliberately does not `Disallow: /cv` — a disallow stops the crawl,
-so the crawler never reads the noindex.
+stray route shipping, which is how `/banner` nearly went live. Only `/404` and `/_not-found`
+are published-but-unlisted.
 
 **The OG card is a static import from `src/assets/og-card.png`, not Next's
 `opengraph-image` file convention.** The convention only hashes the URL for the segment
@@ -172,12 +176,22 @@ old card. A static import is content-hashed for every route. One asset serves bo
 ### Design Tokens
 
 **`src/lib/tokens.ts` is the only place a palette hex may appear.** Everything else reads
-`PALETTE` — canvas code, three.js material colours, raw CSS strings, the data file.
-`src/app/globals.css`'s `@theme` block necessarily repeats the values, because Tailwind v4
-needs literals in CSS to generate utilities; `pnpm tokens:check` asserts the two agree,
-that no hex has leaked elsewhere in `src/` or into a jig, and that the jigs' generated
-stylesheet is current. The guard is location-based, not count-based, so a migration that
-only moves a literal between files still fails.
+`PALETTE` — canvas code, three.js material colours, raw CSS strings, the data file, and the
+CV stylesheet. `src/app/globals.css`'s `@theme` block necessarily repeats the values, because
+Tailwind v4 needs literals in CSS to generate utilities; `pnpm tokens:check` asserts the two
+agree, that no hex has leaked elsewhere in `src/` or into a jig, and that the jigs' generated
+stylesheet is current. The guard is location-based, not count-based, so a migration that only
+moves a literal between files still fails.
+
+**The `@theme` exemption is by file and line, not by value.** Comparing the bare hex made the
+guard exempt every occurrence anywhere of a value that appeared in `@theme`, so it passed a
+live token hardcoded into a component and caught only retired values. See
+`MAINTAINING.md > Guards that pass because they were only tested with inputs they could catch`
+before changing it.
+
+`PALETTE` also holds the CV document's own scale — `ink-2`, `ink-3`, `rail`, `rule`,
+`rule-soft`. They live there rather than in the component so one declaration serves both the
+stylesheet and the Tailwind utilities, and so the guard covers them.
 
 Two rules that are easy to get wrong:
 

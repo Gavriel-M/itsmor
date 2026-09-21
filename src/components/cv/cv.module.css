@@ -4,24 +4,26 @@
  * markup stays a faithful copy.
  *
  * Two deliberate departures from that source:
- *   --ink-3 is #6E6A5C, not #938E7E. The original measures 2.87:1 on this
- *     ground and fails AA at every size; it carries every mono label, the stats
- *     strip, all dates and the footer, so on a web page it is nine failures.
- *     #6E6A5C is 4.74:1 and still reads tertiary.
+ *   The tertiary ink is lighter there, at 2.87:1 on this ground, which fails AA
+ *     at every size. It carries every mono label, the stats strip, all dates
+ *     and the footer, so on a web page it is nine failures. `ink-3` is 4.74:1
+ *     and still reads tertiary.
  *   No dark-mode block. This site is light-only, so the source's
  *     prefers-color-scheme and [data-theme] overrides would put a dark panel on
  *     a cream page.
  */
 .root {
-  --paper: #f2f0e6;
-  --rail: #eceadc;
-  --ink: #1a1a1a;
-  --ink-2: #575347;
-  --ink-3: #6e6a5c;
-  --rule: #d9d4c4;
-  --rule-soft: #e4e0d2;
-  --blue: #004e98;
-  --terra: #a9543b;
+  /* Local names for the document's vocabulary, all resolving to the shared
+     tokens. No colour is declared here. */
+  --paper: var(--color-background);
+  --rail: var(--color-rail);
+  --ink: var(--color-text);
+  --ink-2: var(--color-ink-2);
+  --ink-3: var(--color-ink-3);
+  --rule: var(--color-rule);
+  --rule-soft: var(--color-rule-soft);
+  --blue: var(--color-lapis);
+  --terra: var(--color-terracotta);
   --doc-sans: var(--font-inter), "Helvetica Neue", Helvetica, Arial, sans-serif;
   --doc-mono:
     var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;

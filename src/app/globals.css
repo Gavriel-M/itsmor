@@ -9,6 +9,12 @@
   --color-gold: #ffd700;
   --color-amber: #ffbf00;
 
+  --color-ink-2: #575347;
+  --color-ink-3: #6e6a5c;
+  --color-rail: #eceadc;
+  --color-rule: #d9d4c4;
+  --color-rule-soft: #e4e0d2;
+
   --font-sans:
     var(--font-inter), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
