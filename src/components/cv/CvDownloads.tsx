@@ -3,35 +3,11 @@
  * component renders a TransitionLink and the client router tries to navigate to
  * a PDF.
  *
- * Paths carry a version segment because deploy.sh caches non-HTML assets for a
- * year. Re-uploading a corrected CV to the same path leaves the old one in every
- * browser that already fetched it, and a CloudFront invalidation clears the edge
- * rather than the client. The `download` attribute keeps the saved filename
- * canonical whatever the path says.
+ * Filenames, sizes, page counts and the version segment all come from
+ * `@/lib/cv`, which `pnpm cv:check` verifies against the files on disk. The
+ * `download` attribute keeps the saved filename canonical whatever the path says.
  */
-const VERSION = "2026-09";
-const base = (name: string) => `/cv/${VERSION}/${name}`;
-
-const PRIMARY = {
-  href: base("Gavriel-Mor-Full-Stack-Engineer-CV.pdf"),
-  filename: "Gavriel-Mor-Full-Stack-Engineer-CV.pdf",
-  meta: "A4 · 2 pp · 194 KB",
-};
-
-const ALTERNATES = [
-  {
-    href: base("Gavriel-Mor-Full-Stack-Engineer-CV-Photo.pdf"),
-    filename: "Gavriel-Mor-Full-Stack-Engineer-CV-Photo.pdf",
-    what: "With photo",
-    size: "209 KB",
-  },
-  {
-    href: base("Gavriel-Mor-Full-Stack-Engineer-CV-Plain.pdf"),
-    filename: "Gavriel-Mor-Full-Stack-Engineer-CV-Plain.pdf",
-    what: "Single column",
-    size: "186 KB",
-  },
-];
+import { CV_ALTERNATES, CV_PRIMARY, cvHref } from "@/lib/cv";
 
 export default function CvDownloads() {
   return (
@@ -47,13 +23,13 @@ export default function CvDownloads() {
           on cream beside this fill rather than on it. Do not zero that offset.
         */}
         <a
-          href={PRIMARY.href}
-          download={PRIMARY.filename}
+          href={cvHref(CV_PRIMARY.filename)}
+          download={CV_PRIMARY.filename}
           className="flex items-baseline justify-between gap-4 bg-terracotta text-white px-4 py-3.5 font-mono text-[0.82rem] font-semibold uppercase tracking-[0.1em] hover:bg-text focus-visible:bg-text transition-colors duration-300"
         >
           <span>Download CV</span>
           <span className="font-normal text-[0.62rem] tracking-[0.06em]">
-            {PRIMARY.meta}
+            {`A4 · ${CV_PRIMARY.pages} pp · ${CV_PRIMARY.size}`}
           </span>
         </a>
 
@@ -62,10 +38,10 @@ export default function CvDownloads() {
         </p>
 
         <ul className="flex flex-col gap-0.5">
-          {ALTERNATES.map((alt) => (
+          {CV_ALTERNATES.map((alt) => (
             <li key={alt.filename}>
               <a
-                href={alt.href}
+                href={cvHref(alt.filename)}
                 download={alt.filename}
                 className="group grid grid-cols-[1fr_auto] items-baseline gap-3 py-2"
               >

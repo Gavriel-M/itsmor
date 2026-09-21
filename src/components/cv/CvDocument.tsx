@@ -1,4 +1,5 @@
 import photo from "@/assets/cv-photo.jpg";
+import { CV_STATS } from "@/lib/cv";
 import styles from "./cv.module.css";
 
 /**
@@ -46,15 +47,11 @@ export default function CvDocument() {
           />
         </div>
         <div className="stats">
-          <span className="s">
-            <b>793</b> PRs merged
-          </span>
-          <span className="s">
-            <b>706</b> tickets shipped
-          </span>
-          <span className="s">
-            <b>30+</b> design docs authored
-          </span>
+          {CV_STATS.map((stat) => (
+            <span className="s" key={stat.label}>
+              <b>{stat.value}</b> {stat.label}
+            </span>
+          ))}
         </div>
       </header>
 

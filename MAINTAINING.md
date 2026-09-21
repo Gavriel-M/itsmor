@@ -233,14 +233,19 @@ composited pixels, not derived from the tokens.
 3. **A callout treatment for the body copy on `/about`** — the third item of roadmap step 3.
    The other two are done. This one is a design decision rather than a defect, and it was
    left out of the brief that commissioned the rest, so it is unstarted.
-4. **The `/cv` page and the PDFs are two copies, not one source.** The page markup was ported
-   from the same source the PDFs export from, which keeps them consistent at a point in time,
-   but nothing keeps them so. Any upstream content edit updates the PDFs on the next export
-   and leaves the page behind, silently. They agree today — verified by extracting the text
-   from all three PDFs and diffing the stats against the page. The stats decision below
-   removes the most drift-prone part; the rest is periodic re-porting.
-5. **`CvDownloads`' hardcoded file sizes and page count** — class 4 above. Correct today.
-   They go wrong on the next export, while the version segment in the path does change.
+4. **The `/cv` page and the PDFs are still two copies for everything but the stats.** The
+   page markup was ported from the same source the PDFs export from, and nothing keeps them
+   together except re-porting. Narrower than it was: the stats strip and the photograph now
+   come from one declaration each — `CV_STATS` in `src/lib/cv.ts`, and
+   `src/assets/cv-photo.jpg`, which is the byte-exact image embedded in the photographed PDF
+   (same sha256). Everything else — the prose, the role list, the dates — is still a copy
+   that an upstream edit silently leaves behind. `pnpm cv:check` cannot see this; it checks
+   the files, not the words.
+5. **~~`CvDownloads`' hardcoded file sizes and page count~~** — solved. They are declared in
+   `src/lib/cv.ts` and asserted against the files by `pnpm cv:check`, which also fails on a
+   stale version segment, a superseded version directory left published, an undeclared file
+   in the directory, and the filename crossover below. They survived one re-export correct by
+   luck, which was the warning.
 6. **`Timeline`'s two magic numbers** — class 4 above.
 7. **`Timeline` renders nothing for a crawler if it ever regains a measurement gate.** It was
    fixed to position from percentages precisely so it appears in the static HTML. The
@@ -266,6 +271,12 @@ Recorded so nobody re-derives them.
 - **`/work`'s project descriptions: `text-black/50` (3.87:1) → `text-text/70` (6.03:1).**
   Pure black under an opacity was also the only place on the site not reading a token.
 - **The decorative mark on both pages** — class 2 above.
+- **The CV re-export.** Verified independently before landing: 0 pixels of the retired
+  tertiary ink `#938E7E` and 1,750 of `#6E6A5C` on page 1 of the primary, against 1,852 and 0
+  the other way in the file it replaced, with terracotta, lapis and `ink-2` pixel-identical
+  between the two. All three PDFs carry the floors; page counts 2/2/3 agree with `pdfinfo`;
+  the primary embeds no image. Published under `2026-09-21` because `deploy.sh` caches
+  non-HTML for a year and an invalidation clears the edge, not the client.
 - **`/about`'s timeline reveal.** It ran 1.5 s on a 0.4 s delay against the clock, so it
   always finished 1.9 s after load. **This file claimed the chart is "far below the fold" and
   that nobody had ever seen it; that is only true at some viewports.** Measured share of the
@@ -275,29 +286,40 @@ Recorded so nobody re-derives them.
   seen whole anywhere; the reasoning was overstated. It is now positioned against the chart
   entering the viewport.
 
-## Decisions recorded, not implemented
+## Decisions since implemented
 
-Both need a second party, so neither is a code change to make alone.
+Both are done, recorded because the reasoning is not visible in the diff.
 
-**The CV stats become floors.** `790+ PRs merged` and `700+ tickets shipped`, beside the
-`30+ design docs authored` that already is one. The exact figures were already two behind
-within a day of shipping and drift upward continuously, and a reader cannot verify the digit
-anyway, so the precision is false.
+**The CV stats are floors.** `790+ PRs merged`, `700+ tickets shipped`, `30+ design docs
+authored`. The exact figures were two behind within a day of shipping and a reader cannot
+verify the digit anyway, so the precision was false. It landed on the page and in all three
+PDFs in the same commit, which was the condition — the page was a copy of the PDFs' source,
+and changing one alone was the drift in finding 4. The strings now live once, in `CV_STATS`.
 
-Still not implemented, and the blocker is specific rather than a missing decision. The page
-says `793` and `706` in `CvDocument.tsx`; all three PDFs in `public/cv/2026-09/` say `793 PRs
-merged` and `706 tickets shipped` — checked by extracting their text, so they agree today.
-The PDFs are committed binaries exported from elsewhere and cannot be edited here.
-**Changing the page alone is exactly the drift in finding 4**, so this needs re-exported PDFs
-in the same commit as the two-word page edit.
+**The CV photo's date-stamp is cleaned at source.** The asset carried a camera date-stamp
+bottom-left and a small glyph bottom-right, illegible at the 104 px display size and present
+in the photographed PDF too. It was fixed in the source the PDFs export from and re-exported,
+not painted out on the page. The page's asset is now the JPEG stream lifted out of the
+photographed PDF without re-encoding, so page and download are the same bytes rather than two
+files that happen to agree.
 
-**The CV photo's date-stamp gets cleaned at source.** The asset carries a camera date-stamp
-in the bottom-left and a small glyph bottom-right. It is illegible at the 104 px display size
-and it is already in the photographed PDF. **Clean it in the source the PDFs export from and
-re-export, not on the page** — fixing one side creates exactly the drift the port exists to
-prevent.
+**Identify a re-export by content, not by filename.** The three incoming files do not map
+one-to-one onto the published names. The file whose incoming name has no suffix is the
+**photographed** variant, while the published file of that same name is the **unphotographed
+primary**. So a copy that trusts the names puts the photographed CV behind the primary
+download — the one outcome the unphotographed default exists to prevent — and every candidate
+is a valid CV, so nothing else notices.
 
----
+Tell them apart by what is inside them:
+
+| published                       | embeds a photo | pages |
+| ------------------------------- | -------------- | ----- |
+| `…-CV.pdf` — _primary download_ | no             | 2     |
+| `…-CV-Photo.pdf`                | yes            | 2     |
+| `…-CV-Plain.pdf`                | no             | 3     |
+
+`hasPhoto` in `src/lib/cv.ts` is verified by counting embedded images, so getting this wrong
+is now a CI failure rather than something a reviewer has to notice.
 
 ## The remaining roadmap, and why it is ordered this way
 

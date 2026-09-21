@@ -13,7 +13,8 @@
     "format:check": "prettier --check .",
     "tokens:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON tools/check-tokens.mjs",
     "routes:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON tools/check-routes.mjs",
-    "verify": "pnpm format:check && pnpm lint && pnpm tokens:check && pnpm build && pnpm routes:check"
+    "verify": "pnpm format:check && pnpm lint && pnpm tokens:check && pnpm cv:check && pnpm build && pnpm routes:check",
+    "cv:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON tools/check-cv.mjs"
   },
   "dependencies": {
     "text-cascade": "workspace:*",
