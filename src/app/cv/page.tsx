@@ -5,8 +5,8 @@ import CvDocument from "@/components/cv/CvDocument";
 export const metadata = routeMetadata({
   title: "CV",
   description:
-    "Full-stack engineer at Logz.io. Second engineer on OrionIQ, an agent " +
-    "platform that investigates production and acts on it.",
+    "Full-stack engineer at Logz.io, working on OrionIQ, an agent platform " +
+    "that investigates production and acts on it.",
 });
 
 export default function CvPage() {

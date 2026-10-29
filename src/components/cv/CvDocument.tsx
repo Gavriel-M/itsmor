@@ -19,9 +19,13 @@ import styles from "./cv.module.css";
  *   direction: a recruiter who expects a photo and receives none notices
  *   nothing, while one who bins photographed CVs on policy would bin it.
  *
- * The phone number is absent and the address is the domain one. The PDFs carry
- * the full contact block, but this markup is public and served to crawlers,
- * where noindex stops search engines and not scrapers.
+ * No phone number anywhere, and the address is the domain one. This markup is
+ * public and served to crawlers, where noindex stops search engines and not
+ * scrapers.
+ *
+ * Every string here is also in the PDFs. They are two copies of one source, so
+ * a wording change belongs upstream and lands on both in the same release;
+ * editing one side is the drift the port exists to prevent.
  */
 export default function CvDocument() {
   return (
@@ -169,7 +173,7 @@ export default function CvDocument() {
             </div>
             <div className="edu">
               <span className="t">Military reserve service</span>
-              <span className="m">Oct 2023 – Feb 2024</span>
+              <span className="m">Oct 2023 – Jan 2024</span>
             </div>
           </section>
 
@@ -185,7 +189,7 @@ export default function CvDocument() {
             </div>
             <div className="lang">
               <b>German</b>
-              <span>A1, studying</span>
+              <span>A1–A2, learning</span>
             </div>
           </section>
         </aside>
@@ -195,12 +199,12 @@ export default function CvDocument() {
             <h3 className="sec-title">Profile</h3>
             <p className="summary">
               Full-stack engineer on an agentic observability product, where I
-              am the second engineer and own the interface end to end. I have
+              work across its interface, backend and design system. I have
               shipped LLM features since 2024: agents that investigate an alert,
               answer a question or check a deployment, plus the chat product and
-              the metering and billing behind them. I built the company&apos;s
-              design system after arguing for it, and moved the SIEM platform
-              across single-handed while acting as team lead. I review more code
+              the metering and billing behind them. I led the rebuild of the
+              company&apos;s design system, and led the SIEM platform&apos;s
+              move onto Open360 while acting as team lead. I review more code
               than I write, and the architecture goes in a design doc before it
               goes in the editor.
             </p>
@@ -210,19 +214,12 @@ export default function CvDocument() {
             <h3 className="sec-title">Experience</h3>
             <div className="job-head">
               <span className="co">Logz.io</span>
-              <span className="when">
-                OCT 2023 – PRESENT · TEL AVIV (REMOTE)
-              </span>
+              <span className="when">OCT 2023 – PRESENT · MUNICH (REMOTE)</span>
             </div>
             <div className="prog">
               <span className="stage">
                 <span className="r">Full-Stack Engineer</span>
-                <span className="d">Feb 2024</span>
-              </span>
-              <span className="sep">→</span>
-              <span className="stage">
-                <span className="r">Design System Lead</span>
-                <span className="d">Jul 2025</span>
+                <span className="d">Jan 2024</span>
               </span>
               <span className="sep">→</span>
               <span className="stage">
@@ -231,7 +228,7 @@ export default function CvDocument() {
               </span>
               <span className="sep">→</span>
               <span className="stage cur">
-                <span className="r">OrionIQ, 2nd Engineer</span>
+                <span className="r">OrionIQ</span>
                 <span className="d">Jun 2026</span>
               </span>
             </div>
@@ -240,10 +237,19 @@ export default function CvDocument() {
               <p className="label">Leadership &amp; Ownership</p>
               <ul className="bullets">
                 <li>
-                  <strong>Retained through the December 2025 reduction</strong>{" "}
-                  that merged two teams into one 7-person full-stack unit, then
-                  hired two engineers into it: built the interview framework and
-                  onboarded both, one of whom now leads the team.
+                  <strong>Retained through the 2025–26 reduction</strong> that
+                  merged two teams into one 7-person full-stack unit.
+                </li>
+                <li>
+                  <strong>
+                    Acting lead of the application team, Mar–May 2026, while its
+                    lead was away.
+                  </strong>{" "}
+                  Planned the quarter with KPIs, a capacity model and a risk
+                  register, took part in hiring a senior full-stack developer
+                  and the team&apos;s next lead, and built the intro-interview
+                  framework. Onboarded the new senior full-stack developer and
+                  handed the team over to the incoming lead.
                 </li>
                 <li>
                   Author{" "}
@@ -260,22 +266,26 @@ export default function CvDocument() {
               <ul className="bullets">
                 <li>
                   <strong>
-                    Moved every SIEM customer onto the Open360 platform
-                    single-handed while acting as team lead
+                    Brought the SIEM product onto the Open360 platform
                   </strong>{" "}
-                  (Mar–Jun 2026): scoped with product, then shipped rules
-                  management, AI-assisted event analysis, alerting and
-                  legacy-URL redirects behind flags, with full E2E coverage.
+                  (Apr–May 2026): wrote the epic, the technical design and a
+                  three-phase plan, then delivered the workspace infrastructure,
+                  the Explore integration, the AI investigation pipeline,
+                  security rules, event management, threat feeds and lookups and
+                  the dashboard migration, with three teammates on the parallel
+                  phases. Released to all users in May 2026.
                 </li>
                 <li>
-                  <strong>Second engineer on OrionIQ</strong>, spun out as its
-                  own product on 1 Jan 2026, where I own the one interface its
-                  agents answer through, whether a run starts from a
-                  conversation, an alert, a dashboard or a deployment, over
-                  telemetry that is not always my employer&apos;s. Founded the
-                  Artemis repo and CosmIQ (derived from LUI), extracted the{" "}
-                  <code>orioniq-chat</code> package, and shipped an embeddable
-                  chat drawer now live in Open360.
+                  <strong>On OrionIQ</strong>, spun out as its own product,
+                  where I work across its interface, backend and design system,
+                  whether a run starts from a conversation, an alert, a
+                  dashboard or a deployment, over telemetry that is not always
+                  my employer&apos;s. Extracted the <code>orioniq-chat</code>{" "}
+                  package and shipped an embeddable chat drawer now live in
+                  Open360, and built components for CosmIQ, the design system
+                  that grew out of LUI: the select, the tables and DataTable,
+                  filter menus, a shared drag-resize primitive and the
+                  travelling layer.
                 </li>
                 <li>
                   <strong>
@@ -312,11 +322,9 @@ export default function CvDocument() {
               </p>
               <ul className="bullets">
                 <li>
-                  <strong>Saw the design system nobody owned</strong>, made the
-                  case to leadership until they funded a replacement, then led
-                  it: LUI, with token-based theming, 150+ components and an
-                  adoption-metrics framework, now the surface every Logz.io
-                  product renders through.
+                  <strong>Saw the design system had drifted</strong>, made the
+                  case for rebuilding it, then led it: LUI, with token-based
+                  theming and an adoption-metrics framework.
                 </li>
                 <li>
                   <strong>
@@ -328,12 +336,11 @@ export default function CvDocument() {
                   no user was stranded in the transition.
                 </li>
                 <li>
-                  <strong>Core contributor to Explore</strong>, the
-                  company&apos;s first in-house observability product: a
-                  virtualized table, search and visualizations over very large
-                  result sets, with a non-blocking OPFS and Web Workers cache
-                  that fixed a cross-browser bug blocking render and multi-tab
-                  fetches.
+                  <strong>Core contributor to Explore</strong>, the log-search
+                  page: a virtualized table, search and visualizations over very
+                  large result sets, with a non-blocking OPFS and Web Workers
+                  cache that fixed a cross-browser bug blocking render and
+                  multi-tab fetches.
                 </li>
                 <li>
                   Merged upstream fixes to <strong>xstyled</strong> (2.3k★), the
