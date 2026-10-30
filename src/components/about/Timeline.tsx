@@ -50,7 +50,7 @@ const EVENTS: TimelineEvent[] = [
     emphasis: "primary",
   },
   {
-    label: "ORIONIQ · SECOND ENGINEER",
+    label: "ORIONIQ",
     year: "NOW",
     yPosition: 0.05,
     emphasis: "primary",

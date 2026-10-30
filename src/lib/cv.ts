@@ -16,7 +16,7 @@
  */
 
 /** Bumped on every re-export: deploy.sh caches non-HTML for a year. */
-export const CV_VERSION = "2026-09-21";
+export const CV_VERSION = "2026-10-29";
 
 export const CV_PUBLIC_DIR = `public/cv/${CV_VERSION}`;
 
@@ -34,7 +34,7 @@ export const CV_PRIMARY: CvFile = {
   filename: "Gavriel-Mor-Full-Stack-Engineer-CV.pdf",
   hasPhoto: false,
   pages: 2,
-  size: "194 KB",
+  size: "192 KB",
 };
 
 export const CV_ALTERNATES: (CvFile & { what: string })[] = [
@@ -43,14 +43,14 @@ export const CV_ALTERNATES: (CvFile & { what: string })[] = [
     what: "With photo",
     hasPhoto: true,
     pages: 2,
-    size: "209 KB",
+    size: "200 KB",
   },
   {
     filename: "Gavriel-Mor-Full-Stack-Engineer-CV-Plain.pdf",
     what: "Single column",
     hasPhoto: false,
     pages: 3,
-    size: "186 KB",
+    size: "184 KB",
   },
 ];
 

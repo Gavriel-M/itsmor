@@ -42,9 +42,6 @@ export default function DemoCard({ demoId }: DemoCardProps) {
             <p className="font-mono text-xs uppercase tracking-widest opacity-70">
               Demo Player
             </p>
-            <p className="font-mono text-[10px] opacity-70 mt-1">
-              No demo for this section
-            </p>
           </div>
         )}
       </AnimatePresence>

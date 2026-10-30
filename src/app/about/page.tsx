@@ -41,11 +41,11 @@ export default function AboutPage() {
             transition={{ duration: 0.5, ease: EASE_OUT_EXPO }}
             className="font-sans text-base md:text-lg leading-relaxed opacity-80 mt-12 max-w-2xl"
           >
-            Full-stack engineer at Logz.io since 2023. I am the second engineer
-            on OrionIQ, an agent platform that investigates production and acts
-            on it, and I own its interface end to end. Before that I built the
-            company&apos;s design system, and moved the entire SIEM product onto
-            a new platform single-handed. Munich-based. EU citizen.
+            Full-stack engineer at Logz.io since 2023. I work on OrionIQ, an
+            agent platform that investigates production and acts on it, across
+            its interface, backend and design system. Before that I led the
+            rebuild of the company&apos;s design system, and led the SIEM
+            product&apos;s move onto a new platform. Munich-based. EU citizen.
           </motion.p>
 
           <motion.div

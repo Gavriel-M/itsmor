@@ -9,22 +9,17 @@ const AUTHOR = "Gavriel Mor";
 const TITLE = "Gavriel Mor — Full-Stack Engineer";
 const TITLE_TEMPLATE = `%s | ${AUTHOR}`;
 /**
- * One product, one sentence. This wording is shared verbatim with the other
- * places the product is described, so it is not reworded here.
+ * One product, one sentence, shared verbatim with every other place the product
+ * is described — so it is not reworded here.
  *
- * It runs 167 characters, and Google truncates a meta description around 155,
- * so the two slots take different lengths of the same sentence rather than a
- * fourth variant: search gets the first sentence, which is complete on its own,
- * and the social card gets all of it, where the budget is far larger.
+ * It runs 112 characters, inside the ~155 Google truncates a meta description
+ * at, so search and the social card carry the same string. If a longer social
+ * variant is ever wanted, split it then rather than keeping two names for one
+ * value now.
  */
-const SOCIAL_DESCRIPTION =
-  "Second engineer on OrionIQ at Logz.io, an agent platform that investigates " +
-  "production and acts on it. I own the interface, and enough of the backend " +
-  "to argue about it.";
-
-const META_DESCRIPTION =
-  "Second engineer on OrionIQ at Logz.io, an agent platform that investigates " +
-  "production and acts on it.";
+const DESCRIPTION =
+  "Full-stack engineer at Logz.io, working on OrionIQ, an agent platform " +
+  "that investigates production and acts on it.";
 
 const OG_IMAGE = {
   url: ogCard.src,
@@ -58,12 +53,12 @@ type OgType = "website" | "article";
 export const rootMetadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: TITLE, template: TITLE_TEMPLATE },
-  description: META_DESCRIPTION,
+  description: DESCRIPTION,
   applicationName: SITE_NAME,
   authors: [{ name: AUTHOR, url: SITE_URL }],
   creator: AUTHOR,
   alternates: { canonical: "./" },
-  ...socialCard(TITLE, SOCIAL_DESCRIPTION, "website"),
+  ...socialCard(TITLE, DESCRIPTION, "website"),
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -94,7 +89,7 @@ export function routeMetadata(opts: {
 
   return {
     title: nested ? { default: title, template: TITLE_TEMPLATE } : title,
-    description: description ?? META_DESCRIPTION,
-    ...socialCard(socialTitle, description ?? SOCIAL_DESCRIPTION, type),
+    description: description ?? DESCRIPTION,
+    ...socialCard(socialTitle, description ?? DESCRIPTION, type),
   };
 }
