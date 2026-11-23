@@ -100,7 +100,6 @@ const strays = grep(
   .filter(Boolean)
   .filter((entry) => {
     const [file, line] = entry.split(":");
-    if (relative(".", file) === TOKENS_FILE) return false;
     return !isThemeDeclaration(file, line);
   })
   .map((entry) => entry.split(":")[0]);
