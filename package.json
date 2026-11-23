@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "pnpm build:package && next dev",
     "build": "pnpm build:package && next build",
-    "build:package": "pnpm --filter text-cascade build",
+    "build:package": "pnpm --filter text-cascade --filter @itsmor/tokens build",
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write .",
@@ -17,6 +17,7 @@
     "cv:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON tools/check-cv.mjs"
   },
   "dependencies": {
+    "@itsmor/tokens": "workspace:*",
     "text-cascade": "workspace:*",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.4.2",

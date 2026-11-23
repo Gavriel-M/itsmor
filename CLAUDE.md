@@ -75,7 +75,7 @@ Components live in `src/components/` organized by page domain:
 - `site.ts` — SEO strings and metadata builders, see [Metadata & SEO](#metadata--seo)
 - `routes.ts` — the sitemap's route list. Deliberately free of bundler-only imports so
   `tools/check-routes.mjs` can read it from plain Node
-- `tokens.ts` — the palette, see [Design Tokens](#design-tokens)
+- `tokens.ts` — re-exports the palette from `@itsmor/tokens`, see [Design Tokens](#design-tokens)
 - `links.ts` — external-href detection and new-tab props
 - `webgl.ts` — `useWebGLSupport`, see [WebGL](#webgl)
 - `motion/easing.ts`, `motion/usePrefersReducedMotion.ts` — shared motion primitives
@@ -117,7 +117,7 @@ Three distinct animation approaches coexist:
 ### Styling
 
 - **Tailwind CSS v4** (CSS-first mode via `@tailwindcss/postcss`)
-- Design tokens are CSS variables in `globals.css`'s `@theme`, mirroring `src/lib/tokens.ts`.
+- Design tokens are CSS variables in `globals.css`'s `@theme`, mirroring `packages/tokens/src/index.ts`.
   Read the values there rather than from a second copy — the copy that used to live in this
   list had drifted to a retired terracotta. `--grid-cell: 4rem` is the 64px unit the layout
   maths uses.
@@ -147,6 +147,12 @@ The 2D Animation research page (`/work/2d-web-animation`) has a sophisticated de
 ### Local Packages
 
 `packages/text-cascade/` — Standalone React component for cascading text reveal animations with glow effects. Has its own build (tsup) and test suite (vitest).
+
+`packages/tokens/` — `@itsmor/tokens`, the palette. Builds the module (tsup) and
+`dist/theme.css`, a Tailwind v4 `@theme` block for consumers outside this repo. itsmor.com
+keeps its own `@theme` in `globals.css` rather than importing that file, so `@theme` stays
+next to the font and spacing tokens and the guard's line exemption keeps a fixed target.
+Published by `.github/workflows/publish-tokens.yml`; bump `version` before running it.
 
 ### Contact Network System
 
@@ -188,8 +194,11 @@ old card. A static import is content-hashed for every route. One asset serves bo
 
 ### Design Tokens
 
-**`src/lib/tokens.ts` is the only place a palette hex may appear.** Everything else reads
-`PALETTE` — canvas code, three.js material colours, raw CSS strings, the data file, and the
+**`packages/tokens/src/index.ts` is the only place a palette hex may appear.** It is the
+`@itsmor/tokens` package, published to npm so the other surfaces that carry the palette —
+[itsmor-tools](https://github.com/Gavriel-M/itsmor-tools) first — read the same values.
+App code imports it through `src/lib/tokens.ts`, a re-export with no literals of its own,
+which the guard scans like any other file. Everything else reads `PALETTE` — canvas code, three.js material colours, raw CSS strings, the data file, and the
 CV stylesheet. `src/app/globals.css`'s `@theme` block necessarily repeats the values, because
 Tailwind v4 needs literals in CSS to generate utilities; `pnpm tokens:check` asserts the two
 agree, that no hex has leaked elsewhere in `src/` or into a jig, and that the jigs' generated

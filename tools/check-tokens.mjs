@@ -12,7 +12,7 @@ import { execFileSync } from "node:child_process";
 import { renderTokensCss, tokensCssIsCurrent } from "./gen-tokens.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const TOKENS_FILE = "src/lib/tokens.ts";
+const TOKENS_FILE = "packages/tokens/src/index.ts";
 const RETIRED = ["#b85b40"];
 
 const { PALETTE, DARK_BANNER, GRID_LINE } = await import(
@@ -34,9 +34,13 @@ const declared = new Map(
 for (const [name, hex] of Object.entries(PALETTE)) {
   const inCss = declared.get(name);
   if (inCss === undefined) {
-    problems.push(`globals.css is missing --color-${name} (tokens.ts: ${hex})`);
+    problems.push(
+      `globals.css is missing --color-${name} (${TOKENS_FILE}: ${hex})`
+    );
   } else if (inCss !== hex.toLowerCase()) {
-    problems.push(`--color-${name}: globals.css ${inCss}, tokens.ts ${hex}`);
+    problems.push(
+      `--color-${name}: globals.css ${inCss}, ${TOKENS_FILE} ${hex}`
+    );
   }
 }
 for (const name of declared.keys()) {

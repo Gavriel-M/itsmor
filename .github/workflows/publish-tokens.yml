@@ -1,0 +1,38 @@
+name: Publish @itsmor/tokens
+
+# Manual on purpose: a token change ships to every surface that depends on the
+# package, so publishing is a decision, not a side effect of merging.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  # npm trusted publishing: the registry accepts this workflow's OIDC identity
+  # instead of a stored token, and attaches provenance.
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.18
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - run: pnpm install --frozen-lockfile
+
+      # The package must agree with the site it is published from.
+      - run: pnpm tokens:check
+
+      # Trusted publishing needs npm 11.5.1 or later; Node 22 ships npm 10.
+      - run: npm install -g npm@latest
+
+      - run: npm publish --access public
+        working-directory: packages/tokens

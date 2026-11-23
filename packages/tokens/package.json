@@ -1,0 +1,59 @@
+{
+  "name": "@itsmor/tokens",
+  "version": "0.1.0",
+  "description": "The itsmor design tokens: the palette as a TypeScript module and as a Tailwind v4 @theme stylesheet.",
+  "keywords": [
+    "design-tokens",
+    "tailwindcss",
+    "palette"
+  ],
+  "homepage": "https://github.com/Gavriel-M/itsmor/tree/main/packages/tokens",
+  "bugs": {
+    "url": "https://github.com/Gavriel-M/itsmor/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gavriel-M/itsmor.git",
+    "directory": "packages/tokens"
+  },
+  "license": "MIT",
+  "author": "Gavriel Mor (https://itsmor.com)",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./theme.css": "./dist/theme.css"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5"
+  },
+  "scripts": {
+    "build": "tsup && node scripts/build-css.mjs",
+    "typecheck": "tsc --noEmit",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm run typecheck"
+  }
+}
