@@ -1,6 +1,6 @@
 {
   "name": "@itsmor/tokens",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The itsmor design tokens: the palette as a TypeScript module and as a Tailwind v4 @theme stylesheet.",
   "keywords": [
     "design-tokens",
