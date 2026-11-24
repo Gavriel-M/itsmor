@@ -148,7 +148,8 @@ cannot verify buys nothing — nobody checks 793 against 795.
 
 `pnpm tokens:check` is the cautionary tale and it is worth reading the history.
 
-It was written to assert that `src/lib/tokens.ts` is the only place a palette hex may appear.
+It was written to assert that `src/lib/tokens.ts` (now `packages/tokens/src/index.ts`) is the
+only place a palette hex may appear.
 It exempted the `@theme` declarations in `globals.css`, which it must, because Tailwind needs
 literals in CSS. But the exemption compared the **bare hex** against the text of every
 `@theme` line — so _any_ occurrence anywhere in `src/` of a value that also appeared in

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { usePrefersReducedMotion } from "@/lib/motion/usePrefersReducedMotion";
 import { ToggleButton } from "./shared";
-import { PALETTE } from "@/lib/tokens";
+import { PALETTE } from "@itsmor/tokens";
 
 // Only the head of each ramp is a palette token. The rest are ramp steps
 // mixed by eye for this demo and are not brand colours.

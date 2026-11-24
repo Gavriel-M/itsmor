@@ -1,4 +1,4 @@
-import { GRID_LINE } from "@/lib/tokens";
+import { GRID_LINE } from "@itsmor/tokens";
 
 export default function GridBackground() {
   return (

@@ -6,7 +6,7 @@ import { Center } from "@react-three/drei";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
 import * as THREE from "three";
 import Logo from "@/components/ui/Logo";
-import { PALETTE } from "@/lib/tokens";
+import { PALETTE } from "@itsmor/tokens";
 import { useWebGLSupport } from "@/lib/webgl";
 
 /**

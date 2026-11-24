@@ -1,15 +1,13 @@
 name: Publish @itsmor/tokens
 
-# Manual on purpose: a token change ships to every surface that depends on the
-# package, so publishing is a decision, not a side effect of merging.
 on:
   workflow_dispatch:
 
 permissions:
   contents: read
-  # npm trusted publishing: the registry accepts this workflow's OIDC identity
-  # instead of a stored token, and attaches provenance.
   id-token: write
+
+concurrency: publish-tokens
 
 jobs:
   publish:
@@ -26,13 +24,20 @@ jobs:
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
+      - name: Refuse an unbumped version
+        run: |
+          version=$(node -p "require('./packages/tokens/package.json').version")
+          if npm view "@itsmor/tokens@$version" version >/dev/null 2>&1; then
+            echo "@itsmor/tokens@$version is already published. Bump version first."
+            exit 1
+          fi
+
       - run: pnpm install --frozen-lockfile
 
-      # The package must agree with the site it is published from.
       - run: pnpm tokens:check
 
-      # Trusted publishing needs npm 11.5.1 or later; Node 22 ships npm 10.
-      - run: npm install -g npm@latest
+      # OIDC publish needs npm >= 11.5.1; Node 22 bundles npm 10.
+      - run: npm install -g npm@^11.5.1
 
       - run: npm publish --access public
         working-directory: packages/tokens

@@ -2,7 +2,7 @@
 
 import { motion, useAnimationControls } from "framer-motion";
 import { usePrefersReducedMotion } from "@/lib/motion/usePrefersReducedMotion";
-import { PALETTE } from "@/lib/tokens";
+import { PALETTE } from "@itsmor/tokens";
 import { DemoLabel } from "./shared";
 
 export default function DisplacementDemo() {

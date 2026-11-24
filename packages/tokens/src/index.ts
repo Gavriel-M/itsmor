@@ -1,8 +1,4 @@
-/**
- * The palette. Canonical for everything that is not a Tailwind class.
- * Contrast is measured against the cream ground; every value here clears
- * WCAG AA for its documented use. Enforced by `pnpm tokens:check`.
- */
+/** Contrast is measured against `background`; every value clears WCAG AA for its documented use. */
 export const PALETTE = {
   background: "#f2f0e6",
   text: "#1a1a1a",
@@ -11,16 +7,7 @@ export const PALETTE = {
   gold: "#ffd700",
   amber: "#ffbf00",
 
-  /*
-   * The CV document's own scale. Here rather than in the component so one
-   * declaration serves both the stylesheet and the Tailwind utilities, and so
-   * `pnpm tokens:check` covers it — it was unguarded by construction while it
-   * lived in the component.
-   *
-   * `ink-2` is 6.72:1 and `ink-3` is 4.74:1, both cleared for body text.
-   * `rail`, `rule` and `rule-soft` are surfaces and hairlines. They are far
-   * below any text threshold and must never carry type.
-   */
+  /** `rail`, `rule` and `rule-soft` are surfaces and hairlines and must never carry type. */
   "ink-2": "#575347",
   "ink-3": "#6e6a5c",
   rail: "#eceadc",
@@ -30,11 +17,7 @@ export const PALETTE = {
 
 export type PaletteToken = keyof typeof PALETTE;
 
-/**
- * The GitHub banner's dark ground, derived for that ground rather than inverted
- * from the light set — `lapis` manages only 2.2:1 there. Independent of
- * PALETTE, so a light-token change does not restyle the dark banner.
- */
+/** Derived for its own ground, not inverted from `PALETTE`: lapis manages only 2.2:1 there. */
 export const DARK_BANNER = {
   background: "#161410",
   text: "#e8e4d6",
@@ -43,11 +26,18 @@ export const DARK_BANNER = {
   grid: "#211e17",
 } as const;
 
-/** The hairline grid on the cream ground, in `GridBackground` and every jig. */
 export const GRID_LINE = "#e5e5e5";
 
-/** For a translucent token inside a raw CSS string, where `/nn` is unavailable. */
-export function withAlpha(hex: string, alpha: number): string {
+export const GRID_CELL = "4rem";
+
+type HexColour = `#${string}`;
+
+const SIX_DIGIT_HEX = /^#[0-9a-f]{6}$/i;
+
+export function withAlpha(hex: HexColour, alpha: number): string {
+  if (!SIX_DIGIT_HEX.test(hex)) {
+    throw new Error(`withAlpha expects a six-digit hex, got ${hex}`);
+  }
   const clamped = Math.max(0, Math.min(1, alpha));
   return (
     hex +

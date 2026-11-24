@@ -20,12 +20,13 @@ This gives `bg-background`, `text-text`, `text-lapis`, `border-rule` and the res
 ## TypeScript
 
 ```ts
-import { PALETTE, withAlpha } from "@itsmor/tokens";
+import { PALETTE, GRID_CELL, withAlpha } from "@itsmor/tokens";
 
 ctx.strokeStyle = withAlpha(PALETTE.lapis, 0.4);
 ```
 
-For canvas, WebGL and anything else that cannot use a class.
+For canvas, WebGL and anything else that cannot use a class. `withAlpha` takes a six-digit hex
+and throws on anything else. `GRID_CELL` is the 4rem layout unit.
 
 ## Use rules
 

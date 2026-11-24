@@ -1,5 +1,5 @@
 import { type ResearchSection } from "@/components/animationResearch/types";
-import { PALETTE } from "@/lib/tokens";
+import { PALETTE } from "@itsmor/tokens";
 
 export const ARTICLE = {
   title: "2D Animation on the Web",

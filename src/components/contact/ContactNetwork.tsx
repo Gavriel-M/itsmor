@@ -7,7 +7,7 @@ import { SeparatedLogo } from "./SeparatedLogo";
 import { useCursorTracking } from "./useCursorTracking";
 import { useLightningEffect } from "./useLightningEffect";
 import type { NetworkLink } from "./types";
-import { PALETTE } from "@/lib/tokens";
+import { PALETTE } from "@itsmor/tokens";
 
 // Network links configuration
 export const LINKS: NetworkLink[] = [

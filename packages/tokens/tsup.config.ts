@@ -6,4 +6,5 @@ export default defineConfig({
   dts: true,
   sourcemap: true,
   clean: true,
+  onSuccess: "node scripts/build-css.mjs",
 });
