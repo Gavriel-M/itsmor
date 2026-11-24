@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { PALETTE } from "@/lib/tokens";
+import { PALETTE } from "@itsmor/tokens";
 
 const POINTS_PER_SIDE = 14;
 const FLICKER_INTERVAL = 60; // ms between displacement regeneration

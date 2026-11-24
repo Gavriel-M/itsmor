@@ -66,7 +66,7 @@ shot() {
 }
 
 # Tokens first: rendering before regenerating produces assets matching nothing.
-echo "🎨 Regenerating tokens from src/lib/tokens.ts…"
+echo "🎨 Regenerating tokens from packages/tokens/src/index.ts…"
 node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON "$ROOT/tools/gen-tokens.mjs"
 echo ""
 

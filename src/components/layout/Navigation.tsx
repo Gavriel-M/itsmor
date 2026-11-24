@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Logo from "@/components/ui/Logo";
 import TransitionLink from "@/components/ui/TransitionLink";
-import { PALETTE, withAlpha } from "@/lib/tokens";
+import { PALETTE, withAlpha } from "@itsmor/tokens";
 
 const navItems = [
   { label: "WORK", href: "/work" },

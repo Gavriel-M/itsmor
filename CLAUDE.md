@@ -16,7 +16,7 @@ Personal portfolio site ("itsmor") — a performance-optimized, interactive port
 ```bash
 pnpm dev           # Dev server at localhost:3000
 pnpm build         # Static export build (output: "export")
-pnpm build:package # Build packages/text-cascade — dev and build run this first
+pnpm build:package # Build packages/text-cascade and packages/tokens — dev and build run this first
 pnpm lint          # ESLint
 pnpm format        # Prettier format all files
 pnpm format:check  # Prettier validation
@@ -27,17 +27,22 @@ pnpm verify        # All of the above, in the order CI runs them
 ```
 
 CI (`.github/workflows/checks.yml`) runs `verify` on every PR. `tools/*.mjs` import
-`src/lib/*.ts` directly, which needs Node's unflagged TypeScript stripping — hence
-`engines.node >= 22.18`.
+`src/lib/*.ts` and `packages/tokens/src/index.ts` directly, which needs Node's unflagged
+TypeScript stripping — hence `engines.node >= 22.18`.
 
 Package manager is **pnpm**. The `packages/text-cascade` local package has vitest for tests (`pnpm --filter text-cascade test`). No test runner for the main app.
 
-**The app imports the workspace package, and its `dist/` is gitignored.** `globals.css`
-imports `text-cascade/styles` and `Section.tsx` imports `TextCascade`, both resolving
-through the package's `exports` map into `dist/`. So a clean checkout cannot build or dev
-until the package is built — which is why `dev` and `build` both run `build:package` first.
-`deploy.sh` calls `pnpm run build`, so it is covered too. The package has no `prepare` hook
-on purpose: its `prepack`/`prepublishOnly` gating is left alone.
+**The app imports the workspace packages, and their `dist/` is gitignored.** `globals.css`
+imports `text-cascade/styles`, `Section.tsx` imports `TextCascade`, and palette consumers
+import `@itsmor/tokens`, all resolving through each package's `exports` map into `dist/`.
+So a clean checkout cannot build or dev until the packages are built — which is why `dev`
+and `build` both run `build:package` first. `deploy.sh` calls `pnpm run build`, so it is
+covered too. Neither package has a `prepare` hook on purpose: their
+`prepack`/`prepublishOnly` gating is left alone.
+
+**Editing `packages/tokens/src/index.ts` does not reach a running `pnpm dev`.** The app reads
+`dist/`, while `tokens:check` and the jigs read `src/`, so both pass while the site still
+shows the old value. Re-run `pnpm build:package`.
 
 ## Architecture
 
@@ -75,7 +80,6 @@ Components live in `src/components/` organized by page domain:
 - `site.ts` — SEO strings and metadata builders, see [Metadata & SEO](#metadata--seo)
 - `routes.ts` — the sitemap's route list. Deliberately free of bundler-only imports so
   `tools/check-routes.mjs` can read it from plain Node
-- `tokens.ts` — the palette, see [Design Tokens](#design-tokens)
 - `links.ts` — external-href detection and new-tab props
 - `webgl.ts` — `useWebGLSupport`, see [WebGL](#webgl)
 - `motion/easing.ts`, `motion/usePrefersReducedMotion.ts` — shared motion primitives
@@ -117,7 +121,7 @@ Three distinct animation approaches coexist:
 ### Styling
 
 - **Tailwind CSS v4** (CSS-first mode via `@tailwindcss/postcss`)
-- Design tokens are CSS variables in `globals.css`'s `@theme`, mirroring `src/lib/tokens.ts`.
+- Design tokens are CSS variables in `globals.css`'s `@theme`, mirroring `packages/tokens/src/index.ts`.
   Read the values there rather than from a second copy — the copy that used to live in this
   list had drifted to a retired terracotta. `--grid-cell: 4rem` is the 64px unit the layout
   maths uses.
@@ -147,6 +151,20 @@ The 2D Animation research page (`/work/2d-web-animation`) has a sophisticated de
 ### Local Packages
 
 `packages/text-cascade/` — Standalone React component for cascading text reveal animations with glow effects. Has its own build (tsup) and test suite (vitest).
+
+`packages/tokens/` — `@itsmor/tokens`, the palette and the grid cell. tsup builds the
+module, then `scripts/build-css.mjs` writes `dist/theme.css` from it: a Tailwind v4 `@theme`
+block for consumers outside this repo. itsmor.com keeps its own `@theme` in `globals.css`
+rather than importing that file, so `@theme` stays next to the font and spacing tokens and
+the guard's line exemption keeps a fixed target.
+
+Publishing is manual (`publish-tokens.yml`, `workflow_dispatch`, `main` only), because a
+token change reaches every surface that depends on the package. Bump `version` first; the
+workflow refuses a version that is already on npm. It uses npm trusted publishing, which is
+configured per package on npmjs.com, so the first version had to be published by hand
+before the workflow could run, with the trusted publisher set to `Gavriel-M/itsmor` and
+`publish-tokens.yml`. Publish with `npm`, not `pnpm`, and keep the package free of
+`workspace:` dependencies: `npm publish` would ship the literal `workspace:*`.
 
 ### Contact Network System
 
@@ -188,12 +206,15 @@ old card. A static import is content-hashed for every route. One asset serves bo
 
 ### Design Tokens
 
-**`src/lib/tokens.ts` is the only place a palette hex may appear.** Everything else reads
-`PALETTE` — canvas code, three.js material colours, raw CSS strings, the data file, and the
-CV stylesheet. `src/app/globals.css`'s `@theme` block necessarily repeats the values, because
-Tailwind v4 needs literals in CSS to generate utilities; `pnpm tokens:check` asserts the two
-agree, that no hex has leaked elsewhere in `src/` or into a jig, and that the jigs' generated
-stylesheet is current. The guard is location-based, not count-based, so a migration that only
+**`packages/tokens/src/index.ts` is the only place a palette hex may appear.** It is the
+`@itsmor/tokens` package, published to npm so the other surfaces that carry the palette —
+[itsmor-tools](https://github.com/Gavriel-M/itsmor-tools) first — read the same values.
+Everything else imports `PALETTE` from `@itsmor/tokens` — canvas code, three.js material
+colours, raw CSS strings, the data file, and the CV stylesheet. `src/app/globals.css`'s
+`@theme` block necessarily repeats the values, because Tailwind v4 needs literals in CSS to
+generate utilities; `pnpm tokens:check` asserts the two agree, along with `--grid-cell`
+against `GRID_CELL`, that no hex has leaked elsewhere in `src/`, `packages/tokens/` or into
+a jig, and that the jigs' generated stylesheet is current. The guard is location-based, not count-based, so a migration that only
 moves a literal between files still fails.
 
 **The `@theme` exemption is by file and line, not by value.** Comparing the bare hex made the

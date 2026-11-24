@@ -1,0 +1,43 @@
+name: Publish @itsmor/tokens
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency: publish-tokens
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.18
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Refuse an unbumped version
+        run: |
+          version=$(node -p "require('./packages/tokens/package.json').version")
+          if npm view "@itsmor/tokens@$version" version >/dev/null 2>&1; then
+            echo "@itsmor/tokens@$version is already published. Bump version first."
+            exit 1
+          fi
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm tokens:check
+
+      # OIDC publish needs npm >= 11.5.1; Node 22 bundles npm 10.
+      - run: npm install -g npm@^11.5.1
+
+      - run: npm publish --access public
+        working-directory: packages/tokens

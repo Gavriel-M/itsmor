@@ -27,8 +27,8 @@ references them.
 
 ## Tokens
 
-`src/lib/tokens.ts` is the single source. Nothing here hardcodes a palette hex, and
-`pnpm tokens:check` fails if anything starts to.
+`packages/tokens/src/index.ts` (`@itsmor/tokens`) is the single source. Nothing here
+hardcodes a palette hex, and `pnpm tokens:check` fails if anything starts to.
 
 - `gen-tokens.mjs` writes `tokens.generated.css` from the module. The jigs are
   standalone HTML opened over `file://`, so they cannot import TypeScript — they link

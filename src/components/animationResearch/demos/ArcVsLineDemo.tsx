@@ -4,7 +4,7 @@ import { useRef, useEffect, useCallback, useState } from "react";
 import { usePrefersReducedMotion } from "@/lib/motion/usePrefersReducedMotion";
 import { easeOutExpo, easeInQuad, easeOutQuad } from "@/lib/motion/easing";
 import { PlayButton, DemoLabel } from "./shared";
-import { PALETTE } from "@/lib/tokens";
+import { PALETTE } from "@itsmor/tokens";
 
 const DOT_RADIUS = 6;
 const DURATION_MS = 1000;

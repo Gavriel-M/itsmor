@@ -15,9 +15,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          # tools/*.mjs import src/lib/*.ts directly, which needs Node's
-          # unflagged TypeScript stripping. Kept in step with package.json's
-          # engines field.
+          # Kept in step with package.json's engines field; see CLAUDE.md.
           node-version: 22.18
           cache: pnpm
 

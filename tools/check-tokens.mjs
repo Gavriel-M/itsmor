@@ -9,13 +9,16 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, join, relative } from "node:path";
 import { execFileSync } from "node:child_process";
-import { renderTokensCss, tokensCssIsCurrent } from "./gen-tokens.mjs";
+import {
+  renderTokensCss,
+  tokensCssIsCurrent,
+  TOKENS_SOURCE as TOKENS_FILE,
+} from "./gen-tokens.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const TOKENS_FILE = "src/lib/tokens.ts";
 const RETIRED = ["#b85b40"];
 
-const { PALETTE, DARK_BANNER, GRID_LINE } = await import(
+const { PALETTE, DARK_BANNER, GRID_LINE, GRID_CELL } = await import(
   pathToFileURL(join(ROOT, TOKENS_FILE)).href
 );
 const problems = [];
@@ -34,15 +37,26 @@ const declared = new Map(
 for (const [name, hex] of Object.entries(PALETTE)) {
   const inCss = declared.get(name);
   if (inCss === undefined) {
-    problems.push(`globals.css is missing --color-${name} (tokens.ts: ${hex})`);
+    problems.push(
+      `globals.css is missing --color-${name} (${TOKENS_FILE}: ${hex})`
+    );
   } else if (inCss !== hex.toLowerCase()) {
-    problems.push(`--color-${name}: globals.css ${inCss}, tokens.ts ${hex}`);
+    problems.push(
+      `--color-${name}: globals.css ${inCss}, ${TOKENS_FILE} ${hex}`
+    );
   }
 }
 for (const name of declared.keys()) {
   if (!(name in PALETTE)) {
     problems.push(`globals.css declares --color-${name}, absent from PALETTE`);
   }
+}
+
+const gridCell = css.match(/--grid-cell\s*:\s*([^;]+);/)?.[1].trim();
+if (gridCell !== GRID_CELL) {
+  problems.push(
+    `--grid-cell: globals.css ${gridCell ?? "missing"}, ${TOKENS_FILE} ${GRID_CELL}`
+  );
 }
 
 // Every exported colour, not just PALETTE: GRID_LINE and DARK_BANNER were
@@ -88,9 +102,14 @@ const isThemeDeclaration = (file, line) =>
 
 const strays = grep(
   "src",
+  "packages/tokens",
   "--include=*.ts",
   "--include=*.tsx",
-  "--include=*.css"
+  "--include=*.css",
+  "--include=*.mjs",
+  "--include=*.md",
+  "--exclude-dir=dist",
+  "--exclude-dir=node_modules"
 )
   .split("\n")
   .filter(Boolean)
@@ -132,7 +151,9 @@ if (problems.length) {
 
 console.log("✓ tokens");
 console.log(
-  `  globals.css agrees with ${TOKENS_FILE} on all ${Object.keys(PALETTE).length} colours`
+  `  globals.css agrees with ${TOKENS_FILE} on all ${Object.keys(PALETTE).length} colours and --grid-cell`
 );
-console.log(`  no palette hex outside ${TOKENS_FILE}, in src/ or in a jig`);
+console.log(
+  `  no palette hex outside ${TOKENS_FILE}, in src/, packages/tokens/ or a jig`
+);
 console.log("  tools/tokens.generated.css is current");
